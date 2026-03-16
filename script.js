@@ -1350,8 +1350,8 @@ function getStorySlides() {
     },
     {
       themeClass: THEMES.skycity.className,
-      title: "英雄的救援行动开始",
-      text: "你的任务，是闯入各地哥布林之巢，击退怪潮，净化 Boss，把美少女从黑化中救回来，并让她们成为你的战斗辅佐。",
+      title: "虾仁的救援行动开始",
+      text: "虾仁的任务，是闯入各地哥布林之巢，击退怪潮，净化 Boss，把美少女从黑化中救回来，并让她们成为你的战斗辅佐。",
       meta: ["作战方式：固守下方阵地", "首要任务：救下绯音"],
       leftArt: HERO_ART,
       rightArt: getBeauty("hiyori").art.purified,
@@ -1454,19 +1454,22 @@ function openBossIntro(state) {
     if (!game || game.ended || game.bossSpawned) {
       return;
     }
-    closeBossIntro();
+    closeBossIntro({ cancelSpeech: false });
     spawnBoss(game);
     game.paused = false;
     flashBattleMessage(`${beauty.bossName}：${beauty.taunt}`, 2);
   }, 2300);
 }
 
-function closeBossIntro() {
+function closeBossIntro(options = {}) {
+  const { cancelSpeech = true } = options;
   if (bossIntroTimer) {
     window.clearTimeout(bossIntroTimer);
     bossIntroTimer = null;
   }
-  sound.cancelSpeech();
+  if (cancelSpeech) {
+    sound.cancelSpeech();
+  }
   bossIntroModal.classList.add("hidden");
 }
 
@@ -1486,6 +1489,7 @@ function closeAllOverlays() {
   bossIntroModal.classList.add("hidden");
   upgradeModal.classList.add("hidden");
   resultModal.classList.add("hidden");
+  sound.cancelSpeech();
 }
 
 function launchStage(stageId) {
@@ -2259,7 +2263,7 @@ function updateBattleHud() {
     battleCompanionStatus.innerHTML = `
       <p class="battle-companion-label">美女辅佐</p>
       <strong>当前未携带</strong>
-      <p>这一局完全依赖主角火力和升级卡成长。</p>
+      <p>这一局完全依赖虾仁的火力和升级卡成长。</p>
     `;
     return;
   }
@@ -2290,8 +2294,7 @@ function renderBattleSkills(state) {
         name: meta.name,
         icon: meta.icon,
         level,
-        description: meta.description,
-        cooldownText: remaining > 0 ? `${remaining.toFixed(1)}s` : "自动就绪",
+        cooldownText: remaining > 0 ? remaining.toFixed(1) : "就绪",
         cooling: remaining > 0
       };
     });
@@ -2306,16 +2309,12 @@ function renderBattleSkills(state) {
   battleSkillPanel.innerHTML = `
     <div class="skill-list">
       ${skills.map((skill) => `
-        <div class="skill-item">
+        <div class="skill-item" title="${skill.name}">
           <div class="skill-item-icon">
             <img src="${skill.icon}" alt="${skill.name}">
+            ${skill.cooling ? `<div class="skill-item-cooling"><span class="skill-item-cd cooling">${skill.cooldownText}</span></div>` : '<span class="skill-item-ready"></span>'}
             <span class="skill-item-level">Lv.${skill.level}</span>
           </div>
-          <div class="skill-item-main">
-            <strong>${skill.name}</strong>
-            <span>${skill.description}</span>
-          </div>
-          <div class="skill-item-cd ${skill.cooling ? "cooling" : ""}">${skill.cooldownText}</div>
         </div>
       `).join("")}
     </div>
@@ -3705,6 +3704,7 @@ function createSoundSystem() {
   let lastShotAt = 0;
   let lastDeathAt = 0;
   let selectedVoice = null;
+  let mandarinVoices = [];
   const MASTER_GAIN = 0.34;
   const MUSIC_GAIN = 0.66;
   const FX_GAIN = 1.18;
@@ -4050,23 +4050,46 @@ function createSoundSystem() {
     if (!voices.length) {
       window.speechSynthesis.onvoiceschanged = () => {
         const loadedVoices = window.speechSynthesis.getVoices();
-        selectedVoice = pickVoice(loadedVoices) || null;
+        const resolved = resolveVoices(loadedVoices);
+        mandarinVoices = resolved.mandarinVoices;
+        selectedVoice = resolved.defaultVoice;
       };
       return;
     }
-    selectedVoice = pickVoice(voices) || null;
+    const resolved = resolveVoices(voices);
+    mandarinVoices = resolved.mandarinVoices;
+    selectedVoice = resolved.defaultVoice;
   }
 
-  function pickVoice(voices) {
-    const mandarinVoices = voices.filter((voice) => {
+  function resolveVoices(voices) {
+    const availableMandarinVoices = voices.filter((voice) => {
       const label = `${voice.name} ${voice.lang}`;
       return /(zh-CN|cmn-CN|cmn-Hans-CN|Mandarin|Putonghua|Xiaoyi|Tingting|Xiaoxiao|Xiaohan|Xiaomeng|Yunxi|Yunxia|Yunjian)/i.test(label)
         && !/(zh-HK|Cantonese|Yue|Sin-ji|HiuMaan|Mei-Jia)/i.test(label);
     });
-    return mandarinVoices.find((voice) => /female|xiaoyi|tingting|xiaoxiao|xiaohan|xiaomeng|mei|yan/i.test(voice.name))
-      || mandarinVoices[0]
+    const defaultVoice = availableMandarinVoices.find((voice) => /female|xiaoyi|tingting|xiaoxiao|xiaohan|xiaomeng|mei|yan/i.test(voice.name))
+      || availableMandarinVoices[0]
       || voices.find((voice) => /^zh(?!-HK)/i.test(voice.lang))
       || null;
+    return {
+      mandarinVoices: availableMandarinVoices,
+      defaultVoice
+    };
+  }
+
+  function getBossSpeechStyle(beautyId) {
+    return ({
+      hiyori: { pitch: 1.08, rate: 0.96, volume: 0.8, voiceIndex: 0 },
+      serin: { pitch: 0.82, rate: 0.84, volume: 0.74, voiceIndex: 1 },
+      yelan: { pitch: 0.9, rate: 0.92, volume: 0.8, voiceIndex: 2 },
+      mingsha: { pitch: 1.02, rate: 0.9, volume: 0.77, voiceIndex: 3 },
+      lanwei: { pitch: 0.76, rate: 0.82, volume: 0.76, voiceIndex: 4 },
+      shali: { pitch: 0.95, rate: 0.86, volume: 0.79, voiceIndex: 5 },
+      yuege: { pitch: 1.12, rate: 0.98, volume: 0.82, voiceIndex: 6 },
+      molan: { pitch: 0.8, rate: 0.8, volume: 0.75, voiceIndex: 7 },
+      xingkui: { pitch: 1.18, rate: 1.02, volume: 0.83, voiceIndex: 8 },
+      cangya: { pitch: 0.72, rate: 0.78, volume: 0.78, voiceIndex: 9 }
+    })[beautyId] || { pitch: 1, rate: 0.9, volume: 0.78, voiceIndex: 0 };
   }
 
   function speakBossLine(text, beautyId) {
@@ -4076,26 +4099,18 @@ function createSoundSystem() {
     ensureVoiceLoaded();
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
-    const speechStyle = ({
-      hiyori: { pitch: 1.04, rate: 0.94 },
-      serin: { pitch: 0.9, rate: 0.9 },
-      yelan: { pitch: 0.92, rate: 0.92 },
-      mingsha: { pitch: 1.02, rate: 0.95 },
-      lanwei: { pitch: 0.88, rate: 0.89 },
-      shali: { pitch: 0.95, rate: 0.9 },
-      yuege: { pitch: 1.05, rate: 0.95 },
-      molan: { pitch: 0.9, rate: 0.88 },
-      xingkui: { pitch: 1.08, rate: 0.96 },
-      cangya: { pitch: 0.86, rate: 0.87 }
-    })[beautyId] || { pitch: 1, rate: 0.93 };
-    if (selectedVoice) {
+    const speechStyle = getBossSpeechStyle(beautyId);
+    if (mandarinVoices.length) {
+      utterance.voice = mandarinVoices[speechStyle.voiceIndex % mandarinVoices.length];
+    } else if (selectedVoice) {
       utterance.voice = selectedVoice;
     }
     utterance.lang = "zh-CN";
     utterance.rate = speechStyle.rate;
-    utterance.volume = 0.78;
+    utterance.volume = speechStyle.volume;
     utterance.pitch = speechStyle.pitch;
-    duckMusic(0.64, 2.1);
+    const estimatedDuration = Math.max(2.2, (text.length / Math.max(0.72, speechStyle.rate)) * 0.34);
+    duckMusic(0.62, estimatedDuration + 0.2);
     window.speechSynthesis.speak(utterance);
   }
 
