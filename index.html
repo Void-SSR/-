@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>拯救美少女</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <div class="ambient ambient-a"></div>
+    <div class="ambient ambient-b"></div>
+
+    <header class="hero-banner">
+      <div class="hero-copy">
+        <p class="eyebrow">Roguelike Gun Defense Prototype</p>
+        <h1>拯救美少女</h1>
+        <p class="hero-text">
+          固守阵地，击退怪潮，抽取战术卡强化火力。
+          净化黑化 Boss 后，她会加入你的美女库，并能在后续关卡中以专属技能辅佐作战。
+        </p>
+      </div>
+
+      <div class="hero-panel">
+        <div class="panel-label">任务简报</div>
+        <div class="summary-strip" id="summaryStrip"></div>
+        <button class="ghost-button" id="resetProgressButton" type="button">重置净化记录</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="screen screen-active" id="homeScreen">
+        <div class="top-grid">
+          <section class="glass-card mission-card">
+            <div class="section-head">
+              <p class="section-kicker">作战循环</p>
+              <h2>核心玩法</h2>
+            </div>
+            <div class="mission-steps">
+              <article>
+                <span>01</span>
+                <p>英雄固定防线自动开火，怪物会从右侧源源不断逼近。</p>
+              </article>
+              <article>
+                <span>02</span>
+                <p>击杀怪物可获取经验，升级后从三张战术卡中抽选一项强化。</p>
+              </article>
+              <article>
+                <span>03</span>
+                <p>每关尾声会出现黑化 Boss，美少女净化后会收入美女库并解锁辅佐技能。</p>
+              </article>
+            </div>
+          </section>
+
+          <section class="glass-card companion-card">
+            <div class="section-head">
+              <p class="section-kicker">战前编组</p>
+              <h2>出战辅佐</h2>
+            </div>
+            <div id="currentCompanion" class="current-companion"></div>
+            <div id="companionChoices" class="companion-choices"></div>
+          </section>
+        </div>
+
+        <section class="glass-card">
+          <div class="section-head">
+            <p class="section-kicker">主线关卡</p>
+            <h2>净化行动</h2>
+          </div>
+          <div class="stage-grid" id="stageGrid"></div>
+        </section>
+
+        <section class="glass-card">
+          <div class="section-head">
+            <p class="section-kicker">美女库</p>
+            <h2>已收录净化对象</h2>
+          </div>
+          <div class="beauty-grid" id="beautyLibrary"></div>
+        </section>
+      </section>
+
+      <section class="screen battle-screen" id="battleScreen">
+        <aside class="glass-card battle-sidebar">
+          <div>
+            <p class="section-kicker">实战面板</p>
+            <h2 id="battleStageName">净化行动</h2>
+          </div>
+          <div class="hud-grid">
+            <div class="hud-item">
+              <span>基地生命</span>
+              <strong id="hudHp">0 / 0</strong>
+            </div>
+            <div class="hud-item">
+              <span>净化进度</span>
+              <strong id="hudTimer">0s</strong>
+            </div>
+            <div class="hud-item">
+              <span>战斗等级</span>
+              <strong id="hudLevel">Lv.1</strong>
+            </div>
+            <div class="hud-item">
+              <span>击杀数</span>
+              <strong id="hudKills">0</strong>
+            </div>
+          </div>
+
+          <div class="xp-wrap">
+            <div class="xp-header">
+              <span>经验槽</span>
+              <span id="hudXpText">0 / 0</span>
+            </div>
+            <div class="xp-bar">
+              <div id="hudXpFill"></div>
+            </div>
+          </div>
+
+          <div class="companion-status" id="battleCompanionStatus"></div>
+
+          <div class="battle-notes">
+            <p>提示：怪物靠近防线后会持续攻击基地，优先清掉靠前目标。</p>
+            <p>升级时会暂停战斗，请及时选择一张战术卡。</p>
+          </div>
+
+          <button class="ghost-button" id="retreatButton" type="button">返回主界面</button>
+        </aside>
+
+        <div class="battle-main">
+          <div class="battle-frame">
+            <canvas id="battleCanvas" width="1120" height="640"></canvas>
+            <div id="battleMessage" class="battle-message hidden"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="overlay hidden" id="upgradeModal">
+    <div class="overlay-card">
+      <p class="section-kicker">战术抽卡</p>
+      <h2>选择一张强化卡</h2>
+      <p class="overlay-text">战斗已暂停，选择完成后自动继续。</p>
+      <div class="upgrade-grid" id="upgradeChoices"></div>
+    </div>
+  </div>
+
+  <div class="overlay hidden" id="resultModal">
+    <div class="overlay-card result-card">
+      <p class="section-kicker" id="resultKicker">战斗结算</p>
+      <h2 id="resultTitle">净化成功</h2>
+      <p class="overlay-text" id="resultText"></p>
+      <div class="result-actions">
+        <button class="solid-button" id="resultPrimaryButton" type="button">返回主界面</button>
+        <button class="ghost-button" id="resultSecondaryButton" type="button">继续作战</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
