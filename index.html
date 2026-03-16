@@ -64,12 +64,32 @@
             </div>
             <div id="currentCompanion" class="current-companion"></div>
             <div id="companionChoices" class="companion-choices"></div>
-            <div class="panel-tools">
-              <button class="ghost-button" id="openLibraryButton" type="button">查看全部美女</button>
-              <button class="ghost-button" id="openShopButton" type="button">购买商城</button>
-            </div>
           </section>
         </div>
+
+        <section class="glass-card home-portals">
+          <div class="section-head">
+            <p class="section-kicker">功能入口</p>
+            <h2>装备 / 商城 / 美女库</h2>
+          </div>
+          <div class="portal-grid">
+            <button class="portal-card" id="openEquipmentButton" type="button">
+              <span class="portal-icon portal-equipment"></span>
+              <strong>装备系统</strong>
+              <small>查看虾仁当前装备，并在背包里切换武器、防具、道具。</small>
+            </button>
+            <button class="portal-card" id="openShopButton" type="button">
+              <span class="portal-icon portal-shop"></span>
+              <strong>购买商城</strong>
+              <small>进入角色招募、装备补给和直购商店，继续强化整套阵容。</small>
+            </button>
+            <button class="portal-card" id="openLibraryButton" type="button">
+              <span class="portal-icon portal-library"></span>
+              <strong>查看全部美女</strong>
+              <small>先看美女合照，再进入总览画廊，滑动浏览全部已收录角色。</small>
+            </button>
+          </div>
+        </section>
 
         <section class="glass-card">
           <div class="section-head">
@@ -80,21 +100,57 @@
         </section>
       </section>
 
+      <section class="screen" id="equipmentScreen">
+        <section class="glass-card subpage-card">
+          <div class="subpage-head">
+            <button class="icon-button" id="equipmentBackButton" type="button" aria-label="返回首页">←</button>
+            <div>
+              <p class="section-kicker">装备系统</p>
+              <h2>虾仁的战备仓</h2>
+            </div>
+            <div class="subpage-status" id="equipmentSummary"></div>
+          </div>
+          <div class="equipment-layout">
+            <div class="equipment-stage" id="equipmentStage"></div>
+            <div class="equipment-bag">
+              <div class="section-head section-head-compact">
+                <p class="section-kicker">背包列表</p>
+                <h3>未装备物品</h3>
+              </div>
+              <div class="equipment-inventory" id="equipmentInventory"></div>
+            </div>
+          </div>
+        </section>
+      </section>
+
       <section class="screen" id="libraryScreen">
         <section class="glass-card subpage-card">
           <div class="subpage-head">
             <button class="icon-button" id="libraryBackButton" type="button" aria-label="返回首页">←</button>
             <div>
               <p class="section-kicker">美女库</p>
-              <h2>已收录净化对象</h2>
+              <h2>美女大合照</h2>
             </div>
             <div class="subpage-status" id="libraryCounter"></div>
           </div>
-          <div class="beauty-viewer" id="beautyLibrary"></div>
+          <div class="library-landing" id="libraryLanding"></div>
           <div class="viewer-actions">
-            <button class="ghost-button" id="libraryPrevButton" type="button">上一位</button>
-            <button class="ghost-button" id="libraryNextButton" type="button">下一位</button>
+            <button class="solid-button" id="openLibraryGalleryButton" type="button">进入美女总览</button>
           </div>
+        </section>
+      </section>
+
+      <section class="screen" id="libraryGalleryScreen">
+        <section class="glass-card subpage-card">
+          <div class="subpage-head">
+            <button class="icon-button" id="libraryGalleryBackButton" type="button" aria-label="返回美女库">←</button>
+            <div>
+              <p class="section-kicker">美女总览</p>
+              <h2>滑动浏览全部美女</h2>
+            </div>
+            <div class="subpage-status" id="libraryGalleryCounter"></div>
+          </div>
+          <div class="beauty-gallery" id="beautyGallery"></div>
         </section>
       </section>
 
@@ -104,12 +160,11 @@
             <button class="icon-button" id="shopBackButton" type="button" aria-label="返回首页">←</button>
             <div>
               <p class="section-kicker">补给商城</p>
-              <h2>角色招募 / 装备补给 / 直购商店</h2>
+              <h2>角色招募 / 装备补给 / 购买商城</h2>
             </div>
             <div class="subpage-status" id="shopWallet"></div>
           </div>
           <div class="shop-draw-grid" id="shopDrawDeck"></div>
-          <div class="equipment-strip" id="equipmentStrip"></div>
           <div class="shop-grid" id="shopGrid"></div>
         </section>
       </section>

@@ -1437,24 +1437,32 @@ let bossIntroTimer = null;
 let libraryBeautyIndex = 0;
 
 const homeScreen = document.getElementById("homeScreen");
+const equipmentScreen = document.getElementById("equipmentScreen");
 const libraryScreen = document.getElementById("libraryScreen");
+const libraryGalleryScreen = document.getElementById("libraryGalleryScreen");
 const shopScreen = document.getElementById("shopScreen");
 const battleScreen = document.getElementById("battleScreen");
 const summaryStrip = document.getElementById("summaryStrip");
 const currentCompanion = document.getElementById("currentCompanion");
 const companionChoices = document.getElementById("companionChoices");
+const openEquipmentButton = document.getElementById("openEquipmentButton");
 const openLibraryButton = document.getElementById("openLibraryButton");
 const openShopButton = document.getElementById("openShopButton");
 const stageGrid = document.getElementById("stageGrid");
-const beautyLibrary = document.getElementById("beautyLibrary");
+const equipmentBackButton = document.getElementById("equipmentBackButton");
+const equipmentSummary = document.getElementById("equipmentSummary");
+const equipmentStage = document.getElementById("equipmentStage");
+const equipmentInventory = document.getElementById("equipmentInventory");
+const libraryLanding = document.getElementById("libraryLanding");
 const libraryBackButton = document.getElementById("libraryBackButton");
 const libraryCounter = document.getElementById("libraryCounter");
-const libraryPrevButton = document.getElementById("libraryPrevButton");
-const libraryNextButton = document.getElementById("libraryNextButton");
+const openLibraryGalleryButton = document.getElementById("openLibraryGalleryButton");
+const libraryGalleryBackButton = document.getElementById("libraryGalleryBackButton");
+const libraryGalleryCounter = document.getElementById("libraryGalleryCounter");
+const beautyGallery = document.getElementById("beautyGallery");
 const shopBackButton = document.getElementById("shopBackButton");
 const shopWallet = document.getElementById("shopWallet");
 const shopDrawDeck = document.getElementById("shopDrawDeck");
-const equipmentStrip = document.getElementById("equipmentStrip");
 const shopGrid = document.getElementById("shopGrid");
 const resetProgressButton = document.getElementById("resetProgressButton");
 const retreatButton = document.getElementById("retreatButton");
@@ -1591,7 +1599,12 @@ function bindEvents() {
 
   openLibraryButton.addEventListener("click", () => {
     sound.ensureStarted();
-    openLibraryScreen(progress.selectedCompanionId);
+    openLibraryScreen();
+  });
+
+  openEquipmentButton.addEventListener("click", () => {
+    sound.ensureStarted();
+    openEquipmentScreen();
   });
 
   openShopButton.addEventListener("click", () => {
@@ -1599,24 +1612,29 @@ function bindEvents() {
     openShopScreen();
   });
 
+  equipmentBackButton.addEventListener("click", () => {
+    sound.ensureStarted();
+    renderHome();
+  });
+
   libraryBackButton.addEventListener("click", () => {
     sound.ensureStarted();
     renderHome();
   });
 
+  openLibraryGalleryButton.addEventListener("click", () => {
+    sound.ensureStarted();
+    openLibraryGalleryScreen();
+  });
+
+  libraryGalleryBackButton.addEventListener("click", () => {
+    sound.ensureStarted();
+    openLibraryScreen();
+  });
+
   shopBackButton.addEventListener("click", () => {
     sound.ensureStarted();
     renderHome();
-  });
-
-  libraryPrevButton.addEventListener("click", () => {
-    sound.ensureStarted();
-    shiftLibraryBeauty(-1);
-  });
-
-  libraryNextButton.addEventListener("click", () => {
-    sound.ensureStarted();
-    shiftLibraryBeauty(1);
   });
 
   bossIntroStartButton.addEventListener("click", () => {
@@ -1865,7 +1883,9 @@ function rollVictoryReward(stageId, firstClear) {
 
 function showScreen(name) {
   homeScreen.classList.toggle("screen-active", name === "home");
+  equipmentScreen.classList.toggle("screen-active", name === "equipment");
   libraryScreen.classList.toggle("screen-active", name === "library");
+  libraryGalleryScreen.classList.toggle("screen-active", name === "libraryGallery");
   shopScreen.classList.toggle("screen-active", name === "shop");
   battleScreen.classList.toggle("screen-active", name === "battle");
   sound.setScene(name === "battle" ? "battle" : "menu");
@@ -1876,7 +1896,9 @@ function renderHome() {
   renderSummary();
   renderCompanions();
   renderStages();
-  renderLibrary();
+  renderLibraryHub();
+  renderLibraryGallery();
+  renderEquipmentScreen();
   renderShop();
 }
 
@@ -1997,72 +2019,132 @@ function renderStages() {
   });
 }
 
-function renderLibrary() {
-  if (!ALL_BEAUTIES.length) {
-    beautyLibrary.innerHTML = "";
-    libraryCounter.textContent = "0 / 0";
-    return;
-  }
-  libraryBeautyIndex = ((libraryBeautyIndex % ALL_BEAUTIES.length) + ALL_BEAUTIES.length) % ALL_BEAUTIES.length;
-  const beauty = ALL_BEAUTIES[libraryBeautyIndex];
-  const unlocked = isBeautyOwned(beauty.id);
-  const stage = getStage(beauty.stageId);
-  const bossArt = getCorruptArtPath(beauty);
-  const filterClass = beauty.source === "summon" ? "" : beautyNeedsCorruptFilter(beauty) ? "is-corrupt-filter" : "";
-  const rankMeta = beauty.rank ? getCompanionRankMeta(beauty.rank) : null;
-  libraryCounter.textContent = `${libraryBeautyIndex + 1} / ${ALL_BEAUTIES.length}`;
-  beautyLibrary.innerHTML = `
-    <article class="beauty-viewer-card" style="box-shadow: inset 0 0 0 1px ${hexToRgba(beauty.accent, unlocked ? 0.22 : 0.08)};">
-      <div class="beauty-viewer-art">
-        <div class="beauty-viewer-portrait">
-          <img src="${unlocked ? beauty.art.purified : bossArt}" alt="${unlocked ? beauty.name : beauty.bossName || beauty.name}" class="${unlocked ? "purified-portrait" : !unlocked && filterClass ? filterClass : ""}">
-        </div>
-        <div class="portrait-strip">
-          <div class="portrait-state">
-            <img src="${beauty.source === "summon" ? beauty.art.purified : bossArt}" alt="${beauty.source === "summon" ? beauty.name : beauty.bossName}" class="${beauty.source === "summon" ? "" : filterClass}">
-            <div class="portrait-label">${beauty.source === "summon" ? "招募档案" : "黑化阶段"}</div>
-          </div>
-          <div class="portrait-state">
-            <img src="${beauty.art.purified}" alt="${beauty.name}" class="purified-portrait">
-            <div class="portrait-label">${beauty.source === "summon" ? "出战形态" : "净化阶段"}</div>
-          </div>
-        </div>
+function renderEquipmentScreen() {
+  equipmentSummary.textContent = `已拥有 ${progress.inventoryItemIds.length}/${SHOP_ITEMS.length}`;
+  const weapon = getEquippedItem("weapon");
+  const armor = getEquippedItem("armor");
+  const item = getEquippedItem("item");
+  equipmentStage.innerHTML = `
+    <div class="equipment-hero-card">
+      <div class="equipment-caption">
+        <p class="section-kicker">主角战备</p>
+        <strong>虾仁</strong>
       </div>
-      <div class="beauty-viewer-copy">
-        <div class="beauty-top">
-          <div>
-            <span class="beauty-badge">${unlocked ? beauty.source === "summon" ? "已招募" : "已净化" : beauty.source === "summon" ? "待招募" : `目标 ${libraryBeautyIndex + 1}`}</span>
-            <h3 style="color:${beauty.accent};">${unlocked || beauty.source === "summon" ? beauty.name : beauty.bossName}</h3>
-          </div>
-          <span class="meta-pill">${unlocked ? beauty.title : beauty.source === "summon" ? "商城角色池" : "资料封锁中"}</span>
-        </div>
-        <p>${unlocked ? beauty.profile : beauty.source === "summon" ? "她是暂未加入队伍的招募角色。前往商城中的角色招募池，有机会把她直接收入美女库。" : "她仍被困在哥布林之巢深处。通关对应主线后，才能完整收录这一位美少女的档案。"}</p>
+      ${renderEquipmentSlot("weapon", "主武器", weapon, "weapon-slot")}
+      ${renderEquipmentSlot("armor", "护具", armor, "armor-slot")}
+      ${renderEquipmentSlot("item", "道具", item, "item-slot")}
+      <img src="${HERO_ART}" alt="虾仁立绘" class="equipment-hero-art">
+    </div>
+  `;
+
+  const inventory = getOwnedItems().filter((ownedItem) => progress.equippedItemIds[ownedItem.type] !== ownedItem.id);
+  equipmentInventory.innerHTML = inventory.length ? inventory.map((ownedItem) => renderInventoryCard(ownedItem)).join("") : `
+    <div class="bag-empty">
+      <div>
+        <strong>当前没有可切换的未装备物品</strong>
+        <p>先去商城购买，或者通过主线通关和抽卡继续扩充装备仓库。</p>
+      </div>
+    </div>
+  `;
+  equipmentInventory.querySelectorAll("[data-equip-item]").forEach((button) => {
+    button.addEventListener("click", () => {
+      equipItem(button.dataset.equipItem);
+      saveProgress();
+      renderSummary();
+      renderCompanions();
+      renderEquipmentScreen();
+    });
+  });
+}
+
+function renderEquipmentSlot(type, label, item, extraClass) {
+  const quality = item ? getQualityMeta(item.quality) : null;
+  const icon = item ? createItemIcon(item) : "";
+  return `
+    <div class="equipment-slot ${extraClass} ${quality ? quality.className : ""}">
+      <span class="equipment-slot-label">${label}</span>
+      ${item ? `<img src="${icon}" alt="${item.name}" class="equipment-slot-icon">` : `<div class="equipment-slot-icon"></div>`}
+      <strong class="equipment-slot-name">${item ? item.name : "未装备"}</strong>
+      <span class="equipment-slot-desc">${item ? item.effectText : "前往下方背包栏切换当前装备。"}</span>
+    </div>
+  `;
+}
+
+function renderInventoryCard(item) {
+  const quality = getQualityMeta(item.quality);
+  return `
+    <button class="bag-item-card ${quality.className}" type="button" data-equip-item="${item.id}">
+      <img src="${createItemIcon(item)}" alt="${item.name}" class="equipment-bag-icon">
+      <strong style="color:${quality.color};">${item.name}</strong>
+      <small>${getTypeLabel(item.type)} · ${quality.label}</small>
+      <small>${item.effectText}</small>
+    </button>
+  `;
+}
+
+function openEquipmentScreen() {
+  renderEquipmentScreen();
+  showScreen("equipment");
+}
+
+function renderLibraryHub() {
+  const preview = [...getOwnedBeauties(), ...ALL_BEAUTIES.filter((beauty) => !isBeautyOwned(beauty.id))]
+    .slice(0, 3);
+  libraryCounter.textContent = `已收录 ${getOwnedBeauties().length}/${ALL_BEAUTIES.length}`;
+  libraryLanding.innerHTML = `
+    <article class="library-landing-card">
+      <div class="library-collage">
+        ${preview.map((beauty, index) => {
+          const art = isBeautyOwned(beauty.id) ? beauty.art.purified : getCorruptArtPath(beauty);
+          const cssClass = ["item-a", "item-b", "item-c"][index] || "item-c";
+          const filterClass = isBeautyOwned(beauty.id) ? "purified-portrait" : beautyNeedsCorruptFilter(beauty) ? "is-corrupt-filter" : "";
+          return `<img src="${art}" alt="${beauty.name}" class="library-collage-item ${cssClass} ${filterClass}">`;
+        }).join("")}
+      </div>
+      <div class="library-collage-copy">
+        <p class="section-kicker">美女库入口</p>
+        <h3>先看大合照，再看总览画廊</h3>
+        <p>这里会收录主线净化出来的美女，以及商城抽到的招募角色。进入下一页后，你可以直接滑动浏览全部美女，不再需要一张一张切换查看。</p>
         <div class="beauty-meta">
-          <span class="meta-pill">${beauty.source === "summon" ? "来源 角色招募" : stage ? stage.name : "未知关卡"}</span>
-          <span class="meta-pill">${beauty.source === "summon" ? `品级 ${rankMeta ? rankMeta.label : "C"}` : stage ? stage.sceneName : "未知场景"}</span>
-          <span class="meta-pill">${unlocked ? "已可出战" : beauty.source === "summon" ? "待招募" : "待净化"}</span>
+          <span class="meta-pill">已净化 Boss ${progress.rescued.length}/${BEAUTIES.length}</span>
+          <span class="meta-pill">已招募角色 ${progress.recruitedBeautyIds.length}/${SUMMON_BEAUTIES.length}</span>
+          <span class="meta-pill">总收录 ${getOwnedBeauties().length}/${ALL_BEAUTIES.length}</span>
         </div>
-        <p>${unlocked ? `${beauty.skillName}：${beauty.skillDesc}` : "净化后，她会以辅佐身份加入队伍，并在战斗中自动施放专属技能。"}</p>
-        <p>${unlocked ? `当前状态：可在首页“出战辅佐”中编入队伍。` : beauty.source === "summon" ? "当前状态：可通过商城中的角色招募直接获得，不需要等待主线净化。" : `当前状态：完成第 ${beauty.stageId} 章后即可把她从黑化中救回来。`}</p>
       </div>
     </article>
   `;
 }
 
-function openLibraryScreen(targetBeautyId = null) {
-  if (targetBeautyId) {
-    const nextIndex = ALL_BEAUTIES.findIndex((beauty) => beauty.id === targetBeautyId);
-    if (nextIndex >= 0) {
-      libraryBeautyIndex = nextIndex;
-    }
-  }
-  renderLibrary();
+function renderLibraryGallery() {
+  libraryGalleryCounter.textContent = `${getOwnedBeauties().length}/${ALL_BEAUTIES.length} 已收录`;
+  beautyGallery.innerHTML = ALL_BEAUTIES.map((beauty) => {
+    const unlocked = isBeautyOwned(beauty.id);
+    const art = unlocked ? beauty.art.purified : getCorruptArtPath(beauty);
+    const stage = getStage(beauty.stageId);
+    const rankMeta = beauty.rank ? getCompanionRankMeta(beauty.rank) : null;
+    const filterClass = unlocked ? "purified-portrait" : beautyNeedsCorruptFilter(beauty) ? "is-corrupt-filter" : "";
+    return `
+      <article class="beauty-gallery-card" style="box-shadow: inset 0 0 0 1px ${hexToRgba(beauty.accent, unlocked ? 0.22 : 0.08)};">
+        <div class="beauty-gallery-art">
+          <img src="${art}" alt="${unlocked ? beauty.name : beauty.bossName || beauty.name}" class="${filterClass}">
+        </div>
+        <span class="beauty-badge">${unlocked ? beauty.source === "summon" ? "已招募" : "已净化" : beauty.source === "summon" ? "待招募" : "待净化"}</span>
+        <h3 style="color:${beauty.accent};">${beauty.name}</h3>
+        <p>${unlocked ? beauty.title : beauty.source === "summon" ? `品级 ${rankMeta.label} 招募角色` : stage ? `第 ${stage.id} 章黑化目标` : "资料未解锁"}</p>
+        <p>${unlocked ? beauty.skillName : beauty.source === "summon" ? "可在商城角色招募中获得。" : "完成对应主线后可净化并加入队伍。"}</p>
+      </article>
+    `;
+  }).join("");
+}
+
+function openLibraryScreen() {
+  renderLibraryHub();
   showScreen("library");
 }
 
-function shiftLibraryBeauty(offset) {
-  libraryBeautyIndex = (libraryBeautyIndex + offset + ALL_BEAUTIES.length) % ALL_BEAUTIES.length;
-  renderLibrary();
+function openLibraryGalleryScreen() {
+  renderLibraryGallery();
+  showScreen("libraryGallery");
 }
 
 function pickWeighted(table) {
@@ -2100,31 +2182,44 @@ function getEquipmentDrawPool(currency) {
   return SHOP_ITEMS.filter((item) => allowedQualities.includes(item.quality));
 }
 
-function createShopItemArt(item) {
+function getItemGlyph(item) {
+  return ({
+    "weapon-rustfang": '<rect x="18" y="40" width="58" height="10" rx="5" fill="#eef7ff"/><rect x="47" y="32" width="16" height="7" rx="3" fill="#ffd67d"/><rect x="32" y="48" width="12" height="24" rx="6" fill="#1d2732"/><path d="M30 50L14 65l7 7 17-10V50z" fill="#334454"/>',
+    "weapon-stormbite": '<rect x="16" y="38" width="62" height="12" rx="6" fill="#ecfdff"/><rect x="50" y="28" width="18" height="9" rx="4" fill="#fff0a6"/><rect x="30" y="49" width="14" height="25" rx="7" fill="#13212f"/><path d="M26 50L12 64l8 8 14-8V50z" fill="#5aa8b9"/>',
+    "weapon-railfang": '<rect x="14" y="37" width="66" height="12" rx="6" fill="#f2f7ff"/><rect x="54" y="28" width="20" height="8" rx="4" fill="#7db8ff"/><rect x="34" y="49" width="14" height="26" rx="7" fill="#101926"/><path d="M34 38h24" stroke="#7db8ff" stroke-width="3" stroke-linecap="round"/><path d="M28 50L10 67l7 7 17-10V50z" fill="#36537a"/>',
+    "weapon-phoenix": '<rect x="14" y="36" width="68" height="13" rx="6.5" fill="#fff6da"/><rect x="53" y="27" width="22" height="9" rx="4.5" fill="#ffc07d"/><rect x="35" y="49" width="15" height="27" rx="7" fill="#171d27"/><path d="M25 34l15-8 10 8m2 0l11-10 18 12" fill="none" stroke="#ff8c65" stroke-width="4" stroke-linecap="round"/><path d="M27 50L10 67l8 8 18-10V50z" fill="#783d31"/>',
+    "armor-fieldvest": '<path d="M20 18l28-10 28 10v46L48 78 20 64V18z" fill="#eef6ff"/><path d="M33 22h30v28L48 59 33 50V22z" fill="#324556"/><path d="M37 28h22v10H37z" fill="#6fb7ff"/>',
+    "armor-rampart": '<path d="M19 18l29-11 29 11v47L48 80 19 65V18z" fill="#f4fff8"/><path d="M32 22h32v29L48 61 32 51V22z" fill="#1c3527"/><path d="M36 28h24v11H36z" fill="#79e19d"/><path d="M26 60h44" stroke="#b0ffd0" stroke-width="4" stroke-linecap="round"/>',
+    "armor-polaris": '<path d="M18 18l30-12 30 12v48L48 82 18 66V18z" fill="#f5f9ff"/><path d="M31 22h34v30L48 62 31 52V22z" fill="#1c2642"/><path d="M48 20v34M31 37h34" stroke="#90c9ff" stroke-width="4" stroke-linecap="round"/>',
+    "armor-seraph": '<path d="M18 18l30-12 30 12v48L48 82 18 66V18z" fill="#fff4ff"/><path d="M31 22h34v30L48 62 31 52V22z" fill="#30203d"/><path d="M48 16l8 10 12 3-8 8 2 12-14-6-14 6 2-12-8-8 12-3 8-10z" fill="#d88cff" fill-opacity=".84"/>',
+    "item-scopechip": '<rect x="18" y="18" width="60" height="60" rx="20" fill="#eef7ff"/><circle cx="48" cy="48" r="20" fill="#1c2a3a"/><circle cx="48" cy="48" r="12" fill="#9fe4ff"/><path d="M48 28v10m0 20v10m-20-20h10m20 0h10" stroke="#eaf9ff" stroke-width="4" stroke-linecap="round"/>',
+    "item-powdercharm": '<path d="M48 12l12 18 22 5-15 16 3 23-22-10-22 10 3-23L14 35l22-5 12-18z" fill="#ffe094"/><path d="M36 42l7 8 17-18" fill="none" stroke="#8f4b2c" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>',
+    "item-frostseal": '<circle cx="48" cy="48" r="28" fill="#eefdff"/><path d="M48 18v60M22 32l52 32M22 64l52-32" stroke="#8de3ff" stroke-width="5" stroke-linecap="round"/><circle cx="48" cy="48" r="9" fill="#baf0ff"/>',
+    "item-overdrive": '<circle cx="48" cy="48" r="30" fill="#fff1ff"/><circle cx="48" cy="48" r="15" fill="#2c1932"/><path d="M48 18l7 12 14 1-9 10 2 14-14-6-14 6 2-14-9-10 14-1 7-12z" fill="#d48cff"/><circle cx="48" cy="48" r="6" fill="#ffd9ff"/>'
+  })[item.id] || '<rect x="18" y="18" width="60" height="60" rx="20" fill="#eef6ff"/>';
+}
+
+function createItemIcon(item) {
   const quality = getQualityMeta(item.quality);
-  const glyph = item.type === "weapon"
-    ? '<rect x="78" y="122" width="188" height="24" rx="12" fill="#edf8ff"/><rect x="194" y="104" width="48" height="16" rx="8" fill="#fce4a7"/><rect x="132" y="146" width="34" height="82" rx="16" fill="#13202e"/><path d="M124 154l-42 42 18 18 48-28v-32z" fill="#293b4e"/>'
-    : item.type === "armor"
-      ? '<path d="M104 112l76-30 76 30v122l-76 36-76-36V112z" fill="#ecf7ff"/><path d="M142 124h76v88l-38 20-38-20v-88z" fill="#182533"/><path d="M150 140h60v34l-30 16-30-16v-34z" fill="#7fd3ff"/>'
-      : '<circle cx="180" cy="152" r="58" fill="#edf9ff"/><path d="M180 106l17 28 32 7-22 23 4 33-31-14-31 14 4-33-22-23 32-7 17-28z" fill="#ffd97c"/>';
   const svg = `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 420">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
       <defs>
-        <radialGradient id="bg" cx=".5" cy=".2" r=".9">
-          <stop offset="0" stop-color="${quality.color}" stop-opacity=".42"/>
-          <stop offset=".5" stop-color="${quality.color}" stop-opacity=".12"/>
-          <stop offset="1" stop-color="#0a1017" stop-opacity="0"/>
+        <radialGradient id="bg" cx=".5" cy=".24" r=".9">
+          <stop offset="0" stop-color="${quality.color}" stop-opacity=".38"/>
+          <stop offset=".5" stop-color="${quality.color}" stop-opacity=".08"/>
+          <stop offset="1" stop-color="#0b1017" stop-opacity="0"/>
         </radialGradient>
       </defs>
-      <rect width="360" height="420" rx="42" fill="#0d1520"/>
-      <circle cx="180" cy="120" r="136" fill="url(#bg)"/>
-      <rect x="54" y="74" width="252" height="272" rx="34" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.08)"/>
-      ${glyph}
-      <text x="180" y="312" text-anchor="middle" fill="${quality.color}" font-size="32" font-family="Georgia">${item.name}</text>
-      <text x="180" y="348" text-anchor="middle" fill="#f6cf91" font-size="20" letter-spacing="4">${getTypeLabel(item.type)}</text>
+      <rect width="96" height="96" rx="24" fill="#0d1520"/>
+      <rect x="6" y="6" width="84" height="84" rx="20" fill="url(#bg)" stroke="rgba(255,255,255,.08)"/>
+      ${getItemGlyph(item)}
     </svg>
   `.trim();
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+
+function createShopItemArt(item) {
+  return createItemIcon(item);
 }
 
 function renderDrawCard(category) {
@@ -2284,21 +2379,6 @@ function renderShop() {
     ${renderDrawCard("character")}
     ${renderDrawCard("equipment")}
   `;
-  equipmentStrip.innerHTML = ["weapon", "armor", "item"].map((type) => {
-    const equipped = getEquippedItem(type);
-    const quality = equipped ? getQualityMeta(equipped.quality) : null;
-    return `
-      <article class="equipment-card ${quality ? quality.className : ""}">
-        <div class="equipment-card-top">
-          <span class="type-pill">${getTypeLabel(type)}</span>
-          ${quality ? `<span class="quality-pill" style="color:${quality.color};">${quality.label}</span>` : ""}
-        </div>
-        <strong>${equipped ? equipped.name : "未装备"}</strong>
-        <p>${equipped ? equipped.effectText : "前往下方商城购买或等待通关掉落。"}</p>
-      </article>
-    `;
-  }).join("");
-
   const grouped = ["weapon", "armor", "item"].map((type) => ({
     type,
     items: SHOP_ITEMS.filter((item) => item.type === type)
@@ -2323,26 +2403,14 @@ function renderShop() {
       performDraw(button.dataset.drawCategory, button.dataset.drawCurrency);
     });
   });
-  shopGrid.querySelectorAll("[data-shop-equip]").forEach((button) => {
-    button.addEventListener("click", () => {
-      equipItem(button.dataset.shopEquip);
-      renderHome();
-      openShopScreen();
-    });
-  });
 }
 
 function renderShopCard(item) {
   const quality = getQualityMeta(item.quality);
   const owned = progress.inventoryItemIds.includes(item.id);
-  const equipped = progress.equippedItemIds[item.type] === item.id;
   const afford = progress.gold >= item.price;
-  const actionLabel = equipped ? "已装备" : owned ? "装备" : `购买 ${item.price}`;
-  const actionAttr = equipped
-    ? "disabled"
-    : owned
-      ? `data-shop-equip="${item.id}"`
-      : `data-shop-buy="${item.id}" ${afford ? "" : "disabled"}`;
+  const actionLabel = owned ? "已拥有" : `购买 ${item.price}`;
+  const actionAttr = owned ? "disabled" : `data-shop-buy="${item.id}" ${afford ? "" : "disabled"}`;
   return `
     <article class="shop-card ${quality.className}">
       <div class="shop-card-top">
@@ -2352,8 +2420,13 @@ function renderShopCard(item) {
         </div>
         <span class="quality-pill" style="color:${quality.color};">${quality.label}</span>
       </div>
-      <p>${item.description}</p>
-      <p><strong style="font-size:14px; color:var(--ink);">${item.effectText}</strong></p>
+      <div class="shop-card-body">
+        <img src="${createItemIcon(item)}" alt="${item.name}" class="shop-item-icon">
+        <div>
+          <p>${item.description}</p>
+          <p><strong style="font-size:14px; color:var(--ink);">${item.effectText}</strong></p>
+        </div>
+      </div>
       <div class="shop-price">
         <span class="wallet-chip"><strong>${item.price}</strong> 金币</span>
         <button class="solid-button" type="button" ${actionAttr}>${actionLabel}</button>

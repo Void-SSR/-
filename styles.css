@@ -351,6 +351,111 @@ h2 {
   margin-top: 16px;
 }
 
+.home-portals {
+  margin-top: 20px;
+}
+
+.portal-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.portal-card {
+  position: relative;
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border-radius: 24px;
+  text-align: left;
+  color: var(--ink);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.1), transparent 32%),
+    linear-gradient(135deg, rgba(255, 132, 104, 0.08), rgba(124, 227, 217, 0.06)),
+    rgba(255, 255, 255, 0.03);
+}
+
+.portal-card strong {
+  font-size: 22px;
+  font-family: var(--hero-font);
+}
+
+.portal-card small {
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.portal-icon {
+  position: relative;
+  width: 58px;
+  height: 58px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.portal-icon::before,
+.portal-icon::after {
+  content: "";
+  position: absolute;
+}
+
+.portal-equipment::before {
+  inset: 14px 16px;
+  border-radius: 12px 12px 16px 16px;
+  background: linear-gradient(180deg, #f0f7ff, #8cb8ff);
+}
+
+.portal-equipment::after {
+  left: 21px;
+  top: 10px;
+  width: 16px;
+  height: 8px;
+  border-radius: 8px 8px 0 0;
+  border: 3px solid #f0f7ff;
+  border-bottom: 0;
+}
+
+.portal-shop::before {
+  left: 10px;
+  top: 20px;
+  width: 38px;
+  height: 24px;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #ffe9a8, #f3b856);
+}
+
+.portal-shop::after {
+  left: 14px;
+  top: 10px;
+  width: 30px;
+  height: 14px;
+  border-radius: 14px 14px 10px 10px;
+  border: 3px solid #ffd87d;
+  border-bottom: 0;
+}
+
+.portal-library::before {
+  left: 12px;
+  top: 12px;
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #ffd6e6, #ff8db8);
+}
+
+.portal-library::after {
+  left: 17px;
+  top: 18px;
+  width: 24px;
+  height: 20px;
+  border-radius: 4px;
+  box-shadow:
+    0 0 0 2px rgba(255,255,255,.78) inset,
+    8px 0 0 0 rgba(255,255,255,.12);
+}
+
 .stage-grid {
   grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
 }
@@ -389,9 +494,315 @@ h2 {
   letter-spacing: 0.08em;
 }
 
+.section-head-compact {
+  margin-bottom: 14px;
+}
+
+.section-head-compact h3 {
+  margin: 4px 0 0;
+  font-size: 26px;
+  font-family: var(--hero-font);
+}
+
+.equipment-layout {
+  display: grid;
+  grid-template-columns: minmax(360px, 0.96fr) minmax(0, 1.04fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.equipment-stage,
+.equipment-bag {
+  border-radius: 28px;
+  padding: 22px;
+  background:
+    linear-gradient(135deg, rgba(255, 132, 104, 0.08), rgba(124, 227, 217, 0.06)),
+    rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.equipment-stage {
+  position: relative;
+  min-height: 640px;
+}
+
+.equipment-hero-card {
+  position: relative;
+  min-height: 590px;
+  border-radius: 28px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 12%, rgba(255,255,255,.18), transparent 24%),
+    linear-gradient(180deg, rgba(10, 18, 28, 0.95), rgba(6, 10, 16, 0.98));
+  border: 1px solid rgba(255,255,255,.08);
+}
+
+.equipment-hero-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 22%, rgba(255, 211, 145, 0.14), transparent 12%),
+    radial-gradient(circle at 82% 18%, rgba(126, 221, 248, 0.14), transparent 14%);
+}
+
+.equipment-hero-art {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  width: min(70%, 280px);
+  height: auto;
+}
+
+.equipment-caption {
+  position: absolute;
+  left: 20px;
+  top: 18px;
+  z-index: 2;
+}
+
+.equipment-caption strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 26px;
+  font-family: var(--hero-font);
+}
+
+.equipment-slot {
+  position: absolute;
+  width: 124px;
+  padding: 12px;
+  border-radius: 22px;
+  background: rgba(7, 11, 18, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 16px 28px rgba(0, 0, 0, 0.2);
+}
+
+.equipment-slot.weapon-slot {
+  left: 16px;
+  top: 112px;
+}
+
+.equipment-slot.armor-slot {
+  right: 16px;
+  top: 164px;
+}
+
+.equipment-slot.item-slot {
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+}
+
+.equipment-slot-label {
+  display: inline-flex;
+  margin-bottom: 10px;
+  color: var(--gold);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+}
+
+.equipment-slot-name {
+  display: block;
+  margin-top: 10px;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.equipment-slot-desc {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.equipment-slot-icon,
+.equipment-bag-icon,
+.shop-item-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 18px;
+  object-fit: cover;
+  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.06));
+}
+
+.equipment-inventory {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(152px, 1fr));
+  gap: 12px;
+  max-height: 620px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.bag-item-card {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 20px;
+  text-align: left;
+  color: var(--ink);
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.03);
+}
+
+.bag-item-card:hover,
+.portal-card:hover,
+.beauty-gallery-card:hover {
+  transform: translateY(-1px);
+}
+
+.bag-item-card strong {
+  font-size: 15px;
+}
+
+.bag-item-card small {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.bag-empty {
+  display: grid;
+  place-items: center;
+  min-height: 220px;
+  border-radius: 24px;
+  border: 1px dashed rgba(255,255,255,.1);
+  color: var(--muted);
+  text-align: center;
+  padding: 20px;
+}
+
 .beauty-viewer {
   display: grid;
   gap: 18px;
+}
+
+.library-landing {
+  display: grid;
+  gap: 20px;
+}
+
+.library-landing-card {
+  display: grid;
+  grid-template-columns: minmax(260px, 1.05fr) minmax(280px, 0.95fr);
+  gap: 20px;
+  padding: 22px;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(255,255,255,.12), transparent 28%),
+    linear-gradient(135deg, rgba(255, 154, 179, 0.1), rgba(124, 227, 217, 0.06)),
+    rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.08);
+}
+
+.library-collage {
+  position: relative;
+  min-height: 360px;
+  border-radius: 26px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 16%, rgba(255,255,255,.16), transparent 24%),
+    linear-gradient(180deg, rgba(12, 18, 28, 0.95), rgba(7, 11, 17, 0.98));
+  border: 1px solid rgba(255,255,255,.08);
+}
+
+.library-collage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 48%, rgba(0,0,0,.28));
+  pointer-events: none;
+}
+
+.library-collage-item {
+  position: absolute;
+  bottom: 0;
+  width: 33%;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 20px 28px rgba(0,0,0,.3));
+}
+
+.library-collage-item.item-a {
+  left: 2%;
+  width: 34%;
+}
+
+.library-collage-item.item-b {
+  left: 24%;
+  width: 38%;
+}
+
+.library-collage-item.item-c {
+  right: 4%;
+  width: 34%;
+}
+
+.library-collage-copy {
+  display: grid;
+  gap: 14px;
+  align-content: center;
+}
+
+.library-collage-copy h3 {
+  margin: 0;
+  font-size: 34px;
+  font-family: var(--hero-font);
+}
+
+.library-collage-copy p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.beauty-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(168px, 1fr));
+  gap: 14px;
+  max-height: calc(100vh - 230px);
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.beauty-gallery-card {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.03);
+}
+
+.beauty-gallery-art {
+  min-height: 178px;
+  border-radius: 18px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 12%, rgba(255,255,255,.12), transparent 22%),
+    linear-gradient(180deg, rgba(12, 18, 28, 0.94), rgba(7, 11, 17, 0.96));
+}
+
+.beauty-gallery-art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.beauty-gallery-card h3 {
+  margin: 0;
+  font-size: 20px;
+  font-family: var(--hero-font);
+}
+
+.beauty-gallery-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+  font-size: 13px;
 }
 
 .beauty-viewer-card {
@@ -483,9 +894,10 @@ h2 {
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background:
-    radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.12), transparent 32%),
-    linear-gradient(135deg, rgba(255, 134, 108, 0.12), rgba(115, 206, 255, 0.08)),
+    radial-gradient(circle at 20% 0%, rgba(255, 245, 204, 0.18), transparent 32%),
+    linear-gradient(135deg, rgba(255, 215, 125, 0.18), rgba(193, 134, 44, 0.1)),
     rgba(255, 255, 255, 0.03);
+  box-shadow: inset 0 0 0 1px rgba(246, 207, 145, 0.16);
 }
 
 .draw-card::before {
@@ -552,6 +964,15 @@ h2 {
   flex: 1 1 180px;
 }
 
+.draw-card .solid-button {
+  background: linear-gradient(135deg, #ffe39a, #d89a2c);
+}
+
+.draw-card .ghost-button {
+  border-color: rgba(246, 207, 145, 0.24);
+  background: rgba(255, 230, 170, 0.06);
+}
+
 .currency-chip,
 .rank-pill {
   display: inline-flex;
@@ -606,6 +1027,13 @@ h2 {
   border-radius: 24px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.03);
+}
+
+.shop-card-body {
+  display: grid;
+  grid-template-columns: 78px 1fr;
+  gap: 12px;
+  align-items: start;
 }
 
 .quality-common { box-shadow: inset 0 0 0 1px rgba(225, 232, 238, 0.12); }
@@ -1800,7 +2228,9 @@ h2 {
   .top-grid,
   .battle-screen,
   .beauty-viewer-card,
-  .draw-result-layout {
+  .draw-result-layout,
+  .equipment-layout,
+  .library-landing-card {
     grid-template-columns: 1fr;
   }
 
@@ -1808,8 +2238,11 @@ h2 {
     min-height: auto;
   }
 
-  .equipment-strip,
   .shop-draw-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .portal-grid {
     grid-template-columns: 1fr;
   }
 }
@@ -1834,7 +2267,8 @@ h2 {
   .stage-art-wrap,
   .story-intro-card,
   .stage-intro-card,
-  .boss-intro-layout {
+  .boss-intro-layout,
+  .shop-card-body {
     grid-template-columns: 1fr;
   }
 
@@ -1845,7 +2279,8 @@ h2 {
 
   .hero-showcase-image,
   .current-companion-art,
-  .companion-art {
+  .companion-art,
+  .equipment-hero-art {
     justify-self: center;
   }
 
@@ -1891,7 +2326,49 @@ h2 {
   .companion-choices,
   .shop-grid,
   .shop-cards,
+  .equipment-inventory,
+  .beauty-gallery,
   .shop-draw-grid {
     grid-template-columns: 1fr;
+  }
+
+  .equipment-stage {
+    min-height: auto;
+    padding: 14px;
+  }
+
+  .equipment-hero-card {
+    min-height: 700px;
+  }
+
+  .equipment-slot {
+    width: calc(100% - 28px);
+    left: 14px !important;
+    right: 14px !important;
+    transform: none !important;
+  }
+
+  .equipment-slot.weapon-slot {
+    top: 86px;
+  }
+
+  .equipment-slot.armor-slot {
+    top: 236px;
+  }
+
+  .equipment-slot.item-slot {
+    bottom: 20px;
+  }
+
+  .library-collage-item.item-a {
+    left: -2%;
+  }
+
+  .library-collage-item.item-b {
+    left: 23%;
+  }
+
+  .library-collage-item.item-c {
+    right: -1%;
   }
 }
