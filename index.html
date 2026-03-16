@@ -62,7 +62,10 @@
               <p class="section-kicker">战前编组</p>
               <h2>出战辅佐</h2>
             </div>
-            <div id="currentCompanion" class="current-companion"></div>
+            <div class="companion-overview">
+              <div id="currentCompanion" class="current-companion"></div>
+              <button class="atlas-entry-card" id="openLibraryButton" type="button"></button>
+            </div>
             <div id="companionChoices" class="companion-choices"></div>
           </section>
         </div>
@@ -70,7 +73,7 @@
         <section class="glass-card home-portals">
           <div class="section-head">
             <p class="section-kicker">功能入口</p>
-            <h2>装备 / 商城 / 美女库</h2>
+            <h2>装备 / 商城</h2>
           </div>
           <div class="portal-grid">
             <button class="portal-card" id="openEquipmentButton" type="button">
@@ -82,11 +85,6 @@
               <span class="portal-icon portal-shop"></span>
               <strong>购买商城</strong>
               <small>进入角色招募、装备补给和直购商店，继续强化整套阵容。</small>
-            </button>
-            <button class="portal-card" id="openLibraryButton" type="button">
-              <span class="portal-icon portal-library"></span>
-              <strong>查看全部美女</strong>
-              <small>先看美女合照，再进入总览画廊，滑动浏览全部已收录角色。</small>
             </button>
           </div>
         </section>
@@ -128,8 +126,8 @@
           <div class="subpage-head">
             <button class="icon-button" id="libraryBackButton" type="button" aria-label="返回首页">←</button>
             <div>
-              <p class="section-kicker">美女库</p>
-              <h2>美女大合照</h2>
+              <p class="section-kicker">美女图鉴</p>
+              <h2>图鉴大合照</h2>
             </div>
             <div class="subpage-status" id="libraryCounter"></div>
           </div>
@@ -145,7 +143,7 @@
           <div class="subpage-head">
             <button class="icon-button" id="libraryGalleryBackButton" type="button" aria-label="返回美女库">←</button>
             <div>
-              <p class="section-kicker">美女总览</p>
+              <p class="section-kicker">美女图鉴</p>
               <h2>滑动浏览全部美女</h2>
             </div>
             <div class="subpage-status" id="libraryGalleryCounter"></div>

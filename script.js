@@ -93,6 +93,8 @@ const BEAUTIES = [
   {
     id: "hiyori",
     stageId: 1,
+    rank: "c",
+    visualVariant: "idol-flare",
     name: "绯音",
     title: "净火咏叹者",
     bossName: "黑化·绯音",
@@ -110,6 +112,8 @@ const BEAUTIES = [
   {
     id: "serin",
     stageId: 2,
+    rank: "b",
+    visualVariant: "frost-prism",
     name: "澄澈",
     title: "霜镜审裁者",
     bossName: "黑化·澄澈",
@@ -127,6 +131,8 @@ const BEAUTIES = [
   {
     id: "yelan",
     stageId: 3,
+    rank: "b",
+    visualVariant: "thunder-lance",
     name: "夜岚",
     title: "雷辉裁定者",
     bossName: "黑化·夜岚",
@@ -144,6 +150,8 @@ const BEAUTIES = [
   {
     id: "mingsha",
     stageId: 4,
+    rank: "a",
+    visualVariant: "shrine-fan",
     name: "明纱",
     title: "樱雾祓御巫",
     bossName: "黑化·明纱",
@@ -161,6 +169,8 @@ const BEAUTIES = [
   {
     id: "lanwei",
     stageId: 5,
+    rank: "a",
+    visualVariant: "steam-captain",
     name: "岚薇",
     title: "蒸汽舰港领航姬",
     bossName: "黑化·岚薇",
@@ -178,6 +188,8 @@ const BEAUTIES = [
   {
     id: "shali",
     stageId: 6,
+    rank: "a",
+    visualVariant: "desert-veil",
     name: "砂璃",
     title: "流砂星痕猎手",
     bossName: "黑化·砂璃",
@@ -195,6 +207,8 @@ const BEAUTIES = [
   {
     id: "yuege",
     stageId: 7,
+    rank: "a",
+    visualVariant: "opera-crescent",
     name: "月歌",
     title: "月港谣姬",
     bossName: "黑化·月歌",
@@ -212,6 +226,8 @@ const BEAUTIES = [
   {
     id: "molan",
     stageId: 8,
+    rank: "s",
+    visualVariant: "abyss-tide",
     name: "沫澜",
     title: "深渊潮汐司书",
     bossName: "黑化·沫澜",
@@ -229,6 +245,8 @@ const BEAUTIES = [
   {
     id: "xingkui",
     stageId: 9,
+    rank: "s",
+    visualVariant: "flora-spore",
     name: "星葵",
     title: "星孢园艺使",
     bossName: "黑化·星葵",
@@ -246,6 +264,8 @@ const BEAUTIES = [
   {
     id: "cangya",
     stageId: 10,
+    rank: "s",
+    visualVariant: "sky-crown",
     name: "苍雅",
     title: "圣城执光者",
     bossName: "黑化·苍雅",
@@ -769,6 +789,7 @@ const SUMMON_BEAUTIES = [
     id: "qinglu",
     source: "summon",
     rank: "c",
+    visualVariant: "petal-bloom",
     name: "晴露",
     title: "晨风花匠",
     profile: "从风庭苗圃逃出来的少女，会把清晨花露压成高速花弹，替虾仁扫开前线怪潮。",
@@ -778,6 +799,7 @@ const SUMMON_BEAUTIES = [
     cooldown: 9,
     art: {
       purified: createSummonBeautyArt({
+        variant: "petal-bloom",
         aura: "#9df8cf",
         glow: "#dffff4",
         hairA: "#f7f5d9",
@@ -792,6 +814,7 @@ const SUMMON_BEAUTIES = [
     id: "taoxi",
     source: "summon",
     rank: "c",
+    visualVariant: "pearl-tide",
     name: "桃汐",
     title: "软潮泡泡师",
     profile: "她会把甜潮雾气封成泡阵，把冲得最急的哥布林拖进黏稠减速里。",
@@ -801,6 +824,7 @@ const SUMMON_BEAUTIES = [
     cooldown: 10,
     art: {
       purified: createSummonBeautyArt({
+        variant: "pearl-tide",
         aura: "#ffbdd6",
         glow: "#ffe7f1",
         hairA: "#ffd3e9",
@@ -815,6 +839,7 @@ const SUMMON_BEAUTIES = [
     id: "yunmi",
     source: "summon",
     rank: "b",
+    visualVariant: "feather-dart",
     name: "云弥",
     title: "巡云猎手",
     profile: "擅长在高空巡视战场，她会把云羽压成追光飞针，精准点掉危险目标。",
@@ -824,6 +849,7 @@ const SUMMON_BEAUTIES = [
     cooldown: 8.5,
     art: {
       purified: createSummonBeautyArt({
+        variant: "feather-dart",
         aura: "#9de8ff",
         glow: "#ecfbff",
         hairA: "#ebf6ff",
@@ -838,6 +864,7 @@ const SUMMON_BEAUTIES = [
     id: "luoye",
     source: "summon",
     rank: "b",
+    visualVariant: "shadow-tailor",
     name: "洛夜",
     title: "影幕裁缝",
     profile: "她会把影线缝进怪群脚下，让逼近防线的敌人瞬间停滞。",
@@ -847,6 +874,7 @@ const SUMMON_BEAUTIES = [
     cooldown: 10.5,
     art: {
       purified: createSummonBeautyArt({
+        variant: "shadow-tailor",
         aura: "#d0c2ff",
         glow: "#f0ebff",
         hairA: "#d9cbff",
@@ -861,6 +889,7 @@ const SUMMON_BEAUTIES = [
     id: "qinyao",
     source: "summon",
     rank: "b",
+    visualVariant: "lyra-arc",
     name: "琴瑶",
     title: "和声补给官",
     profile: "她善于在极短时间里完成前线补给，顺手把爆裂弹精准投进敌堆中央。",
@@ -870,6 +899,7 @@ const SUMMON_BEAUTIES = [
     cooldown: 11,
     art: {
       purified: createSummonBeautyArt({
+        variant: "lyra-arc",
         aura: "#ffd88e",
         glow: "#fff2cf",
         hairA: "#fff1cf",
@@ -884,6 +914,7 @@ const SUMMON_BEAUTIES = [
     id: "ruolan",
     source: "summon",
     rank: "a",
+    visualVariant: "prism-mage",
     name: "若澜",
     title: "棱镜魔装使",
     profile: "她会把光棱压成笔直射线，打穿整条怪潮，还能顺带灼烧线上的残余目标。",
@@ -893,6 +924,7 @@ const SUMMON_BEAUTIES = [
     cooldown: 9.5,
     art: {
       purified: createSummonBeautyArt({
+        variant: "prism-mage",
         aura: "#80ebff",
         glow: "#defbff",
         hairA: "#f7ffff",
@@ -907,6 +939,7 @@ const SUMMON_BEAUTIES = [
     id: "aisha",
     source: "summon",
     rank: "a",
+    visualVariant: "halo-warden",
     name: "艾纱",
     title: "星轨圣职者",
     profile: "她会从高空牵引星轨惩戒，优先斩掉精英与大体型目标。",
@@ -916,6 +949,7 @@ const SUMMON_BEAUTIES = [
     cooldown: 10,
     art: {
       purified: createSummonBeautyArt({
+        variant: "halo-warden",
         aura: "#ffc5db",
         glow: "#fff0f7",
         hairA: "#ffe4ef",
@@ -930,6 +964,7 @@ const SUMMON_BEAUTIES = [
     id: "jinse",
     source: "summon",
     rank: "s",
+    visualVariant: "phoenix-empress",
     name: "瑾瑟",
     title: "天穹凰姬",
     profile: "稀有招募角色。她会张开凰羽天穹，一边惩戒多名敌人，一边为阵地覆上圣焰护盾。",
@@ -939,6 +974,7 @@ const SUMMON_BEAUTIES = [
     cooldown: 12.5,
     art: {
       purified: createSummonBeautyArt({
+        variant: "phoenix-empress",
         aura: "#ff8fd6",
         glow: "#ffe4f4",
         hairA: "#fff1f7",
@@ -1364,7 +1400,46 @@ const CORE_UPGRADE_TO_MODULE_KEY = {
   "drone-wing": "droneWing"
 };
 
+function getSummonVariantArtwork(variant, config) {
+  const variants = {
+    "petal-bloom": {
+      backHair: '<path d="M98 176c0-58 34-100 84-100 52 0 90 39 90 94 0 32-11 62-30 90l-20-10 0-58c0-32-15-54-40-54-27 0-48 22-50 58l-3 52-18 12c-9-14-13-29-13-46z" fill="url(#hair)"/><path d="M114 216l-22 118 32-8 20-108zm132 0l20 110 34 8-26-118z" fill="url(#hair)" fill-opacity=".9"/>',
+      frontHair: '<path d="M112 136c0-48 34-81 82-81 44 0 78 30 78 78 0 18-5 34-12 48-13-15-28-28-48-36-18 14-46 22-82 22-8 0-15 0-22 1 2-10 4-21 4-32z" fill="url(#hair)"/><path d="M124 108l20-18 16 18m54-8l18 18 22-14" fill="none" stroke="${variant === "petal-bloom" ? "#dfffe9" : "#fff"}" stroke-width="6" stroke-linecap="round" stroke-opacity=".8"/>'
+    },
+    "pearl-tide": {
+      backHair: '<path d="M104 178c0-60 30-102 78-102 53 0 92 39 92 94 0 28-8 53-24 78l-22-8c5-15 8-30 8-45 0-31-20-54-51-54-34 0-58 25-58 60 0 14 3 27 7 40l-21 11c-6-13-9-28-9-44z" fill="url(#hair)"/><path d="M118 218c14 16 36 24 60 24 34 0 66-12 88-38-10 44-40 76-84 76-46 0-76-25-88-62 8 2 16 2 24 0z" fill="url(#hair)" fill-opacity=".82"/>',
+      frontHair: '<path d="M112 138c0-50 33-81 81-81 47 0 80 29 80 77 0 21-6 37-14 49-14-12-32-22-54-25-20 10-49 14-87 9-4-10-6-18-6-29z" fill="url(#hair)"/><path d="M136 200c18 14 38 18 58 18 24 0 43-5 70-19-6 18-18 35-38 44-23 4-43 2-62-9-12-6-21-18-28-34z" fill="url(#hair)" fill-opacity=".48"/>'
+    },
+    "feather-dart": {
+      backHair: '<path d="M118 176c0-58 34-96 82-96 52 0 88 36 88 88 0 20-5 40-14 58-8-24-22-44-44-56-24 12-50 18-80 18-9 0-17 0-24 1-5-5-8-9-8-13z" fill="url(#hair)"/><path d="M226 84c36 11 58 42 58 82 0 23-7 48-16 67l-26-10c8-20 10-41 4-62-3-13-10-26-20-39z" fill="url(#hair)" fill-opacity=".88"/><path d="M238 72l46 28-40 20" fill="none" stroke="${config.ribbon}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".8"/>',
+      frontHair: '<path d="M112 138c0-46 33-79 80-79 42 0 76 29 76 77 0 15-4 30-11 42-12-12-25-21-42-29-21 11-48 18-81 20-14 1-20 2-22 4 0-12 0-23 0-35z" fill="url(#hair)"/>'
+    },
+    "shadow-tailor": {
+      backHair: '<path d="M96 182c0-62 33-104 86-104 54 0 90 38 90 94 0 40-18 80-48 112l-18-12 6-74c2-34-16-56-40-56-26 0-47 24-50 60l-5 70-18 10c-3-8-3-16-3-24 0-28 0-52 0-76z" fill="url(#hair)"/>',
+      frontHair: '<path d="M110 138c0-50 33-81 81-81 45 0 79 30 79 77 0 19-4 35-12 48-10-17-22-30-39-40-20 11-45 18-76 18-11 0-22 0-33 2 0-8 0-16 0-24z" fill="url(#hair)"/><path d="M92 118c16 12 30 18 42 18-6 20-6 42 0 66-20-11-38-30-42-84z" fill="url(#hair)" fill-opacity=".78"/>'
+    },
+    "lyra-arc": {
+      backHair: '<path d="M100 176c0-60 34-100 84-100 53 0 92 38 92 92 0 29-9 55-24 80l-20-11 0-47c0-31-18-52-44-52-31 0-52 23-54 56l-2 50-19 11c-9-15-13-32-13-51z" fill="url(#hair)"/><circle cx="120" cy="104" r="24" fill="url(#hair)"/><circle cx="246" cy="104" r="22" fill="url(#hair)"/>',
+      frontHair: '<path d="M112 140c0-48 32-80 78-80 45 0 78 30 78 76 0 18-4 32-10 44-13-10-28-18-46-25-17 9-41 15-74 15-12 0-23 1-34 3 6-10 8-21 8-33z" fill="url(#hair)"/><path d="M120 102l14-14 14 14m92-2l14 14 16-12" fill="none" stroke="${config.glow}" stroke-width="5" stroke-linecap="round" stroke-opacity=".75"/>'
+    },
+    "prism-mage": {
+      backHair: '<path d="M102 180c0-60 30-100 82-100 57 0 96 40 96 96 0 24-6 50-18 75l-22-9c7-16 9-30 9-44 0-35-22-58-57-58-34 0-58 22-58 56 0 14 2 27 6 40l-22 14c-10-18-16-43-16-70z"/><path d="M228 150l50 96-30 8-28-88z" fill="url(#hair)" fill-opacity=".82"/>',
+      frontHair: '<path d="M112 140c0-48 33-82 81-82 46 0 80 30 80 78 0 15-3 31-10 44-14-14-31-23-52-29-18 12-48 19-86 18-7 0-11 0-13 1v-30z" fill="url(#hair)"/><path d="M124 198c12 20 30 32 56 36-25 8-48 5-64-12-8-8-14-17-18-29 10 3 18 4 26 5z" fill="url(#hair)" fill-opacity=".5"/>'
+    },
+    "halo-warden": {
+      backHair: '<path d="M100 180c0-60 34-102 84-102 54 0 92 40 92 96 0 33-12 63-32 92l-18-12c4-13 6-28 6-44 0-42-18-70-50-70-32 0-54 25-56 63l-2 63-18 9c-4-10-6-22-6-35z" fill="url(#hair)"/>',
+      frontHair: '<path d="M112 140c0-50 33-83 81-83 46 0 80 30 80 79 0 17-4 33-11 47-13-14-28-24-47-32-20 12-49 19-83 19-9 0-16 0-22 1 1-10 2-20 2-31z" fill="url(#hair)"/><ellipse cx="182" cy="82" rx="44" ry="12" fill="none" stroke="${config.glow}" stroke-width="6" stroke-opacity=".78"/>'
+    },
+    "phoenix-empress": {
+      backHair: '<path d="M92 182c0-62 34-106 90-106 58 0 94 40 94 98 0 36-15 72-40 106l-18-12 6-70c3-34-14-58-42-58-31 0-56 25-58 62l-4 66-18 10c-6-13-10-31-10-54 0-15 0-27 0-42z" fill="url(#hair)"/><path d="M116 116l-20 56 34-16m132-40l28 58-38-18" fill="none" stroke="${config.ribbon}" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".66"/>',
+      frontHair: '<path d="M108 140c0-52 35-84 84-84 52 0 86 31 86 81 0 18-5 36-14 52-13-17-29-31-50-41-21 13-50 21-88 21-8 0-14 0-18 1v-30z" fill="url(#hair)"/><path d="M152 88l28-26 26 26m8 6l22-20 22 18" fill="none" stroke="${config.glow}" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".82"/>'
+    }
+  };
+  return variants[variant] || variants["petal-bloom"];
+}
+
 function createSummonBeautyArt(config) {
+  const variant = getSummonVariantArtwork(config.variant || "petal-bloom", config);
   const svg = `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 520">
       <defs>
@@ -1390,9 +1465,9 @@ function createSummonBeautyArt(config) {
       </defs>
       <ellipse cx="180" cy="488" rx="86" ry="22" fill="#000" fill-opacity=".14"/>
       <circle cx="180" cy="150" r="128" fill="url(#aura)"/>
-      <path d="M94 176c0-56 34-96 86-96 49 0 88 37 88 90 0 34-13 64-34 96l-19-11 2-56c1-32-16-56-38-56-28 0-51 22-52 56l-1 56-19 13c-9-14-13-31-13-49z" fill="url(#hair)"/>
+      ${variant.backHair}
       <path d="M169 95c-31 0-56 27-56 62 0 27 16 49 38 58l-6 30h70l-6-30c23-9 38-31 38-58 0-35-25-62-56-62h-22z" fill="url(#skin)"/>
-      <path d="M110 136c0-46 33-79 80-79 42 0 76 29 76 77 0 17-4 32-11 45-11-16-25-27-43-35-18 12-44 19-78 19-9 0-17 1-24 3 0-11 0-20 0-30z" fill="url(#hair)"/>
+      ${variant.frontHair}
       <path d="M144 153c10-9 23-12 36-8" fill="none" stroke="#4b2d36" stroke-width="4" stroke-linecap="round"/>
       <path d="M184 145c14-4 27-1 37 8" fill="none" stroke="#4b2d36" stroke-width="4" stroke-linecap="round"/>
       <ellipse cx="164" cy="157" rx="5.2" ry="6.4" fill="#2d3040"/>
@@ -1401,20 +1476,114 @@ function createSummonBeautyArt(config) {
       <circle cx="196.6" cy="155.4" r="1.4" fill="#fff" fill-opacity=".8"/>
       <path d="M176 171c2 2 5 3 9 2" fill="none" stroke="#c58e83" stroke-width="2.6" stroke-linecap="round"/>
       <path d="M161 185c7 8 14 10 20 10 6 0 13-2 20-10" fill="none" stroke="#d07b7a" stroke-width="3.2" stroke-linecap="round"/>
-      <path d="M116 264c0-44 27-75 64-75 39 0 64 31 64 75v48H116v-48z" fill="url(#dress)"/>
-      <path d="M132 314c22 16 39 23 52 23 15 0 34-6 56-17l20 70H98l34-76z" fill="#f8fbff" fill-opacity=".92"/>
-      <path d="M150 336l-14 138h42l6-80 8 80h42l-16-138h-68z" fill="url(#dress)"/>
-      <path d="M140 282l-26 98h40l22-74-36-24zm82 0l36 24 20 74h-40l-16-98z" fill="#ffd9cb" fill-opacity=".8"/>
-      <path d="M86 180l-28 76 26 10 30-64-28-22zm188 0l28 76-26 10-30-64 28-22z" fill="#f8dbc9"/>
-      <path d="M140 250l40 30 40-30v48h-80v-48z" fill="${config.ribbon}" fill-opacity=".78"/>
+      <path d="M118 258c0-43 26-74 62-74 38 0 64 30 64 74v44H118v-44z" fill="url(#dress)"/>
+      <path d="M132 306c20 18 36 26 50 26 16 0 35-6 58-18l20 76H98l34-84z" fill="#f8fbff" fill-opacity=".92"/>
+      <path d="M146 334l-12 140h42l8-82 8 82h42l-16-140h-72z" fill="url(#dress)"/>
+      <path d="M140 278l-26 100h40l22-70-36-30zm82 0l36 28 20 72h-40l-16-100z" fill="#ffd9cb" fill-opacity=".8"/>
+      <path d="M84 182l-28 74 26 10 30-64-28-20zm192 0l28 74-26 10-30-64 28-20z" fill="#f8dbc9"/>
+      <path d="M140 248l40 28 40-28v48h-80v-48z" fill="${config.ribbon}" fill-opacity=".78"/>
       <path d="M150 212h58" stroke="rgba(99,66,72,.42)" stroke-width="8" stroke-linecap="round"/>
-      <path d="M118 110l22-18 18 18m74-6l18 18 20-16" fill="none" stroke="${config.glow}" stroke-width="6" stroke-linecap="round" stroke-opacity=".8"/>
       <circle cx="84" cy="126" r="6" fill="${config.glow}" fill-opacity=".55"/>
       <circle cx="282" cy="148" r="5" fill="${config.glow}" fill-opacity=".45"/>
       <circle cx="254" cy="90" r="4" fill="${config.glow}" fill-opacity=".55"/>
     </svg>
   `.trim();
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+
+const lockedBeautyArtCache = {};
+
+function getLockedSilhouetteType(beauty) {
+  const map = {
+    "idol-flare": "twin-ribbon",
+    "frost-prism": "crystal-lady",
+    "thunder-lance": "ponytail-lancer",
+    "shrine-fan": "fan-priestess",
+    "steam-captain": "captain-coat",
+    "desert-veil": "veil-dancer",
+    "opera-crescent": "opera-diva",
+    "abyss-tide": "wave-sorceress",
+    "flora-spore": "garden-muse",
+    "sky-crown": "crown-saint",
+    "petal-bloom": "petal-scout",
+    "pearl-tide": "bubble-bob",
+    "feather-dart": "feather-ranger",
+    "shadow-tailor": "veil-tailor",
+    "lyra-arc": "harp-maiden",
+    "prism-mage": "prism-mage",
+    "halo-warden": "halo-guard",
+    "phoenix-empress": "phoenix-queen"
+  };
+  return map[beauty.visualVariant] || "mystery";
+}
+
+function getLockedSilhouettePaths(type) {
+  const silhouettes = {
+    "twin-ribbon": '<path d="M112 214c6-86 32-130 70-130 34 0 58 38 64 122l-10 174h-112l-12-166z"/><path d="M126 120l-22 78 24-12 22-62zm118 0l18 66 26 12-20-78z"/>',
+    "crystal-lady": '<path d="M116 220c6-82 34-132 74-132 42 0 72 48 78 128l-16 168H124l-8-164z"/><path d="M168 82l-28 44 30 26 24-28zm44 0l28 42-30 26-24-26z"/>',
+    "ponytail-lancer": '<path d="M124 220c8-84 36-132 74-132 38 0 66 44 72 122l-18 176H126l-2-166z"/><path d="M226 86c30 10 54 40 58 88-18-18-32-26-58-32z"/>',
+    "fan-priestess": '<path d="M114 224c8-88 36-136 74-136 40 0 68 46 74 130l-10 166H122l-8-160z"/><path d="M90 156l44 40-56 20zm184 8l-44 36 58 18z"/>',
+    "captain-coat": '<path d="M106 222c8-86 38-138 80-138 42 0 72 52 78 134l-14 166H118l-12-162z"/><path d="M126 104h116l-14 22H140z"/>',
+    "veil-dancer": '<path d="M116 220c6-86 34-132 74-132 38 0 66 42 72 126l-14 170H120l-4-164z"/><path d="M82 128c40 18 62 54 66 104-34-18-56-50-66-104z"/>',
+    "opera-diva": '<path d="M106 220c10-86 40-132 80-132 40 0 70 42 76 122l-8 174H116l-10-164z"/><path d="M138 92c18-14 36-20 54-20 18 0 36 6 56 20l-30 28h-48z"/>',
+    "wave-sorceress": '<path d="M112 220c6-84 34-132 74-132 40 0 72 46 80 132l-18 164H120l-8-164z"/><path d="M94 178c44-20 78-18 118 2-40 20-80 24-118-2z"/>',
+    "garden-muse": '<path d="M112 220c6-84 36-132 76-132 42 0 74 48 78 130l-16 166H118l-6-164z"/><path d="M138 106l24-26 20 26m10 0l20-26 24 26" fill="none" stroke="#76808d" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>',
+    "crown-saint": '<path d="M108 220c8-88 36-138 78-138 44 0 74 50 78 134l-16 168H120l-12-164z"/><path d="M146 88l18-26 18 26 18-26 18 26" fill="none" stroke="#76808d" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>',
+    "petal-scout": '<path d="M114 220c8-82 36-130 76-130 38 0 66 42 70 122l-16 172H118l-4-164z"/><path d="M124 132l-12 78 24-8 16-66zm108 0l14 72 26 10-18-82z"/>',
+    "bubble-bob": '<path d="M120 220c8-80 34-128 74-128 42 0 74 48 80 130l-20 162H124l-4-164z"/><ellipse cx="156" cy="116" rx="26" ry="18"/><ellipse cx="214" cy="116" rx="28" ry="18"/>',
+    "feather-ranger": '<path d="M116 220c6-82 34-128 74-128 40 0 72 46 78 130l-18 162H118l-2-164z"/><path d="M214 86c30 10 56 42 62 94-18-20-36-30-62-40z"/>',
+    "veil-tailor": '<path d="M114 220c8-84 36-132 76-132 42 0 70 46 74 130l-12 166H122l-8-164z"/><path d="M90 110c34 12 58 44 64 88-30-14-54-42-64-88z"/>',
+    "harp-maiden": '<path d="M116 220c8-82 36-130 74-130 40 0 70 46 76 128l-14 166H122l-6-164z"/><circle cx="132" cy="112" r="20"/><circle cx="232" cy="112" r="18"/>',
+    "prism-mage": '<path d="M112 220c8-84 36-130 76-130 42 0 72 46 78 128l-12 166H120l-8-164z"/><path d="M224 136l50 104-36 8-22-90z"/>',
+    "halo-guard": '<path d="M114 220c8-86 36-132 76-132 42 0 72 46 78 130l-16 166H120l-6-164z"/><ellipse cx="184" cy="82" rx="48" ry="12" fill="none" stroke="#76808d" stroke-width="12"/>',
+    "phoenix-queen": '<path d="M110 220c8-88 40-136 80-136 42 0 72 46 76 128l-14 172H122l-12-164z"/><path d="M134 96l18-26 18 24 16-24 18 24 18-22 18 26" fill="none" stroke="#76808d" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>',
+    mystery: '<path d="M116 220c8-84 36-132 76-132 40 0 70 46 76 128l-14 168H122l-6-164z"/>'
+  };
+  return silhouettes[type] || silhouettes.mystery;
+}
+
+function createLockedBeautyArt(beauty) {
+  const accent = beauty.accent || "#9aa8b8";
+  const silhouette = getLockedSilhouettePaths(getLockedSilhouetteType(beauty));
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 520">
+      <defs>
+        <linearGradient id="bg" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stop-color="#1c2430"/>
+          <stop offset=".52" stop-color="#10161f"/>
+          <stop offset="1" stop-color="#080b10"/>
+        </linearGradient>
+        <radialGradient id="mist" cx=".5" cy=".32" r=".72">
+          <stop offset="0" stop-color="${accent}" stop-opacity=".28"/>
+          <stop offset=".44" stop-color="#cfd7e1" stop-opacity=".12"/>
+          <stop offset="1" stop-color="#0a1017" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="shadow" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stop-color="#7f8994"/>
+          <stop offset=".24" stop-color="#59626e"/>
+          <stop offset=".62" stop-color="#343c45"/>
+          <stop offset="1" stop-color="#151a20"/>
+        </linearGradient>
+      </defs>
+      <rect width="360" height="520" rx="26" fill="url(#bg)"/>
+      <circle cx="180" cy="150" r="132" fill="url(#mist)"/>
+      <ellipse cx="180" cy="486" rx="90" ry="20" fill="#000" fill-opacity=".2"/>
+      <g fill="url(#shadow)" fill-opacity=".98">
+        ${silhouette}
+      </g>
+      <circle cx="180" cy="250" r="58" fill="#0f1319" fill-opacity=".18"/>
+      <path d="M154 250h52m-26-26v52" fill="none" stroke="#b8c1cb" stroke-width="10" stroke-linecap="round" stroke-opacity=".74"/>
+      <path d="M94 112c34-30 82-48 130-48 48 0 98 18 138 48" fill="none" stroke="#ced8e2" stroke-width="4" stroke-dasharray="9 12" stroke-opacity=".22"/>
+    </svg>
+  `.trim();
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+
+function getLockedBeautyArt(beauty) {
+  if (!lockedBeautyArtCache[beauty.id]) {
+    lockedBeautyArtCache[beauty.id] = createLockedBeautyArt(beauty);
+  }
+  return lockedBeautyArtCache[beauty.id];
 }
 
 const SPRITE_PATHS = Array.from(new Set([
@@ -1930,12 +2099,14 @@ function renderCompanions() {
       </div>
     `;
   } else {
+    const rankMeta = getBeautyRankMeta(selected);
     currentCompanion.innerHTML = `
       <div class="current-companion-layout">
         <img src="${selected.art.purified}" alt="${selected.name}净化形态" class="current-companion-art purified-portrait">
         <div>
           <p class="section-kicker">${selected.source === "summon" ? "已招募编组" : "已净化编组"}</p>
           <h3 style="margin: 0; color: ${selected.accent};">${selected.name} · ${selected.title}</h3>
+          <p><strong style="color:${rankMeta.color};">品级 ${rankMeta.label}</strong></p>
           <p>${selected.profile}</p>
           <p><strong>${selected.skillName}</strong>：${selected.skillDesc}</p>
         </div>
@@ -1953,7 +2124,7 @@ function renderCompanions() {
   ];
 
   getOwnedBeauties().forEach((beauty) => {
-    const rankMeta = beauty.rank ? getCompanionRankMeta(beauty.rank) : null;
+    const rankMeta = beauty.rank ? getBeautyRankMeta(beauty) : null;
     buttons.push(`
       <button class="choice-button with-art ${progress.selectedCompanionId === beauty.id ? "is-selected" : ""}" data-beauty-id="${beauty.id}">
         <img src="${beauty.art.purified}" alt="${beauty.name}" class="choice-avatar purified-portrait">
@@ -2091,20 +2262,36 @@ function renderLibraryHub() {
   const preview = [...getOwnedBeauties(), ...ALL_BEAUTIES.filter((beauty) => !isBeautyOwned(beauty.id))]
     .slice(0, 3);
   libraryCounter.textContent = `已收录 ${getOwnedBeauties().length}/${ALL_BEAUTIES.length}`;
+  openLibraryButton.innerHTML = `
+    <div class="atlas-entry-head">
+      <strong>美女图鉴</strong>
+      <span class="atlas-entry-hint">点击合照进入</span>
+    </div>
+    <div class="atlas-entry-collage">
+      ${preview.map((beauty, index) => {
+        const unlocked = isBeautyOwned(beauty.id);
+        const art = getCodexArt(beauty, unlocked);
+        const cssClass = ["shot-a", "shot-b", "shot-c"][index] || "shot-c";
+        return `<img src="${art}" alt="${unlocked ? beauty.name : "未解锁美女档案"}" class="atlas-entry-shot ${cssClass} ${unlocked ? "purified-portrait" : "is-codex-locked"}">`;
+      }).join("")}
+    </div>
+    <p class="atlas-entry-copy">这里会统一收录主线净化出的美女，以及商城招募到的角色。未点亮档案会保持灰色封存状态。</p>
+  `;
   libraryLanding.innerHTML = `
     <article class="library-landing-card">
       <div class="library-collage">
         ${preview.map((beauty, index) => {
-          const art = isBeautyOwned(beauty.id) ? beauty.art.purified : getCorruptArtPath(beauty);
+          const unlocked = isBeautyOwned(beauty.id);
+          const art = getCodexArt(beauty, unlocked);
           const cssClass = ["item-a", "item-b", "item-c"][index] || "item-c";
-          const filterClass = isBeautyOwned(beauty.id) ? "purified-portrait" : beautyNeedsCorruptFilter(beauty) ? "is-corrupt-filter" : "";
-          return `<img src="${art}" alt="${beauty.name}" class="library-collage-item ${cssClass} ${filterClass}">`;
+          const filterClass = unlocked ? "purified-portrait" : "is-codex-locked";
+          return `<img src="${art}" alt="${unlocked ? beauty.name : "未解锁美女档案"}" class="library-collage-item ${cssClass} ${filterClass}">`;
         }).join("")}
       </div>
       <div class="library-collage-copy">
-        <p class="section-kicker">美女库入口</p>
+        <p class="section-kicker">美女图鉴入口</p>
         <h3>先看大合照，再看总览画廊</h3>
-        <p>这里会收录主线净化出来的美女，以及商城抽到的招募角色。进入下一页后，你可以直接滑动浏览全部美女，不再需要一张一张切换查看。</p>
+        <p>未点亮档案会继续保持灰色封存状态，不会直接透露名字和详细信息。进入下一页后，你可以滑动查看全部美女图鉴。</p>
         <div class="beauty-meta">
           <span class="meta-pill">已净化 Boss ${progress.rescued.length}/${BEAUTIES.length}</span>
           <span class="meta-pill">已招募角色 ${progress.recruitedBeautyIds.length}/${SUMMON_BEAUTIES.length}</span>
@@ -2116,22 +2303,36 @@ function renderLibraryHub() {
 }
 
 function renderLibraryGallery() {
-  libraryGalleryCounter.textContent = `${getOwnedBeauties().length}/${ALL_BEAUTIES.length} 已收录`;
+  libraryGalleryCounter.textContent = `${getOwnedBeauties().length}/${ALL_BEAUTIES.length} 已点亮`;
   beautyGallery.innerHTML = ALL_BEAUTIES.map((beauty) => {
     const unlocked = isBeautyOwned(beauty.id);
-    const art = unlocked ? beauty.art.purified : getCorruptArtPath(beauty);
-    const stage = getStage(beauty.stageId);
-    const rankMeta = beauty.rank ? getCompanionRankMeta(beauty.rank) : null;
-    const filterClass = unlocked ? "purified-portrait" : beautyNeedsCorruptFilter(beauty) ? "is-corrupt-filter" : "";
+    const art = getCodexArt(beauty, unlocked);
+    const rankMeta = getBeautyRankMeta(beauty);
+    const filterClass = unlocked ? "purified-portrait" : "is-codex-locked";
+    const title = unlocked ? beauty.title : getCodexHiddenTitle(beauty);
+    const profile = unlocked ? beauty.profile : getCodexHiddenHint(beauty);
+    const skillName = unlocked ? `专属技能 · ${beauty.skillName}` : "专属技能 · ???";
+    const skillDesc = unlocked ? beauty.skillDesc : "点亮图鉴后显示完整技能效果说明。";
     return `
-      <article class="beauty-gallery-card" style="box-shadow: inset 0 0 0 1px ${hexToRgba(beauty.accent, unlocked ? 0.22 : 0.08)};">
-        <div class="beauty-gallery-art">
-          <img src="${art}" alt="${unlocked ? beauty.name : beauty.bossName || beauty.name}" class="${filterClass}">
+      <article class="beauty-gallery-card ${unlocked ? "is-unlocked" : "is-locked"}" style="box-shadow: inset 0 0 0 1px ${hexToRgba(beauty.accent, unlocked ? 0.22 : 0.08)};">
+        <div class="beauty-gallery-head">
+          <span class="rank-pill ${rankMeta.className}">品级 ${rankMeta.label}</span>
+          <div class="beauty-gallery-flags">
+            <span class="beauty-gallery-pill ${beauty.source === "summon" ? "type-summon" : "type-main"}">${getCodexTypeLabel(beauty)}</span>
+          </div>
         </div>
-        <span class="beauty-badge">${unlocked ? beauty.source === "summon" ? "已招募" : "已净化" : beauty.source === "summon" ? "待招募" : "待净化"}</span>
-        <h3 style="color:${beauty.accent};">${beauty.name}</h3>
-        <p>${unlocked ? beauty.title : beauty.source === "summon" ? `品级 ${rankMeta.label} 招募角色` : stage ? `第 ${stage.id} 章黑化目标` : "资料未解锁"}</p>
-        <p>${unlocked ? beauty.skillName : beauty.source === "summon" ? "可在商城角色招募中获得。" : "完成对应主线后可净化并加入队伍。"}</p>
+        <div class="beauty-gallery-art">
+          <img src="${art}" alt="${unlocked ? beauty.name : "未解锁美女档案"}" class="${filterClass}">
+        </div>
+        <h3 style="color:${unlocked ? beauty.accent : "#e7edf4"};">${unlocked ? beauty.name : "？？？"}</h3>
+        <span class="beauty-gallery-subtitle">${title}</span>
+        <div class="beauty-gallery-copy">
+          <p>${profile}</p>
+          <div class="beauty-skill-block">
+            <strong>${skillName}</strong>
+            <p>${skillDesc}</p>
+          </div>
+        </div>
       </article>
     `;
   }).join("");
@@ -5581,6 +5782,28 @@ function getCorruptArtPath(beauty) {
 
 function beautyNeedsCorruptFilter(beauty) {
   return beauty.source !== "summon" && !beauty.art.corrupt;
+}
+
+function getBeautyRankMeta(beauty) {
+  return getCompanionRankMeta(beauty.rank || "c");
+}
+
+function getCodexArt(beauty, unlocked) {
+  return unlocked ? beauty.art.purified : getLockedBeautyArt(beauty);
+}
+
+function getCodexTypeLabel(beauty) {
+  return beauty.source === "summon" ? "招募档案" : "主线档案";
+}
+
+function getCodexHiddenTitle(beauty) {
+  return beauty.source === "summon" ? "待招募档案" : "待净化档案";
+}
+
+function getCodexHiddenHint(beauty) {
+  return beauty.source === "summon"
+    ? "通过角色招募点亮这份档案后，才会显示名字、立绘和完整技能说明。"
+    : "净化对应关卡的黑化 Boss 后，这份档案才会点亮并显示完整资料。";
 }
 
 function getUpgradeLevel(state, id) {
