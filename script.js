@@ -715,6 +715,104 @@ const UPGRADE_POOL = [
   }
 ];
 
+const MODULE_SKILLS = {
+  thermobaric: {
+    name: "温压弹",
+    icon: createSkillIcon("TB", "#ff845a", "#ffd06f"),
+    description: "高爆轰击密集怪群。",
+    cooldown(level) {
+      return Math.max(1.2, 8.6 - level * 0.55);
+    }
+  },
+  fuelBomb: {
+    name: "燃油弹",
+    icon: createSkillIcon("FB", "#ff9a62", "#ffdd8e"),
+    description: "投下燃油并留下灼烧区域。",
+    cooldown(level) {
+      return Math.max(1.2, 9.4 - level * 0.55);
+    }
+  },
+  dryIce: {
+    name: "干冰弹",
+    icon: createSkillIcon("DI", "#88ecff", "#d7fbff"),
+    description: "冻结落点周围敌人。",
+    cooldown(level) {
+      return Math.max(1.2, 8.2 - level * 0.45);
+    }
+  },
+  iceBurst: {
+    name: "冰爆发生器",
+    icon: createSkillIcon("IB", "#9fe4ff", "#ffffff"),
+    description: "周期性冻结前场。",
+    cooldown(level) {
+      return Math.max(1.2, 10.2 - level * 0.8);
+    }
+  },
+  electroSpike: {
+    name: "电磁穿刺",
+    icon: createSkillIcon("ES", "#ffe06f", "#fff7be"),
+    description: "打出贯穿型电磁刺线。",
+    cooldown(level) {
+      return Math.max(1.2, 7.8 - level * 0.45);
+    }
+  },
+  highEnergyRay: {
+    name: "高能射线",
+    icon: createSkillIcon("HR", "#ff8a70", "#ffd4a8"),
+    description: "持续灼烧一条线路。",
+    cooldown(level) {
+      return Math.max(1.2, 9.2 - level * 0.55);
+    }
+  },
+  guidedLaser: {
+    name: "制导激光",
+    icon: createSkillIcon("GL", "#c59cff", "#f1d4ff"),
+    description: "精准点杀高威胁目标。",
+    cooldown(level) {
+      return Math.max(1.2, 8.8 - level * 0.55);
+    }
+  },
+  cycloneCannon: {
+    name: "旋风加农",
+    icon: createSkillIcon("CC", "#7ee6db", "#c9fff5"),
+    description: "形成旋转弹幕。",
+    cooldown(level) {
+      return Math.max(1.2, 6.5 - level * 0.28);
+    }
+  },
+  airdrop: {
+    name: "空投轰炸",
+    icon: createSkillIcon("AD", "#f1b06b", "#ffe3b4"),
+    description: "上空多点投弹。",
+    cooldown(level) {
+      return Math.max(1.2, 10.5 - level * 0.55);
+    }
+  },
+  droneWing: {
+    name: "无人机",
+    icon: createSkillIcon("DR", "#b7ff8b", "#efffd8"),
+    description: "伴飞补枪。",
+    cooldown(level) {
+      return Math.max(0.45, 1.02 - level * 0.12);
+    }
+  }
+};
+
+const MAX_MODULE_SKILL_TYPES = 4;
+
+const CORE_UPGRADE_TO_MODULE_KEY = {
+  thermobaric: "thermobaric",
+  "fuel-bomb": "fuelBomb",
+  "dry-ice": "dryIce",
+  "ice-burst": "iceBurst",
+  "electro-spike": "electroSpike",
+  "high-energy-ray": "highEnergyRay",
+  "guided-laser": "guidedLaser",
+  "cyclone-cannon": "cycloneCannon",
+  airdrop: "airdrop",
+  "drone-wing": "droneWing"
+};
+
 const SPRITE_PATHS = Array.from(new Set([
   HERO_ART,
   MONSTER_ART.goblin,
@@ -752,6 +850,7 @@ const hudXpText = document.getElementById("hudXpText");
 const hudXpFill = document.getElementById("hudXpFill");
 const upgradeModal = document.getElementById("upgradeModal");
 const upgradeChoices = document.getElementById("upgradeChoices");
+const battleSkillPanel = document.getElementById("battleSkillPanel");
 const storyIntroModal = document.getElementById("storyIntroModal");
 const storyIntroVisual = document.getElementById("storyIntroVisual");
 const storyIntroLeftArt = document.getElementById("storyIntroLeftArt");
@@ -1234,6 +1333,7 @@ function openBossIntro(state) {
     <span class="meta-pill">${state.stage.danger}</span>
   `;
   sound.playBossAlert();
+  sound.speakBossLine(beauty.taunt, beauty.id);
   bossIntroModal.classList.remove("hidden");
   if (bossIntroTimer) {
     window.clearTimeout(bossIntroTimer);
@@ -1254,6 +1354,7 @@ function closeBossIntro() {
     window.clearTimeout(bossIntroTimer);
     bossIntroTimer = null;
   }
+  sound.cancelSpeech();
   bossIntroModal.classList.add("hidden");
 }
 
@@ -1823,9 +1924,15 @@ function openUpgradeModal() {
   if (!game || pendingUpgrades <= 0 || game.ended) {
     return;
   }
+  const choices = pickUpgradeChoices(game);
+  if (!choices.length) {
+    pendingUpgrades = 0;
+    closeUpgradeModal();
+    game.paused = false;
+    return;
+  }
   game.paused = true;
   upgradeModal.classList.remove("hidden");
-  const choices = pickUpgradeChoices(game);
   upgradeChoices.innerHTML = choices.map((choice) => {
     const nextLevel = getUpgradeLevel(game, choice.id) + 1;
     return `
@@ -1866,6 +1973,9 @@ function pickUpgradeChoices(state) {
     if (current >= upgrade.maxLevel) {
       return false;
     }
+    if (isBlockedByModuleSkillCap(state, upgrade)) {
+      return false;
+    }
     return upgrade.available ? upgrade.available(state, current + 1) : true;
   });
 
@@ -1886,6 +1996,21 @@ function pickUpgradeChoices(state) {
     result.push(picked);
   }
   return result;
+}
+
+function getOwnedModuleKeys(state) {
+  return Object.entries(state.modules)
+    .filter(([, level]) => level > 0)
+    .map(([key]) => key);
+}
+
+function isBlockedByModuleSkillCap(state, upgrade) {
+  const moduleKey = CORE_UPGRADE_TO_MODULE_KEY[upgrade.id];
+  if (!moduleKey) {
+    return false;
+  }
+  const ownedModuleKeys = getOwnedModuleKeys(state);
+  return ownedModuleKeys.length >= MAX_MODULE_SKILL_TYPES && !ownedModuleKeys.includes(moduleKey);
 }
 
 function gainXp(state, amount) {
@@ -1963,6 +2088,7 @@ function updateBattleHud() {
   hudKills.textContent = `${game.killCount}`;
   hudXpText.textContent = `${Math.round(game.xp)} / ${game.nextXp}`;
   hudXpFill.style.width = `${Math.min(100, (game.xp / game.nextXp) * 100)}%`;
+  renderBattleSkills(game);
 
   if (!game.companion) {
     battleCompanionStatus.innerHTML = `
@@ -1983,6 +2109,50 @@ function updateBattleHud() {
         <p>${game.companion.skillName}</p>
         <p class="cooldown-label">${cooldownLeft > 0 ? `技能冷却 ${cooldownLeft.toFixed(1)}s` : "技能就绪"}</p>
       </div>
+    </div>
+  `;
+}
+
+function renderBattleSkills(state) {
+  const skills = getOwnedModuleKeys(state)
+    .slice(0, MAX_MODULE_SKILL_TYPES)
+    .map((key) => {
+      const meta = MODULE_SKILLS[key];
+      const level = state.modules[key] || 0;
+      const remaining = Math.max(0, state.moduleCooldowns[key] || 0);
+      return {
+        key,
+        name: meta.name,
+        icon: meta.icon,
+        level,
+        description: meta.description,
+        cooldownText: remaining > 0 ? `${remaining.toFixed(1)}s` : "自动就绪",
+        cooling: remaining > 0
+      };
+    });
+
+  if (!skills.length) {
+    battleSkillPanel.classList.add("hidden");
+    battleSkillPanel.innerHTML = "";
+    return;
+  }
+
+  battleSkillPanel.classList.remove("hidden");
+  battleSkillPanel.innerHTML = `
+    <div class="skill-list">
+      ${skills.map((skill) => `
+        <div class="skill-item">
+          <div class="skill-item-icon">
+            <img src="${skill.icon}" alt="${skill.name}">
+            <span class="skill-item-level">Lv.${skill.level}</span>
+          </div>
+          <div class="skill-item-main">
+            <strong>${skill.name}</strong>
+            <span>${skill.description}</span>
+          </div>
+          <div class="skill-item-cd ${skill.cooling ? "cooling" : ""}">${skill.cooldownText}</div>
+        </div>
+      `).join("")}
     </div>
   `;
 }
@@ -3278,6 +3448,7 @@ function createSoundSystem() {
   let musicTimer = null;
   let lastShotAt = 0;
   let lastDeathAt = 0;
+  let selectedVoice = null;
 
   function ensureStarted() {
     if (!window.AudioContext && !window.webkitAudioContext) {
@@ -3300,6 +3471,7 @@ function createSoundSystem() {
     if (ctx.state === "suspended") {
       ctx.resume();
     }
+    ensureVoiceLoaded();
     startMusic(desiredScene);
     return true;
   }
@@ -3355,25 +3527,42 @@ function createSoundSystem() {
     ];
     chords.forEach((chord, chordIndex) => {
       chord.forEach((note, noteIndex) => {
-        playTone(midiToFreq(note), start + chordIndex * 0.9 + noteIndex * 0.12, 0.58, "triangle", 0.06, musicGain);
+        playTone(midiToFreq(note), start + chordIndex * 0.92 + noteIndex * 0.14, 0.74, "sine", 0.028, musicGain, {
+          attack: 0.08,
+          release: 0.24
+        });
       });
-      playTone(midiToFreq(chord[0] - 12), start + chordIndex * 0.9, 0.82, "sine", 0.04, musicGain);
+      playTone(midiToFreq(chord[0] - 12), start + chordIndex * 0.92, 0.88, "triangle", 0.03, musicGain, {
+        attack: 0.03,
+        release: 0.2
+      });
     });
+    playNoise(start + 0.06, 0.2, 0.006, musicGain, 1800);
   }
 
   function scheduleBattleLoop(start) {
     const sequence = [45, 45, 48, 50, 52, 50, 48, 45];
     sequence.forEach((note, index) => {
       const time = start + index * 0.3;
-      playTone(midiToFreq(note), time, 0.18, "sawtooth", 0.05, musicGain);
+      playTone(midiToFreq(note), time, 0.2, "triangle", 0.04, musicGain, {
+        attack: 0.01,
+        release: 0.08
+      });
       if (index % 2 === 0) {
-        playTone(midiToFreq(note + 12), time + 0.08, 0.12, "square", 0.03, musicGain);
+        playTone(midiToFreq(note + 12), time + 0.08, 0.18, "sine", 0.018, musicGain, {
+          attack: 0.02,
+          release: 0.08
+        });
       }
+      playNoise(time, 0.05, 0.02, musicGain, 170);
     });
     [57, 60, 64, 67].forEach((note, index) => {
-      playTone(midiToFreq(note), start + 0.15 + index * 0.6, 0.22, "triangle", 0.035, musicGain);
+      playTone(midiToFreq(note), start + 0.15 + index * 0.6, 0.34, "sine", 0.022, musicGain, {
+        attack: 0.04,
+        release: 0.14
+      });
     });
-    playNoise(start + 0.02, 0.09, 0.015, musicGain, 1200);
+    playNoise(start + 0.02, 0.11, 0.012, musicGain, 900);
   }
 
   function playHeroShot() {
@@ -3384,8 +3573,15 @@ function createSoundSystem() {
       return;
     }
     lastShotAt = ctx.currentTime;
-    playTone(690, ctx.currentTime, 0.045, "square", 0.07, fxGain);
-    playTone(920, ctx.currentTime + 0.01, 0.035, "triangle", 0.04, fxGain);
+    playNoise(ctx.currentTime, 0.045, 0.12, fxGain, 2100);
+    playTone(180, ctx.currentTime, 0.06, "triangle", 0.08, fxGain, {
+      attack: 0.002,
+      release: 0.05
+    });
+    playTone(760, ctx.currentTime + 0.004, 0.03, "sine", 0.03, fxGain, {
+      attack: 0.003,
+      release: 0.02
+    });
   }
 
   function playMonsterDeath(isElite) {
@@ -3396,8 +3592,11 @@ function createSoundSystem() {
       return;
     }
     lastDeathAt = ctx.currentTime;
-    playNoise(ctx.currentTime, isElite ? 0.14 : 0.08, isElite ? 0.06 : 0.04, fxGain, isElite ? 900 : 1400);
-    playTone(isElite ? 180 : 240, ctx.currentTime, isElite ? 0.16 : 0.1, "triangle", isElite ? 0.06 : 0.04, fxGain);
+    playNoise(ctx.currentTime, isElite ? 0.12 : 0.08, isElite ? 0.055 : 0.035, fxGain, isElite ? 540 : 760);
+    playTone(isElite ? 120 : 150, ctx.currentTime, isElite ? 0.18 : 0.12, "sine", isElite ? 0.055 : 0.035, fxGain, {
+      attack: 0.004,
+      release: 0.08
+    });
   }
 
   function playCompanionSkill(id) {
@@ -3424,17 +3623,28 @@ function createSoundSystem() {
       return;
     }
     [69, 73, 78].forEach((note, index) => {
-      playTone(midiToFreq(note), ctx.currentTime + index * 0.07, 0.16, "triangle", 0.07, fxGain);
+      playTone(midiToFreq(note), ctx.currentTime + index * 0.08, 0.22, "sine", 0.05, fxGain, {
+        attack: 0.02,
+        release: 0.08
+      });
     });
+    playNoise(ctx.currentTime, 0.08, 0.03, fxGain, 700);
   }
 
   function playBossAlert() {
     if (!ensureStarted()) {
       return;
     }
-    playNoise(ctx.currentTime, 0.18, 0.08, fxGain, 600);
-    playTone(140, ctx.currentTime, 0.24, "sawtooth", 0.08, fxGain);
-    playTone(220, ctx.currentTime + 0.12, 0.22, "square", 0.07, fxGain);
+    duckMusic(0.4, 2.1);
+    playNoise(ctx.currentTime, 0.2, 0.07, fxGain, 560);
+    playTone(164, ctx.currentTime, 0.36, "triangle", 0.09, fxGain, {
+      attack: 0.01,
+      release: 0.12
+    });
+    playTone(246, ctx.currentTime + 0.18, 0.28, "sine", 0.06, fxGain, {
+      attack: 0.01,
+      release: 0.08
+    });
   }
 
   function playVictory() {
@@ -3442,7 +3652,10 @@ function createSoundSystem() {
       return;
     }
     [72, 76, 79, 84].forEach((note, index) => {
-      playTone(midiToFreq(note), ctx.currentTime + index * 0.1, 0.28, "triangle", 0.08, fxGain);
+      playTone(midiToFreq(note), ctx.currentTime + index * 0.11, 0.32, "sine", 0.06, fxGain, {
+        attack: 0.03,
+        release: 0.1
+      });
     });
   }
 
@@ -3451,7 +3664,10 @@ function createSoundSystem() {
       return;
     }
     [58, 54, 49].forEach((note, index) => {
-      playTone(midiToFreq(note), ctx.currentTime + index * 0.13, 0.34, "sawtooth", 0.08, fxGain);
+      playTone(midiToFreq(note), ctx.currentTime + index * 0.13, 0.34, "triangle", 0.06, fxGain, {
+        attack: 0.02,
+        release: 0.12
+      });
     });
     playNoise(ctx.currentTime + 0.1, 0.22, 0.05, fxGain, 500);
   }
@@ -3480,13 +3696,16 @@ function createSoundSystem() {
     });
   }
 
-  function playTone(frequency, start, duration, type, volume, destination) {
+  function playTone(frequency, start, duration, type, volume, destination, envelope = {}) {
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
+    const attack = envelope.attack ?? 0.015;
+    const release = envelope.release ?? 0.05;
     osc.type = type;
     osc.frequency.setValueAtTime(frequency, start);
     gain.gain.setValueAtTime(0.0001, start);
-    gain.gain.linearRampToValueAtTime(volume, start + 0.015);
+    gain.gain.linearRampToValueAtTime(volume, start + attack);
+    gain.gain.exponentialRampToValueAtTime(Math.max(0.0001, volume * 0.42), Math.max(start + attack + 0.01, start + duration - release));
     gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
     osc.connect(gain);
     gain.connect(destination);
@@ -3528,6 +3747,75 @@ function createSoundSystem() {
     return 440 * Math.pow(2, (note - 69) / 12);
   }
 
+  function ensureVoiceLoaded() {
+    if (!("speechSynthesis" in window) || selectedVoice) {
+      return;
+    }
+    const voices = window.speechSynthesis.getVoices();
+    if (!voices.length) {
+      window.speechSynthesis.onvoiceschanged = () => {
+        const loadedVoices = window.speechSynthesis.getVoices();
+        selectedVoice = pickVoice(loadedVoices) || null;
+      };
+      return;
+    }
+    selectedVoice = pickVoice(voices) || null;
+  }
+
+  function pickVoice(voices) {
+    return voices.find((voice) => /zh/i.test(voice.lang) && /female|xiaoyi|tingting|mei|yan/i.test(voice.name))
+      || voices.find((voice) => /zh/i.test(voice.lang))
+      || voices[0];
+  }
+
+  function speakBossLine(text, beautyId) {
+    if (!("speechSynthesis" in window)) {
+      return;
+    }
+    ensureVoiceLoaded();
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    if (selectedVoice) {
+      utterance.voice = selectedVoice;
+      utterance.lang = selectedVoice.lang || "zh-CN";
+    } else {
+      utterance.lang = "zh-CN";
+    }
+    utterance.rate = 0.96;
+    utterance.volume = 0.94;
+    utterance.pitch = ({
+      hiyori: 1.08,
+      serin: 0.9,
+      yelan: 0.92,
+      mingsha: 1.02,
+      lanwei: 0.88,
+      shali: 0.95,
+      yuege: 1.06,
+      molan: 0.9,
+      xingkui: 1.1,
+      cangya: 0.86
+    })[beautyId] || 1;
+    duckMusic(0.26, 1.8);
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function cancelSpeech() {
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+  }
+
+  function duckMusic(ratio, duration) {
+    if (!musicGain || !ctx) {
+      return;
+    }
+    const now = ctx.currentTime;
+    musicGain.gain.cancelScheduledValues(now);
+    musicGain.gain.setValueAtTime(musicGain.gain.value, now);
+    musicGain.gain.linearRampToValueAtTime(0.46 * ratio, now + 0.05);
+    musicGain.gain.linearRampToValueAtTime(0.46, now + duration);
+  }
+
   return {
     ensureStarted,
     setScene,
@@ -3536,9 +3824,32 @@ function createSoundSystem() {
     playCompanionSkill,
     playBattleStart,
     playBossAlert,
+    speakBossLine,
+    cancelSpeech,
     playVictory,
     playDefeat
   };
+}
+
+function createSkillIcon(label, startColor, endColor) {
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+      <defs>
+        <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="${startColor}"/>
+          <stop offset="100%" stop-color="${endColor}"/>
+        </linearGradient>
+      </defs>
+      <rect x="4" y="4" width="88" height="88" rx="24" fill="#081018"/>
+      <rect x="8" y="8" width="80" height="80" rx="20" fill="url(#g)"/>
+      <circle cx="48" cy="42" r="20" fill="rgba(255,255,255,0.14)"/>
+      <path d="M24 62c10-9 16-13 24-13s14 4 24 13" fill="none" stroke="rgba(255,255,255,0.42)" stroke-width="5" stroke-linecap="round"/>
+      <path d="M30 30l12-10M66 30L54 20M48 18v12" fill="none" stroke="rgba(255,255,255,0.34)" stroke-width="4" stroke-linecap="round"/>
+      <text x="48" y="74" text-anchor="middle" font-size="18" font-family="Arial, sans-serif" font-weight="700" fill="#081018">${label}</text>
+      <text x="48" y="72" text-anchor="middle" font-size="18" font-family="Arial, sans-serif" font-weight="700" fill="rgba(255,255,255,0.96)">${label}</text>
+    </svg>
+  `.trim();
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 }
 
 function getSelectedCompanion() {
