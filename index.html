@@ -151,6 +151,77 @@
     </div>
   </div>
 
+  <div class="overlay hidden" id="storyIntroModal">
+    <div class="overlay-card story-intro-card">
+      <div class="story-intro-visual" id="storyIntroVisual">
+        <div class="scene-badge">Opening Story</div>
+        <div class="story-sigil"></div>
+        <img id="storyIntroLeftArt" class="story-art story-art-left" alt="剧情左侧立绘">
+        <img id="storyIntroRightArt" class="story-art story-art-right" alt="剧情右侧立绘">
+        <div class="scene-layer scene-layer-a"></div>
+        <div class="scene-layer scene-layer-b"></div>
+        <div class="scene-layer scene-layer-c"></div>
+      </div>
+      <div class="story-intro-copy">
+        <p class="section-kicker">序章动画</p>
+        <h2 id="storyIntroTitle">拯救行动开启</h2>
+        <p class="overlay-text" id="storyIntroText"></p>
+        <div class="stage-intro-meta" id="storyIntroMeta"></div>
+        <div class="result-actions">
+          <button class="ghost-button" id="storyIntroSkipButton" type="button">跳过剧情</button>
+          <button class="solid-button" id="storyIntroNextButton" type="button">下一幕</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay hidden" id="stageIntroModal">
+    <div class="overlay-card stage-intro-card">
+      <div class="stage-intro-art" id="stageIntroArt">
+        <div class="scene-badge">Stage Preview</div>
+        <img id="stageIntroBossArt" class="stage-intro-boss-art" alt="关卡 Boss 立绘">
+        <div class="scene-layer scene-layer-a"></div>
+        <div class="scene-layer scene-layer-b"></div>
+        <div class="scene-layer scene-layer-c"></div>
+      </div>
+      <div class="stage-intro-copy">
+        <p class="section-kicker">主线关卡</p>
+        <h2 id="stageIntroTitle">净化行动</h2>
+        <p class="overlay-text" id="stageIntroText"></p>
+        <div class="stage-intro-meta" id="stageIntroMeta"></div>
+        <div class="result-actions">
+          <button class="solid-button" id="stageIntroStartButton" type="button">开始净化</button>
+          <button class="ghost-button" id="stageIntroCancelButton" type="button">返回选关</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay hidden" id="bossIntroModal">
+    <div class="overlay-card boss-intro-card">
+      <div class="boss-alert-head">
+        <span class="boss-alert-chip">BOSS ALERT</span>
+        <span class="boss-alert-line"></span>
+      </div>
+      <div class="boss-intro-layout">
+        <div class="boss-intro-art-wrap" id="bossIntroArtWrap">
+          <img id="bossIntroArt" class="boss-intro-art" alt="Boss 黑化立绘">
+          <div class="boss-intro-sigil"></div>
+          <div class="boss-intro-rings"></div>
+        </div>
+        <div class="boss-intro-copy">
+          <p class="section-kicker">黑化目标现身</p>
+          <h2 id="bossIntroTitle">黑化 Boss</h2>
+          <p class="overlay-text" id="bossIntroText"></p>
+          <div class="stage-intro-meta" id="bossIntroMeta"></div>
+          <div class="result-actions">
+            <button class="solid-button" id="bossIntroStartButton" type="button">迎战 Boss</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="overlay hidden" id="resultModal">
     <div class="overlay-card result-card">
       <p class="section-kicker" id="resultKicker">战斗结算</p>
