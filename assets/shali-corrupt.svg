@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 520">
+  <defs>
+    <linearGradient id="dress" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#241907"/>
+      <stop offset=".5" stop-color="#5c4313"/>
+      <stop offset="1" stop-color="#120d07"/>
+    </linearGradient>
+    <linearGradient id="hair" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#ffd780"/>
+      <stop offset="1" stop-color="#6b4a10"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="180" cy="486" rx="92" ry="24" fill="#000" fill-opacity=".22"/>
+  <circle cx="180" cy="150" r="122" fill="#f0c354" fill-opacity=".16"/>
+  <path d="M101 168c8-54 39-92 86-92 52 0 92 39 92 97 0 38-12 69-34 99l-20-11 4-55c2-33-18-57-47-57-29 0-53 24-51 57l1 52-23 17c-10-18-18-42-18-75 0-11 3-22 10-32z" fill="url(#hair)"/>
+  <path d="M112 258c0-43 30-73 67-73 39 0 68 30 68 73v53H112v-53z" fill="url(#dress)"/>
+  <path d="M131 310c24 13 41 18 49 18 19 0 39-4 60-13l22 72H97l34-77z" fill="#181208"/>
+  <path d="M149 330l-13 144h40l8-84 8 84h40l-15-144h-68z" fill="#8b6518"/>
+  <path d="M170 90c-32 0-56 25-56 59 0 26 15 48 35 58l-4 31h71l-5-31c21-10 35-32 35-58 0-34-24-59-56-59h-20z" fill="#f2cfba"/>
+  <path d="M111 130c0-46 32-74 79-74 44 0 79 29 79 81 0 15-3 28-8 41-14-17-28-28-46-35-18 12-44 18-80 18-8 1-16 3-24 5-1-11-1-21 0-36z" fill="#7a5e18"/>
+  <path d="M148 246l32 27 32-27v54h-64v-54z" fill="#c89f2a"/>
+  <path d="M151 205h58" stroke="#97752a" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="165" cy="177" r="5" fill="#ffe99a"/><circle cx="202" cy="177" r="5" fill="#ffe99a"/>
+  <path d="M111 188l-32 88 28 10 34-78-30-20zm138 0l32 88-28 10-34-78 30-20z" fill="#ead5ca"/>
+  <path d="M78 132l42 23-17 17-38-11zm204 0l-42 23 17 17 38-11zM57 174l30 13-18 14-23-8zm246 0l-30 13 18 14 23-8z" fill="#c89e42" fill-opacity=".72"/>
+</svg>

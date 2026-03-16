@@ -99,6 +99,7 @@ const BEAUTIES = [
     profile: "曾是霓虹舞台最耀眼的歌姬，被渣男的虚假承诺诱入黑雾剧场。",
     skillName: "焰羽扫射",
     skillDesc: "每 10 秒射出三束焰羽贯穿弹，专门清理直线怪群。",
+    taunt: "你也想被舞台的黑焰吞掉吗？",
     accent: "#ff8e61",
     cooldown: 10,
     art: {
@@ -115,6 +116,7 @@ const BEAUTIES = [
     profile: "冰穹巡礼的守护者，被拖入寒晶回廊后，心象被腐化成停滞的寒雾。",
     skillName: "冰镜领域",
     skillDesc: "每 11 秒冻结全场敌人并触发一次冰爆。",
+    taunt: "在我的寒镜里慢慢碎掉吧。",
     accent: "#7eddf8",
     cooldown: 11,
     art: {
@@ -131,6 +133,7 @@ const BEAUTIES = [
     profile: "雷落穹塔的审判者，她的意志被黑化核心扭成暴走的连锁雷光。",
     skillName: "雷链裁决",
     skillDesc: "每 9 秒锁定多名敌人，降下连锁雷击。",
+    taunt: "下一道雷，就落在你头顶。",
     accent: "#ffe48a",
     cooldown: 9,
     art: {
@@ -147,10 +150,12 @@ const BEAUTIES = [
     profile: "神社巫女在樱雾祭坛中失去神性，净化后会用樱刃切开整条压境路线。",
     skillName: "樱刃风暴",
     skillDesc: "每 10 秒扔出多枚樱刃，形成高穿透扇形斩击。",
+    taunt: "樱雾会把你切成碎片。",
     accent: "#ff9caf",
     cooldown: 10,
     art: {
-      purified: "assets/mingsha-purified.svg"
+      purified: "assets/mingsha-purified.svg",
+      corrupt: "assets/mingsha-corrupt.svg"
     }
   },
   {
@@ -162,10 +167,12 @@ const BEAUTIES = [
     profile: "她原是蒸汽船坞的航道指挥官，被囚在锅炉阵列中后化为灼热风暴。",
     skillName: "蒸汽爆缸",
     skillDesc: "每 12 秒向前引爆高压蒸汽，造成大范围伤害与减速。",
+    taunt: "别靠近，锅炉会把你蒸干。",
     accent: "#eab471",
     cooldown: 12,
     art: {
-      purified: "assets/lanwei-purified.svg"
+      purified: "assets/lanwei-purified.svg",
+      corrupt: "assets/lanwei-corrupt.svg"
     }
   },
   {
@@ -177,10 +184,12 @@ const BEAUTIES = [
     profile: "砂海遗都的游侠被锁进流砂阵眼，净化后能在战场上铺出迟缓陷阱。",
     skillName: "流砂陷阱",
     skillDesc: "每 11 秒在敌群前方制造流砂区，持续减速并磨血。",
+    taunt: "踏进来吧，流砂正等着埋你。",
     accent: "#ffd68d",
     cooldown: 11,
     art: {
-      purified: "assets/shali-purified.svg"
+      purified: "assets/shali-purified.svg",
+      corrupt: "assets/shali-corrupt.svg"
     }
   },
   {
@@ -192,10 +201,12 @@ const BEAUTIES = [
     profile: "歌剧院的首席谣姬被渣男献祭给黑幕舞台，月光被扭成锋利新月。",
     skillName: "弦月回旋",
     skillDesc: "每 9.5 秒放出两道回旋月刃，来回切割怪群。",
+    taunt: "谢幕之前，你先倒下。",
     accent: "#ffb6a1",
     cooldown: 9.5,
     art: {
-      purified: "assets/yuege-purified.svg"
+      purified: "assets/yuege-purified.svg",
+      corrupt: "assets/yuege-corrupt.svg"
     }
   },
   {
@@ -207,10 +218,12 @@ const BEAUTIES = [
     profile: "研究所的潮汐司书被深海样本同化，净化后会唤来冲刷全屏的浪潮。",
     skillName: "潮汐冲刷",
     skillDesc: "每 12 秒掀起一轮潮汐波，横扫前方大片敌人。",
+    taunt: "深海会把你的呼吸一寸寸夺走。",
     accent: "#86e7ee",
     cooldown: 12,
     art: {
-      purified: "assets/molan-purified.svg"
+      purified: "assets/molan-purified.svg",
+      corrupt: "assets/molan-corrupt.svg"
     }
   },
   {
@@ -222,10 +235,12 @@ const BEAUTIES = [
     profile: "温室中的园艺使被黑孢寄生，净化后可降下覆盖上半场的星孢花雨。",
     skillName: "星孢花雨",
     skillDesc: "每 10.5 秒在上空播撒星孢爆点，持续轰击敌群。",
+    taunt: "花孢会从你的骨头里开出来。",
     accent: "#c4f88a",
     cooldown: 10.5,
     art: {
-      purified: "assets/xingkui-purified.svg"
+      purified: "assets/xingkui-purified.svg",
+      corrupt: "assets/xingkui-corrupt.svg"
     }
   },
   {
@@ -237,10 +252,12 @@ const BEAUTIES = [
     profile: "天穹圣城的执光者最终被拽入最深的哥布林之巢，净化后会为防线降下圣辉。",
     skillName: "圣辉屏障",
     skillDesc: "每 13 秒恢复基地并张开圣辉护盾，同时惩戒最前方敌人。",
+    taunt: "连圣光都站在黑雾这一边了。",
     accent: "#dbe7ff",
     cooldown: 13,
     art: {
-      purified: "assets/cangya-purified.svg"
+      purified: "assets/cangya-purified.svg",
+      corrupt: "assets/cangya-corrupt.svg"
     }
   }
 ];
@@ -713,6 +730,7 @@ let pendingUpgrades = 0;
 let resultContext = null;
 let pendingStageId = null;
 let storyState = null;
+let bossIntroTimer = null;
 
 const homeScreen = document.getElementById("homeScreen");
 const battleScreen = document.getElementById("battleScreen");
@@ -756,6 +774,7 @@ const bossIntroArtWrap = document.getElementById("bossIntroArtWrap");
 const bossIntroArt = document.getElementById("bossIntroArt");
 const bossIntroTitle = document.getElementById("bossIntroTitle");
 const bossIntroText = document.getElementById("bossIntroText");
+const bossIntroTaunt = document.getElementById("bossIntroTaunt");
 const bossIntroMeta = document.getElementById("bossIntroMeta");
 const bossIntroStartButton = document.getElementById("bossIntroStartButton");
 const resultModal = document.getElementById("resultModal");
@@ -766,6 +785,7 @@ const resultPrimaryButton = document.getElementById("resultPrimaryButton");
 const resultSecondaryButton = document.getElementById("resultSecondaryButton");
 const canvas = document.getElementById("battleCanvas");
 const ctx = canvas.getContext("2d");
+const sound = createSoundSystem();
 
 preloadSprites();
 bindEvents();
@@ -781,8 +801,13 @@ function preloadSprites() {
 }
 
 function bindEvents() {
+  document.addEventListener("pointerdown", () => {
+    sound.ensureStarted();
+  }, { passive: true });
+
   resetProgressButton.addEventListener("click", () => {
-    if (!window.confirm("确认清空所有净化记录、美女库与序章进度吗？")) {
+    sound.ensureStarted();
+    if (!window.confirm("确认清空所有净化记录与美女库吗？")) {
       return;
     }
     progress = createDefaultProgress();
@@ -793,6 +818,7 @@ function bindEvents() {
   });
 
   retreatButton.addEventListener("click", () => {
+    sound.ensureStarted();
     if (!game) {
       showScreen("home");
       return;
@@ -807,10 +833,17 @@ function bindEvents() {
     renderHome();
   });
 
-  storyIntroSkipButton.addEventListener("click", finishStoryIntro);
-  storyIntroNextButton.addEventListener("click", advanceStoryIntro);
+  storyIntroSkipButton.addEventListener("click", () => {
+    sound.ensureStarted();
+    finishStoryIntro();
+  });
+  storyIntroNextButton.addEventListener("click", () => {
+    sound.ensureStarted();
+    advanceStoryIntro();
+  });
 
   stageIntroStartButton.addEventListener("click", () => {
+    sound.ensureStarted();
     if (!pendingStageId) {
       return;
     }
@@ -820,27 +853,23 @@ function bindEvents() {
   });
 
   stageIntroCancelButton.addEventListener("click", () => {
+    sound.ensureStarted();
     closeStageIntro();
   });
 
   bossIntroStartButton.addEventListener("click", () => {
-    if (!game || game.ended) {
-      closeBossIntro();
-      return;
-    }
-    closeBossIntro();
-    spawnBoss(game);
-    game.paused = false;
-    flashBattleMessage(`${getBeauty(game.stage.bossBeautyId).bossName} 降临`, 1.5);
+    return;
   });
 
   resultPrimaryButton.addEventListener("click", () => {
+    sound.ensureStarted();
     closeResultModal();
     game = null;
     renderHome();
   });
 
   resultSecondaryButton.addEventListener("click", () => {
+    sound.ensureStarted();
     if (!resultContext) {
       closeResultModal();
       game = null;
@@ -902,6 +931,7 @@ function isBeautyKnown(id) {
 function showScreen(name) {
   homeScreen.classList.toggle("screen-active", name === "home");
   battleScreen.classList.toggle("screen-active", name === "battle");
+  sound.setScene(name === "battle" ? "battle" : "menu");
 }
 
 function renderHome() {
@@ -1068,7 +1098,8 @@ function requestStageStart(stageId) {
   if (!stage || !isStageUnlocked(stageId)) {
     return;
   }
-  if (stageId === 1 && !progress.introWatched) {
+  sound.ensureStarted();
+  if (stageId === 1) {
     openStoryIntro(stageId);
     return;
   }
@@ -1158,8 +1189,6 @@ function advanceStoryIntro() {
 function finishStoryIntro() {
   const nextStageId = storyState ? storyState.stageId : 1;
   storyState = null;
-  progress.introWatched = true;
-  saveProgress();
   storyIntroModal.classList.add("hidden");
   openStageIntro(nextStageId);
 }
@@ -1198,15 +1227,33 @@ function openBossIntro(state) {
   bossIntroArt.className = `boss-intro-art ${beautyNeedsCorruptFilter(beauty) ? "is-corrupt-filter" : ""}`;
   bossIntroTitle.textContent = beauty.bossName;
   bossIntroText.textContent = state.stage.bossWarning;
+  bossIntroTaunt.textContent = beauty.taunt;
   bossIntroMeta.innerHTML = `
     <span class="meta-pill">主线第 ${state.stage.id} 章</span>
     <span class="meta-pill">${beauty.skillName}</span>
     <span class="meta-pill">${state.stage.danger}</span>
   `;
+  sound.playBossAlert();
   bossIntroModal.classList.remove("hidden");
+  if (bossIntroTimer) {
+    window.clearTimeout(bossIntroTimer);
+  }
+  bossIntroTimer = window.setTimeout(() => {
+    if (!game || game.ended || game.bossSpawned) {
+      return;
+    }
+    closeBossIntro();
+    spawnBoss(game);
+    game.paused = false;
+    flashBattleMessage(`${beauty.bossName}：${beauty.taunt}`, 2);
+  }, 2300);
 }
 
 function closeBossIntro() {
+  if (bossIntroTimer) {
+    window.clearTimeout(bossIntroTimer);
+    bossIntroTimer = null;
+  }
   bossIntroModal.classList.add("hidden");
 }
 
@@ -1240,6 +1287,7 @@ function launchStage(stageId) {
   battleStageName.textContent = `第 ${stage.id} 章 · ${stage.name}`;
   updateBattleHud();
   showScreen("battle");
+  sound.playBattleStart();
   flashBattleMessage(`第 ${stage.id} 章开始：${stage.name}`, 2);
 }
 
@@ -1596,6 +1644,7 @@ function updateHeroFire(state) {
     });
   }
 
+  sound.playHeroShot();
   state.hero.fireCooldown = 1 / state.hero.fireRate;
   state.hero.recoil = Math.min(1, state.hero.recoil + 0.9);
   state.hero.muzzleTimer = 0.08;
@@ -1878,6 +1927,13 @@ function finishBattle(victory) {
     saveProgress();
   }
 
+  if (victory) {
+    sound.playVictory();
+  } else {
+    sound.playDefeat();
+  }
+  sound.setScene("menu");
+
   const nextStage = victory && game.stage.id < STAGES.length ? game.stage.id + 1 : null;
   resultContext = {
     nextStageId: nextStage,
@@ -1940,6 +1996,8 @@ function castCompanionSkill(state, beauty) {
   if (!targets.length) {
     return false;
   }
+
+  sound.playCompanionSkill(beauty.id);
 
   switch (beauty.id) {
     case "hiyori": {
@@ -2555,6 +2613,7 @@ function handleMonsterDeath(state, monster) {
     finishBattle(true);
     return;
   }
+  sound.playMonsterDeath(monster.isElite);
   state.killCount += 1;
   if (state.hero.onKillRepair > 0) {
     state.hero.hp = Math.min(state.hero.maxHp, state.hero.hp + state.hero.onKillRepair);
@@ -3060,6 +3119,8 @@ function drawHero(state) {
     rotation: -state.hero.recoil * 0.04
   });
 
+  drawUnitHpBar(state.hero.x, y - 146, 104, state.hero.hp, state.hero.maxHp, "#7de0bb", state.hero.barrier);
+
   if (state.hero.muzzleTimer > 0) {
     const alpha = state.hero.muzzleTimer / 0.08;
     ctx.save();
@@ -3175,6 +3236,24 @@ function drawPill(x, y, text, color) {
   ctx.restore();
 }
 
+function drawUnitHpBar(x, y, width, hp, maxHp, color, barrier = 0) {
+  ctx.save();
+  const safeRatio = Math.max(0, Math.min(1, hp / Math.max(1, maxHp)));
+  roundRectPath(x - width / 2, y, width, 10, 5);
+  ctx.fillStyle = "rgba(0, 0, 0, 0.45)";
+  ctx.fill();
+  roundRectPath(x - width / 2, y, width * safeRatio, 10, 5);
+  ctx.fillStyle = color;
+  ctx.fill();
+  if (barrier > 0) {
+    const barrierWidth = Math.min(width * 0.32, (barrier / Math.max(1, maxHp)) * width);
+    roundRectPath(x - width / 2 + width * safeRatio, y, barrierWidth, 10, 5);
+    ctx.fillStyle = "rgba(220, 236, 255, 0.76)";
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
 function drawPolygon(points) {
   ctx.beginPath();
   points.forEach((point, index) => {
@@ -3186,6 +3265,280 @@ function drawPolygon(points) {
   });
   ctx.closePath();
   ctx.fill();
+}
+
+function createSoundSystem() {
+  let ctx = null;
+  let master = null;
+  let musicGain = null;
+  let fxGain = null;
+  let noiseBuffer = null;
+  let desiredScene = "menu";
+  let activeScene = null;
+  let musicTimer = null;
+  let lastShotAt = 0;
+  let lastDeathAt = 0;
+
+  function ensureStarted() {
+    if (!window.AudioContext && !window.webkitAudioContext) {
+      return false;
+    }
+    if (!ctx) {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      ctx = new AudioCtx();
+      master = ctx.createGain();
+      master.gain.value = 0.22;
+      musicGain = ctx.createGain();
+      musicGain.gain.value = 0.46;
+      fxGain = ctx.createGain();
+      fxGain.gain.value = 0.92;
+      musicGain.connect(master);
+      fxGain.connect(master);
+      master.connect(ctx.destination);
+      noiseBuffer = createNoiseBuffer(ctx);
+    }
+    if (ctx.state === "suspended") {
+      ctx.resume();
+    }
+    startMusic(desiredScene);
+    return true;
+  }
+
+  function setScene(scene) {
+    desiredScene = scene;
+    if (ctx && ctx.state === "running") {
+      startMusic(scene);
+    }
+  }
+
+  function startMusic(scene) {
+    if (!ctx || activeScene === scene) {
+      return;
+    }
+    stopMusic();
+    activeScene = scene;
+    queueMusic(scene);
+  }
+
+  function stopMusic() {
+    if (musicTimer) {
+      window.clearTimeout(musicTimer);
+      musicTimer = null;
+    }
+    activeScene = null;
+  }
+
+  function queueMusic(scene) {
+    if (!ctx || activeScene !== scene) {
+      return;
+    }
+    const start = ctx.currentTime + 0.02;
+    const loopSeconds = scene === "battle" ? 2.7 : 3.6;
+    if (scene === "battle") {
+      scheduleBattleLoop(start);
+    } else {
+      scheduleMenuLoop(start);
+    }
+    musicTimer = window.setTimeout(() => {
+      if (activeScene === scene) {
+        queueMusic(scene);
+      }
+    }, loopSeconds * 1000 - 120);
+  }
+
+  function scheduleMenuLoop(start) {
+    const chords = [
+      [62, 66, 69],
+      [59, 62, 66],
+      [64, 67, 71],
+      [57, 61, 64]
+    ];
+    chords.forEach((chord, chordIndex) => {
+      chord.forEach((note, noteIndex) => {
+        playTone(midiToFreq(note), start + chordIndex * 0.9 + noteIndex * 0.12, 0.58, "triangle", 0.06, musicGain);
+      });
+      playTone(midiToFreq(chord[0] - 12), start + chordIndex * 0.9, 0.82, "sine", 0.04, musicGain);
+    });
+  }
+
+  function scheduleBattleLoop(start) {
+    const sequence = [45, 45, 48, 50, 52, 50, 48, 45];
+    sequence.forEach((note, index) => {
+      const time = start + index * 0.3;
+      playTone(midiToFreq(note), time, 0.18, "sawtooth", 0.05, musicGain);
+      if (index % 2 === 0) {
+        playTone(midiToFreq(note + 12), time + 0.08, 0.12, "square", 0.03, musicGain);
+      }
+    });
+    [57, 60, 64, 67].forEach((note, index) => {
+      playTone(midiToFreq(note), start + 0.15 + index * 0.6, 0.22, "triangle", 0.035, musicGain);
+    });
+    playNoise(start + 0.02, 0.09, 0.015, musicGain, 1200);
+  }
+
+  function playHeroShot() {
+    if (!ensureStarted()) {
+      return;
+    }
+    if (ctx.currentTime - lastShotAt < 0.05) {
+      return;
+    }
+    lastShotAt = ctx.currentTime;
+    playTone(690, ctx.currentTime, 0.045, "square", 0.07, fxGain);
+    playTone(920, ctx.currentTime + 0.01, 0.035, "triangle", 0.04, fxGain);
+  }
+
+  function playMonsterDeath(isElite) {
+    if (!ensureStarted()) {
+      return;
+    }
+    if (ctx.currentTime - lastDeathAt < 0.04) {
+      return;
+    }
+    lastDeathAt = ctx.currentTime;
+    playNoise(ctx.currentTime, isElite ? 0.14 : 0.08, isElite ? 0.06 : 0.04, fxGain, isElite ? 900 : 1400);
+    playTone(isElite ? 180 : 240, ctx.currentTime, isElite ? 0.16 : 0.1, "triangle", isElite ? 0.06 : 0.04, fxGain);
+  }
+
+  function playCompanionSkill(id) {
+    if (!ensureStarted()) {
+      return;
+    }
+    const roots = {
+      hiyori: 75,
+      serin: 74,
+      yelan: 78,
+      mingsha: 77,
+      lanwei: 72,
+      shali: 73,
+      yuege: 76,
+      molan: 74,
+      xingkui: 79,
+      cangya: 81
+    };
+    playVocalCue(midiToFreq(roots[id] || 76), 0.34);
+  }
+
+  function playBattleStart() {
+    if (!ensureStarted()) {
+      return;
+    }
+    [69, 73, 78].forEach((note, index) => {
+      playTone(midiToFreq(note), ctx.currentTime + index * 0.07, 0.16, "triangle", 0.07, fxGain);
+    });
+  }
+
+  function playBossAlert() {
+    if (!ensureStarted()) {
+      return;
+    }
+    playNoise(ctx.currentTime, 0.18, 0.08, fxGain, 600);
+    playTone(140, ctx.currentTime, 0.24, "sawtooth", 0.08, fxGain);
+    playTone(220, ctx.currentTime + 0.12, 0.22, "square", 0.07, fxGain);
+  }
+
+  function playVictory() {
+    if (!ensureStarted()) {
+      return;
+    }
+    [72, 76, 79, 84].forEach((note, index) => {
+      playTone(midiToFreq(note), ctx.currentTime + index * 0.1, 0.28, "triangle", 0.08, fxGain);
+    });
+  }
+
+  function playDefeat() {
+    if (!ensureStarted()) {
+      return;
+    }
+    [58, 54, 49].forEach((note, index) => {
+      playTone(midiToFreq(note), ctx.currentTime + index * 0.13, 0.34, "sawtooth", 0.08, fxGain);
+    });
+    playNoise(ctx.currentTime + 0.1, 0.22, 0.05, fxGain, 500);
+  }
+
+  function playVocalCue(frequency, duration) {
+    const start = ctx.currentTime;
+    const voiceGain = ctx.createGain();
+    voiceGain.gain.value = 0;
+    voiceGain.connect(fxGain);
+    voiceGain.gain.linearRampToValueAtTime(0.08, start + 0.03);
+    voiceGain.gain.exponentialRampToValueAtTime(0.001, start + duration);
+
+    [1, 2.02, 3.04].forEach((ratio, index) => {
+      const osc = ctx.createOscillator();
+      const filter = ctx.createBiquadFilter();
+      filter.type = "bandpass";
+      filter.frequency.value = [850, 1220, 2550][index];
+      filter.Q.value = 7;
+      osc.type = index === 0 ? "triangle" : "sine";
+      osc.frequency.setValueAtTime(frequency * ratio, start);
+      osc.frequency.exponentialRampToValueAtTime(frequency * ratio * 1.07, start + duration * 0.6);
+      osc.connect(filter);
+      filter.connect(voiceGain);
+      osc.start(start);
+      osc.stop(start + duration);
+    });
+  }
+
+  function playTone(frequency, start, duration, type, volume, destination) {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(frequency, start);
+    gain.gain.setValueAtTime(0.0001, start);
+    gain.gain.linearRampToValueAtTime(volume, start + 0.015);
+    gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+    osc.connect(gain);
+    gain.connect(destination);
+    osc.start(start);
+    osc.stop(start + duration + 0.02);
+  }
+
+  function playNoise(start, duration, volume, destination, filterFrequency) {
+    if (!noiseBuffer) {
+      return;
+    }
+    const source = ctx.createBufferSource();
+    const filter = ctx.createBiquadFilter();
+    const gain = ctx.createGain();
+    source.buffer = noiseBuffer;
+    filter.type = "bandpass";
+    filter.frequency.value = filterFrequency;
+    filter.Q.value = 0.8;
+    gain.gain.setValueAtTime(0.0001, start);
+    gain.gain.linearRampToValueAtTime(volume, start + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+    source.connect(filter);
+    filter.connect(gain);
+    gain.connect(destination);
+    source.start(start);
+    source.stop(start + duration + 0.02);
+  }
+
+  function createNoiseBuffer(audioContext) {
+    const buffer = audioContext.createBuffer(1, audioContext.sampleRate * 0.6, audioContext.sampleRate);
+    const channel = buffer.getChannelData(0);
+    for (let index = 0; index < channel.length; index += 1) {
+      channel[index] = (Math.random() * 2 - 1) * 0.7;
+    }
+    return buffer;
+  }
+
+  function midiToFreq(note) {
+    return 440 * Math.pow(2, (note - 69) / 12);
+  }
+
+  return {
+    ensureStarted,
+    setScene,
+    playHeroShot,
+    playMonsterDeath,
+    playCompanionSkill,
+    playBattleStart,
+    playBossAlert,
+    playVictory,
+    playDefeat
+  };
 }
 
 function getSelectedCompanion() {

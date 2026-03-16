@@ -889,6 +889,10 @@ h2 {
   gap: 16px;
 }
 
+.boss-intro-copy .result-actions {
+  display: none;
+}
+
 .stage-intro-meta {
   display: flex;
   flex-wrap: wrap;
@@ -937,7 +941,8 @@ h2 {
 }
 
 .boss-intro-sigil,
-.boss-intro-rings {
+.boss-intro-rings,
+.boss-intro-scan {
   position: absolute;
   inset: 0;
   pointer-events: none;
@@ -969,6 +974,62 @@ h2 {
 .boss-intro-rings::after {
   width: 48%;
   height: 48%;
+}
+
+.boss-intro-scan {
+  background:
+    repeating-linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.02) 0,
+      rgba(255, 255, 255, 0.02) 4px,
+      transparent 4px,
+      transparent 14px
+    );
+  mix-blend-mode: screen;
+  opacity: 0.5;
+  animation: scan-drift 3.2s linear infinite;
+}
+
+.boss-taunt {
+  margin: -2px 0 0;
+  padding: 14px 18px;
+  border-radius: 18px;
+  background:
+    linear-gradient(90deg, rgba(255, 101, 101, 0.14), rgba(255, 198, 140, 0.08)),
+    rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 138, 112, 0.16);
+  color: #ffe2d8;
+  font-size: 17px;
+  line-height: 1.6;
+  letter-spacing: 0.02em;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+}
+
+.boss-taunt::before {
+  content: "BOSS";
+  display: inline-block;
+  margin-right: 12px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: rgba(255, 114, 114, 0.16);
+  color: var(--gold);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  vertical-align: middle;
+}
+
+@keyframes scan-drift {
+  0% {
+    transform: translateY(-16px);
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.58;
+  }
+  100% {
+    transform: translateY(24px);
+    opacity: 0.35;
+  }
 }
 
 .theme-neon {
