@@ -1,5 +1,5 @@
-const STORAGE_KEY = "rescue-beauties-save-v3";
-const LEGACY_STORAGE_KEYS = ["rescue-beauties-save-v2", "rescue-beauties-save-v1"];
+const STORAGE_KEY = "rescue-beauties-save-v5";
+const LEGACY_STORAGE_KEYS = ["rescue-beauties-save-v4", "rescue-beauties-save-v3", "rescue-beauties-save-v2", "rescue-beauties-save-v1"];
 const HERO_ART = "assets/hero-main.svg";
 const MONSTER_ART = {
   goblin: "assets/goblin-grunt.svg",
@@ -530,6 +530,442 @@ const STAGE_SCENE_PRESETS = {
 
 const STAGE_SCENE_ART = Object.fromEntries(STAGES.map((stage) => [stage.id, createStageSceneIllustration(stage)]));
 
+const QUALITY_META = {
+  common: {
+    label: "白色",
+    className: "quality-common",
+    color: "#dfe7ee"
+  },
+  uncommon: {
+    label: "绿色",
+    className: "quality-uncommon",
+    color: "#8cf0ab"
+  },
+  rare: {
+    label: "蓝色",
+    className: "quality-rare",
+    color: "#7db8ff"
+  },
+  epic: {
+    label: "紫色",
+    className: "quality-epic",
+    color: "#c98cff"
+  }
+};
+
+const COMPANION_RANK_META = {
+  c: {
+    label: "C",
+    className: "rank-c",
+    color: "#dfe7ee"
+  },
+  b: {
+    label: "B",
+    className: "rank-b",
+    color: "#8fe4f7"
+  },
+  a: {
+    label: "A",
+    className: "rank-a",
+    color: "#ffca8d"
+  },
+  s: {
+    label: "S",
+    className: "rank-s",
+    color: "#ff88c8"
+  }
+};
+
+const DRAW_COSTS = {
+  character: {
+    gold: 480,
+    ticket: 12
+  },
+  equipment: {
+    gold: 280,
+    ticket: 8
+  }
+};
+
+const DRAW_TABLES = {
+  character: {
+    gold: [["c", 0.58], ["b", 0.42]],
+    ticket: [["b", 0.58], ["a", 0.31], ["s", 0.11]]
+  },
+  equipment: {
+    gold: [["common", 0.72], ["uncommon", 0.28]],
+    ticket: [["uncommon", 0.54], ["rare", 0.32], ["epic", 0.14]]
+  }
+};
+
+const SHOP_ITEMS = [
+  {
+    id: "weapon-rustfang",
+    type: "weapon",
+    name: "锈牙冲锋枪",
+    quality: "common",
+    price: 140,
+    description: "便宜但稳定的近防武器，提升基础火力。",
+    effectText: "基础伤害 +10",
+    apply(state) {
+      state.hero.damage += 10;
+    }
+  },
+  {
+    id: "weapon-stormbite",
+    type: "weapon",
+    name: "风暴短铳",
+    quality: "uncommon",
+    price: 260,
+    description: "轻量化改装枪管，压得住连续射击节奏。",
+    effectText: "射速 +14%，伤害 +8",
+    apply(state) {
+      state.hero.fireRate *= 1.14;
+      state.hero.damage += 8;
+    }
+  },
+  {
+    id: "weapon-railfang",
+    type: "weapon",
+    name: "破甲轨炮",
+    quality: "rare",
+    price: 430,
+    description: "更高动能的轨道实弹，对厚血目标更有效。",
+    effectText: "基础伤害 +18，穿透 +1，暴击率 +4%",
+    apply(state) {
+      state.hero.damage += 18;
+      state.hero.pierce += 1;
+      state.hero.critChance += 0.04;
+    }
+  },
+  {
+    id: "weapon-phoenix",
+    type: "weapon",
+    name: "炽凰主炮",
+    quality: "epic",
+    price: 760,
+    description: "高阶主炮，能在开局就打出成型的清线火力。",
+    effectText: "基础伤害 +26，投射物 +1，对 Boss 伤害 +12%",
+    apply(state) {
+      state.hero.damage += 26;
+      state.hero.projectiles += 1;
+      state.hero.bossBonus += 0.12;
+    }
+  },
+  {
+    id: "armor-fieldvest",
+    type: "armor",
+    name: "前哨护衣",
+    quality: "common",
+    price: 120,
+    description: "简易防护服，优先提高前期容错。",
+    effectText: "基地生命上限 +45",
+    apply(state) {
+      state.hero.maxHp += 45;
+      state.hero.hp += 45;
+    }
+  },
+  {
+    id: "armor-rampart",
+    type: "armor",
+    name: "壁垒装甲",
+    quality: "uncommon",
+    price: 250,
+    description: "中型护板和能量衬层，能挡住一轮压线。",
+    effectText: "基地生命上限 +72，护盾 +24",
+    apply(state) {
+      state.hero.maxHp += 72;
+      state.hero.hp += 72;
+      state.hero.barrier += 24;
+    }
+  },
+  {
+    id: "armor-polaris",
+    type: "armor",
+    name: "北极星战甲",
+    quality: "rare",
+    price: 420,
+    description: "稳定供能的高级装甲，同时缩短辅助回转。",
+    effectText: "基地生命上限 +96，护盾 +38，辅佐冷却 -8%",
+    apply(state) {
+      state.hero.maxHp += 96;
+      state.hero.hp += 96;
+      state.hero.barrier += 38;
+      state.hero.companionCooldownScale *= 0.92;
+    }
+  },
+  {
+    id: "armor-seraph",
+    type: "armor",
+    name: "炽天使外骨骼",
+    quality: "epic",
+    price: 720,
+    description: "重型外骨骼，让虾仁能扛住终局怪潮。",
+    effectText: "基地生命上限 +126，护盾 +64，对精英伤害 +10%",
+    apply(state) {
+      state.hero.maxHp += 126;
+      state.hero.hp += 126;
+      state.hero.barrier += 64;
+      state.hero.eliteBonus += 0.1;
+    }
+  },
+  {
+    id: "item-scopechip",
+    type: "item",
+    name: "战术瞄片",
+    quality: "common",
+    price: 110,
+    description: "简单但实用的战术挂件。",
+    effectText: "暴击率 +5%",
+    apply(state) {
+      state.hero.critChance += 0.05;
+    }
+  },
+  {
+    id: "item-powdercharm",
+    type: "item",
+    name: "爆裂符坠",
+    quality: "uncommon",
+    price: 240,
+    description: "让主武器爆裂更稳定的攻击挂件。",
+    effectText: "爆裂半径 +14，子弹伤害 +6",
+    apply(state) {
+      state.hero.splash += 14;
+      state.hero.damage += 6;
+    }
+  },
+  {
+    id: "item-frostseal",
+    type: "item",
+    name: "霜痕印章",
+    quality: "rare",
+    price: 410,
+    description: "每一发子弹都会拖出冻结尾迹。",
+    effectText: "子弹附带减速，减速时长 +1.0s，弹速 +8%",
+    apply(state) {
+      state.hero.slowShots = true;
+      state.hero.slowDuration += 1;
+      state.hero.bulletSpeed *= 1.08;
+    }
+  },
+  {
+    id: "item-overdrive",
+    type: "item",
+    name: "超载核心",
+    quality: "epic",
+    price: 700,
+    description: "直接拉高整套火力循环的稀有核心。",
+    effectText: "射速 +12%，基础伤害 +12，暴击伤害 +20%",
+    apply(state) {
+      state.hero.fireRate *= 1.12;
+      state.hero.damage += 12;
+      state.hero.critMultiplier += 0.2;
+    }
+  }
+];
+
+const SUMMON_BEAUTIES = [
+  {
+    id: "qinglu",
+    source: "summon",
+    rank: "c",
+    name: "晴露",
+    title: "晨风花匠",
+    profile: "从风庭苗圃逃出来的少女，会把清晨花露压成高速花弹，替虾仁扫开前线怪潮。",
+    skillName: "花露散射",
+    skillDesc: "每 9 秒发射四枚花露弹，清掉前方扇形内的小怪。",
+    accent: "#8ef1c2",
+    cooldown: 9,
+    art: {
+      purified: createSummonBeautyArt({
+        aura: "#9df8cf",
+        glow: "#dffff4",
+        hairA: "#f7f5d9",
+        hairB: "#8fcf87",
+        dressA: "#eefdf4",
+        dressB: "#7fdbb1",
+        ribbon: "#5ecf97"
+      })
+    }
+  },
+  {
+    id: "taoxi",
+    source: "summon",
+    rank: "c",
+    name: "桃汐",
+    title: "软潮泡泡师",
+    profile: "她会把甜潮雾气封成泡阵，把冲得最急的哥布林拖进黏稠减速里。",
+    skillName: "潮泡禁域",
+    skillDesc: "每 10 秒在敌群前方生成泡阵，持续减速并磨血。",
+    accent: "#ffb4d0",
+    cooldown: 10,
+    art: {
+      purified: createSummonBeautyArt({
+        aura: "#ffbdd6",
+        glow: "#ffe7f1",
+        hairA: "#ffd3e9",
+        hairB: "#f18aab",
+        dressA: "#fff1f8",
+        dressB: "#ff9fc4",
+        ribbon: "#ff78ad"
+      })
+    }
+  },
+  {
+    id: "yunmi",
+    source: "summon",
+    rank: "b",
+    name: "云弥",
+    title: "巡云猎手",
+    profile: "擅长在高空巡视战场，她会把云羽压成追光飞针，精准点掉危险目标。",
+    skillName: "追光羽针",
+    skillDesc: "每 8.5 秒锁定多名敌人，打出追踪羽针。",
+    accent: "#97e6ff",
+    cooldown: 8.5,
+    art: {
+      purified: createSummonBeautyArt({
+        aura: "#9de8ff",
+        glow: "#ecfbff",
+        hairA: "#ebf6ff",
+        hairB: "#8dc4ff",
+        dressA: "#f0fbff",
+        dressB: "#7bd6f4",
+        ribbon: "#6ab6ff"
+      })
+    }
+  },
+  {
+    id: "luoye",
+    source: "summon",
+    rank: "b",
+    name: "洛夜",
+    title: "影幕裁缝",
+    profile: "她会把影线缝进怪群脚下，让逼近防线的敌人瞬间停滞。",
+    skillName: "暮影禁锢",
+    skillDesc: "每 10.5 秒束缚多名靠前目标，并追加一次影伤。",
+    accent: "#c4b8ff",
+    cooldown: 10.5,
+    art: {
+      purified: createSummonBeautyArt({
+        aura: "#d0c2ff",
+        glow: "#f0ebff",
+        hairA: "#d9cbff",
+        hairB: "#745cd6",
+        dressA: "#f4efff",
+        dressB: "#9c7fff",
+        ribbon: "#b66dff"
+      })
+    }
+  },
+  {
+    id: "qinyao",
+    source: "summon",
+    rank: "b",
+    name: "琴瑶",
+    title: "和声补给官",
+    profile: "她善于在极短时间里完成前线补给，顺手把爆裂弹精准投进敌堆中央。",
+    skillName: "和声投送",
+    skillDesc: "每 11 秒恢复基地并空投两枚爆裂弹。",
+    accent: "#ffd38a",
+    cooldown: 11,
+    art: {
+      purified: createSummonBeautyArt({
+        aura: "#ffd88e",
+        glow: "#fff2cf",
+        hairA: "#fff1cf",
+        hairB: "#f0b66b",
+        dressA: "#fff9eb",
+        dressB: "#f3c577",
+        ribbon: "#f09854"
+      })
+    }
+  },
+  {
+    id: "ruolan",
+    source: "summon",
+    rank: "a",
+    name: "若澜",
+    title: "棱镜魔装使",
+    profile: "她会把光棱压成笔直射线，打穿整条怪潮，还能顺带灼烧线上的残余目标。",
+    skillName: "棱镜射界",
+    skillDesc: "每 9.5 秒放出一道高能棱镜射线，贯穿并灼烧前方路径。",
+    accent: "#7de6ff",
+    cooldown: 9.5,
+    art: {
+      purified: createSummonBeautyArt({
+        aura: "#80ebff",
+        glow: "#defbff",
+        hairA: "#f7ffff",
+        hairB: "#69c5ff",
+        dressA: "#f2ffff",
+        dressB: "#6ce0ff",
+        ribbon: "#59b7ff"
+      })
+    }
+  },
+  {
+    id: "aisha",
+    source: "summon",
+    rank: "a",
+    name: "艾纱",
+    title: "星轨圣职者",
+    profile: "她会从高空牵引星轨惩戒，优先斩掉精英与大体型目标。",
+    skillName: "星轨惩戒",
+    skillDesc: "每 10 秒锁定多名敌人，降下高压星轨圣光。",
+    accent: "#ffb7d2",
+    cooldown: 10,
+    art: {
+      purified: createSummonBeautyArt({
+        aura: "#ffc5db",
+        glow: "#fff0f7",
+        hairA: "#ffe4ef",
+        hairB: "#ff87bb",
+        dressA: "#fff1f8",
+        dressB: "#ffa1cb",
+        ribbon: "#ff6da8"
+      })
+    }
+  },
+  {
+    id: "jinse",
+    source: "summon",
+    rank: "s",
+    name: "瑾瑟",
+    title: "天穹凰姬",
+    profile: "稀有招募角色。她会张开凰羽天穹，一边惩戒多名敌人，一边为阵地覆上圣焰护盾。",
+    skillName: "凰羽圣裁",
+    skillDesc: "每 12.5 秒对多名敌人降下凰羽圣裁，并恢复基地生命与护盾。",
+    accent: "#ff8ecb",
+    cooldown: 12.5,
+    art: {
+      purified: createSummonBeautyArt({
+        aura: "#ff8fd6",
+        glow: "#ffe4f4",
+        hairA: "#fff1f7",
+        hairB: "#ff63b3",
+        dressA: "#fff0f8",
+        dressB: "#ff97d4",
+        ribbon: "#ff6fa6"
+      })
+    }
+  }
+];
+
+const ALL_BEAUTIES = [...BEAUTIES, ...SUMMON_BEAUTIES];
+
+const BOSS_VOICE_PATHS = {
+  hiyori: "assets/audio/boss-hiyori.wav",
+  serin: "assets/audio/boss-serin.wav",
+  yelan: "assets/audio/boss-yelan.wav",
+  mingsha: "assets/audio/boss-mingsha.wav",
+  lanwei: "assets/audio/boss-lanwei.wav",
+  shali: "assets/audio/boss-shali.wav",
+  yuege: "assets/audio/boss-yuege.wav",
+  molan: "assets/audio/boss-molan.wav",
+  xingkui: "assets/audio/boss-xingkui.wav",
+  cangya: "assets/audio/boss-cangya.wav"
+};
+
 const UPGRADE_POOL = [
   {
     id: "rapid-trigger",
@@ -598,7 +1034,7 @@ const UPGRADE_POOL = [
     rarity: "枪械卡",
     maxLevel: 4,
     describe(_state, nextLevel) {
-      return `第 ${nextLevel} 级：命中后附加更大的小范围爆裂。`;
+      return `第 ${nextLevel} 级：命中爆裂半径 +12，爆裂伤害维持主伤害的 36%。`;
     },
     apply(state) {
       state.hero.splash += 12;
@@ -610,7 +1046,7 @@ const UPGRADE_POOL = [
     rarity: "元素卡",
     maxLevel: 3,
     describe(_state, nextLevel) {
-      return `第 ${nextLevel} 级：子弹附带减速，持续时间提升。`;
+      return `第 ${nextLevel} 级：子弹附带减速，减速时长额外 +0.5 秒。`;
     },
     apply(state) {
       state.hero.slowShots = true;
@@ -679,7 +1115,7 @@ const UPGRADE_POOL = [
     rarity: "枪械卡",
     maxLevel: 4,
     describe(_state, nextLevel) {
-      return `第 ${nextLevel} 级：对 Boss 与精英的伤害提升。`;
+      return `第 ${nextLevel} 级：主武器对 Boss 伤害 +12%，对精英伤害 +8%。`;
     },
     apply(state) {
       state.hero.bossBonus += 0.12;
@@ -692,7 +1128,7 @@ const UPGRADE_POOL = [
     rarity: "防线卡",
     maxLevel: 3,
     describe(_state, nextLevel) {
-      return `第 ${nextLevel} 级：击杀普通怪可回复少量生命。`;
+      return `第 ${nextLevel} 级：每次击杀非 Boss 目标回复 3 点基地生命。`;
     },
     apply(state) {
       state.hero.onKillRepair += 3;
@@ -704,7 +1140,7 @@ const UPGRADE_POOL = [
     rarity: "核心卡",
     maxLevel: 3,
     describe(_state, nextLevel) {
-      return nextLevel === 1 ? "解锁周期性温压爆弹，轰击密集怪群。" : `升至 ${nextLevel} 级：爆炸伤害、范围与灼烧同步提升。`;
+      return nextLevel === 1 ? "解锁周期性温压爆弹，命中后附带灼烧。" : `升至 ${nextLevel} 级：爆炸伤害、爆炸范围和灼烧 DPS 同步提升。`;
     },
     apply(state) {
       state.modules.thermobaric = (state.modules.thermobaric || 0) + 1;
@@ -717,7 +1153,7 @@ const UPGRADE_POOL = [
     rarity: "核心卡",
     maxLevel: 3,
     describe(_state, nextLevel) {
-      return nextLevel === 1 ? "解锁燃油弹，落地后形成持续灼烧区域。" : `升至 ${nextLevel} 级：燃烧区域变大且持续更久。`;
+      return nextLevel === 1 ? "解锁燃油弹，落地后生成灼烧地带。" : `升至 ${nextLevel} 级：投弹数量增加，燃烧区域更大且持续更久。`;
     },
     apply(state) {
       state.modules.fuelBomb = (state.modules.fuelBomb || 0) + 1;
@@ -730,7 +1166,7 @@ const UPGRADE_POOL = [
     rarity: "核心卡",
     maxLevel: 3,
     describe(_state, nextLevel) {
-      return nextLevel === 1 ? "解锁干冰弹，对落点周围敌人造成冻结冲击。" : `升至 ${nextLevel} 级：冻结持续更久，伤害更高。`;
+      return nextLevel === 1 ? "解锁干冰弹，对范围内敌人造成减速和冻结。" : `升至 ${nextLevel} 级：冻结时间、减速时间和伤害提高。`;
     },
     apply(state) {
       state.modules.dryIce = (state.modules.dryIce || 0) + 1;
@@ -743,7 +1179,7 @@ const UPGRADE_POOL = [
     rarity: "核心卡",
     maxLevel: 3,
     describe(_state, nextLevel) {
-      return nextLevel === 1 ? "解锁冰爆发生器，周期性冻结前场。" : `升至 ${nextLevel} 级：冰爆半径和伤害同步提升。`;
+      return nextLevel === 1 ? "解锁冰爆发生器，周期性在前场触发冻结冲击。" : `升至 ${nextLevel} 级：冰爆半径、伤害和冻结时间同步提升。`;
     },
     apply(state) {
       state.modules.iceBurst = (state.modules.iceBurst || 0) + 1;
@@ -756,7 +1192,7 @@ const UPGRADE_POOL = [
     rarity: "核心卡",
     maxLevel: 3,
     describe(_state, nextLevel) {
-      return nextLevel === 1 ? "解锁电磁穿刺，发射一条贯穿型能量刺线。" : `升至 ${nextLevel} 级：穿刺宽度和伤害提高。`;
+      return nextLevel === 1 ? "解锁电磁穿刺，发射一条贯穿型能量刺线。" : `升至 ${nextLevel} 级：刺线宽度和贯穿伤害提高。`;
     },
     apply(state) {
       state.modules.electroSpike = (state.modules.electroSpike || 0) + 1;
@@ -769,7 +1205,7 @@ const UPGRADE_POOL = [
     rarity: "核心卡",
     maxLevel: 3,
     describe(_state, nextLevel) {
-      return nextLevel === 1 ? "解锁高能射线，锁定前方目标并持续灼烧一线。" : `升至 ${nextLevel} 级：射线更宽、伤害更高。`;
+      return nextLevel === 1 ? "解锁高能射线，锁定前方目标并灼烧整条射线。" : `升至 ${nextLevel} 级：射线更宽、即时伤害更高，灼烧更强。`;
     },
     apply(state) {
       state.modules.highEnergyRay = (state.modules.highEnergyRay || 0) + 1;
@@ -782,7 +1218,7 @@ const UPGRADE_POOL = [
     rarity: "核心卡",
     maxLevel: 3,
     describe(_state, nextLevel) {
-      return nextLevel === 1 ? "解锁制导激光，对高威胁敌人降下精准光束。" : `升至 ${nextLevel} 级：每轮打击更多目标。`;
+      return nextLevel === 1 ? "解锁制导激光，对高威胁敌人降下精准光束。" : `升至 ${nextLevel} 级：每轮制导打击更多目标。`;
     },
     apply(state) {
       state.modules.guidedLaser = (state.modules.guidedLaser || 0) + 1;
@@ -795,7 +1231,7 @@ const UPGRADE_POOL = [
     rarity: "核心卡",
     maxLevel: 3,
     describe(_state, nextLevel) {
-      return nextLevel === 1 ? "解锁旋风加农，周期性发出旋转弹幕。" : `升至 ${nextLevel} 级：每轮弹数与伤害增加。`;
+      return nextLevel === 1 ? "解锁旋风加农，周期性发出旋转弹幕。" : `升至 ${nextLevel} 级：每轮弹数、穿透和伤害增加。`;
     },
     apply(state) {
       state.modules.cycloneCannon = (state.modules.cycloneCannon || 0) + 1;
@@ -808,7 +1244,7 @@ const UPGRADE_POOL = [
     rarity: "核心卡",
     maxLevel: 3,
     describe(_state, nextLevel) {
-      return nextLevel === 1 ? "解锁空投轰炸，从上方多点投下爆弹。" : `升至 ${nextLevel} 级：轰炸点和范围提升。`;
+      return nextLevel === 1 ? "解锁空投轰炸，从上方多点投下爆弹。" : `升至 ${nextLevel} 级：轰炸点数量、爆炸范围和伤害提升。`;
     },
     apply(state) {
       state.modules.airdrop = (state.modules.airdrop || 0) + 1;
@@ -821,7 +1257,7 @@ const UPGRADE_POOL = [
     rarity: "核心卡",
     maxLevel: 3,
     describe(_state, nextLevel) {
-      return nextLevel === 1 ? "解锁无人机伴飞，持续自动补枪。" : `升至 ${nextLevel} 级：无人机数量与火力同步提高。`;
+      return nextLevel === 1 ? "解锁无人机伴飞，持续自动补枪。" : `升至 ${nextLevel} 级：无人机数量、射击间隔和伤害同步优化。`;
     },
     apply(state) {
       state.modules.droneWing = (state.modules.droneWing || 0) + 1;
@@ -928,14 +1364,68 @@ const CORE_UPGRADE_TO_MODULE_KEY = {
   "drone-wing": "droneWing"
 };
 
+function createSummonBeautyArt(config) {
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 520">
+      <defs>
+        <radialGradient id="aura" cx=".5" cy=".28" r=".72">
+          <stop offset="0" stop-color="${config.glow}" stop-opacity=".92"/>
+          <stop offset=".48" stop-color="${config.aura}" stop-opacity=".34"/>
+          <stop offset="1" stop-color="#0a1017" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="hair" x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0" stop-color="${config.hairA}"/>
+          <stop offset="1" stop-color="${config.hairB}"/>
+        </linearGradient>
+        <linearGradient id="dress" x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0" stop-color="${config.dressA}"/>
+          <stop offset=".54" stop-color="${config.dressB}"/>
+          <stop offset="1" stop-color="${config.ribbon}"/>
+        </linearGradient>
+        <linearGradient id="skin" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0" stop-color="#fae0d0"/>
+          <stop offset=".6" stop-color="#f0c7b1"/>
+          <stop offset="1" stop-color="#d9a78f"/>
+        </linearGradient>
+      </defs>
+      <ellipse cx="180" cy="488" rx="86" ry="22" fill="#000" fill-opacity=".14"/>
+      <circle cx="180" cy="150" r="128" fill="url(#aura)"/>
+      <path d="M94 176c0-56 34-96 86-96 49 0 88 37 88 90 0 34-13 64-34 96l-19-11 2-56c1-32-16-56-38-56-28 0-51 22-52 56l-1 56-19 13c-9-14-13-31-13-49z" fill="url(#hair)"/>
+      <path d="M169 95c-31 0-56 27-56 62 0 27 16 49 38 58l-6 30h70l-6-30c23-9 38-31 38-58 0-35-25-62-56-62h-22z" fill="url(#skin)"/>
+      <path d="M110 136c0-46 33-79 80-79 42 0 76 29 76 77 0 17-4 32-11 45-11-16-25-27-43-35-18 12-44 19-78 19-9 0-17 1-24 3 0-11 0-20 0-30z" fill="url(#hair)"/>
+      <path d="M144 153c10-9 23-12 36-8" fill="none" stroke="#4b2d36" stroke-width="4" stroke-linecap="round"/>
+      <path d="M184 145c14-4 27-1 37 8" fill="none" stroke="#4b2d36" stroke-width="4" stroke-linecap="round"/>
+      <ellipse cx="164" cy="157" rx="5.2" ry="6.4" fill="#2d3040"/>
+      <ellipse cx="198" cy="157" rx="5.2" ry="6.4" fill="#2d3040"/>
+      <circle cx="162.6" cy="155.4" r="1.4" fill="#fff" fill-opacity=".8"/>
+      <circle cx="196.6" cy="155.4" r="1.4" fill="#fff" fill-opacity=".8"/>
+      <path d="M176 171c2 2 5 3 9 2" fill="none" stroke="#c58e83" stroke-width="2.6" stroke-linecap="round"/>
+      <path d="M161 185c7 8 14 10 20 10 6 0 13-2 20-10" fill="none" stroke="#d07b7a" stroke-width="3.2" stroke-linecap="round"/>
+      <path d="M116 264c0-44 27-75 64-75 39 0 64 31 64 75v48H116v-48z" fill="url(#dress)"/>
+      <path d="M132 314c22 16 39 23 52 23 15 0 34-6 56-17l20 70H98l34-76z" fill="#f8fbff" fill-opacity=".92"/>
+      <path d="M150 336l-14 138h42l6-80 8 80h42l-16-138h-68z" fill="url(#dress)"/>
+      <path d="M140 282l-26 98h40l22-74-36-24zm82 0l36 24 20 74h-40l-16-98z" fill="#ffd9cb" fill-opacity=".8"/>
+      <path d="M86 180l-28 76 26 10 30-64-28-22zm188 0l28 76-26 10-30-64 28-22z" fill="#f8dbc9"/>
+      <path d="M140 250l40 30 40-30v48h-80v-48z" fill="${config.ribbon}" fill-opacity=".78"/>
+      <path d="M150 212h58" stroke="rgba(99,66,72,.42)" stroke-width="8" stroke-linecap="round"/>
+      <path d="M118 110l22-18 18 18m74-6l18 18 20-16" fill="none" stroke="${config.glow}" stroke-width="6" stroke-linecap="round" stroke-opacity=".8"/>
+      <circle cx="84" cy="126" r="6" fill="${config.glow}" fill-opacity=".55"/>
+      <circle cx="282" cy="148" r="5" fill="${config.glow}" fill-opacity=".45"/>
+      <circle cx="254" cy="90" r="4" fill="${config.glow}" fill-opacity=".55"/>
+    </svg>
+  `.trim();
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+
 const SPRITE_PATHS = Array.from(new Set([
   HERO_ART,
   MONSTER_ART.goblin,
   MONSTER_ART.elite,
-  ...BEAUTIES.flatMap((beauty) => [beauty.art.purified, beauty.art.corrupt || beauty.art.purified])
+  ...ALL_BEAUTIES.flatMap((beauty) => [beauty.art.purified, beauty.art.corrupt || beauty.art.purified])
 ]));
 
 const spriteCache = {};
+const bossVoiceCache = {};
 let progress = loadProgress();
 let game = null;
 let lastTimestamp = 0;
@@ -944,14 +1434,28 @@ let resultContext = null;
 let pendingStageId = null;
 let storyState = null;
 let bossIntroTimer = null;
+let libraryBeautyIndex = 0;
 
 const homeScreen = document.getElementById("homeScreen");
+const libraryScreen = document.getElementById("libraryScreen");
+const shopScreen = document.getElementById("shopScreen");
 const battleScreen = document.getElementById("battleScreen");
 const summaryStrip = document.getElementById("summaryStrip");
 const currentCompanion = document.getElementById("currentCompanion");
 const companionChoices = document.getElementById("companionChoices");
+const openLibraryButton = document.getElementById("openLibraryButton");
+const openShopButton = document.getElementById("openShopButton");
 const stageGrid = document.getElementById("stageGrid");
 const beautyLibrary = document.getElementById("beautyLibrary");
+const libraryBackButton = document.getElementById("libraryBackButton");
+const libraryCounter = document.getElementById("libraryCounter");
+const libraryPrevButton = document.getElementById("libraryPrevButton");
+const libraryNextButton = document.getElementById("libraryNextButton");
+const shopBackButton = document.getElementById("shopBackButton");
+const shopWallet = document.getElementById("shopWallet");
+const shopDrawDeck = document.getElementById("shopDrawDeck");
+const equipmentStrip = document.getElementById("equipmentStrip");
+const shopGrid = document.getElementById("shopGrid");
 const resetProgressButton = document.getElementById("resetProgressButton");
 const retreatButton = document.getElementById("retreatButton");
 const battleStageName = document.getElementById("battleStageName");
@@ -998,6 +1502,14 @@ const resultText = document.getElementById("resultText");
 const resultStats = document.getElementById("resultStats");
 const resultPrimaryButton = document.getElementById("resultPrimaryButton");
 const resultSecondaryButton = document.getElementById("resultSecondaryButton");
+const drawResultModal = document.getElementById("drawResultModal");
+const drawResultBadge = document.getElementById("drawResultBadge");
+const drawResultArt = document.getElementById("drawResultArt");
+const drawResultKicker = document.getElementById("drawResultKicker");
+const drawResultTitle = document.getElementById("drawResultTitle");
+const drawResultText = document.getElementById("drawResultText");
+const drawResultMeta = document.getElementById("drawResultMeta");
+const drawResultConfirmButton = document.getElementById("drawResultConfirmButton");
 const canvas = document.getElementById("battleCanvas");
 const ctx = canvas.getContext("2d");
 const sound = createSoundSystem();
@@ -1012,6 +1524,11 @@ function preloadSprites() {
     const image = new Image();
     image.src = path;
     spriteCache[path] = image;
+  });
+  Object.entries(BOSS_VOICE_PATHS).forEach(([id, path]) => {
+    const audio = new Audio(path);
+    audio.preload = "auto";
+    bossVoiceCache[id] = audio;
   });
 }
 
@@ -1072,6 +1589,36 @@ function bindEvents() {
     closeStageIntro();
   });
 
+  openLibraryButton.addEventListener("click", () => {
+    sound.ensureStarted();
+    openLibraryScreen(progress.selectedCompanionId);
+  });
+
+  openShopButton.addEventListener("click", () => {
+    sound.ensureStarted();
+    openShopScreen();
+  });
+
+  libraryBackButton.addEventListener("click", () => {
+    sound.ensureStarted();
+    renderHome();
+  });
+
+  shopBackButton.addEventListener("click", () => {
+    sound.ensureStarted();
+    renderHome();
+  });
+
+  libraryPrevButton.addEventListener("click", () => {
+    sound.ensureStarted();
+    shiftLibraryBeauty(-1);
+  });
+
+  libraryNextButton.addEventListener("click", () => {
+    sound.ensureStarted();
+    shiftLibraryBeauty(1);
+  });
+
   bossIntroStartButton.addEventListener("click", () => {
     return;
   });
@@ -1099,14 +1646,28 @@ function bindEvents() {
       requestStageStart(targetStageId);
     }
   });
+
+  drawResultConfirmButton.addEventListener("click", () => {
+    sound.ensureStarted();
+    closeDrawResultModal();
+  });
 }
 
 function createDefaultProgress() {
   return {
     rescued: [],
+    recruitedBeautyIds: [],
     clearedStages: [],
     selectedCompanionId: null,
-    introWatched: false
+    introWatched: false,
+    gold: 0,
+    tickets: 24,
+    inventoryItemIds: [],
+    equippedItemIds: {
+      weapon: null,
+      armor: null,
+      item: null
+    }
   };
 }
 
@@ -1119,13 +1680,35 @@ function loadProgress() {
 
   try {
     const parsed = JSON.parse(raw);
+    const inventoryItemIds = Array.isArray(parsed.inventoryItemIds)
+      ? parsed.inventoryItemIds.filter((id) => SHOP_ITEMS.some((item) => item.id === id))
+      : [];
+    const recruitedBeautyIds = Array.isArray(parsed.recruitedBeautyIds)
+      ? parsed.recruitedBeautyIds.filter((id) => SUMMON_BEAUTIES.some((beauty) => beauty.id === id))
+      : [];
+    const equippedItemIds = parsed.equippedItemIds && typeof parsed.equippedItemIds === "object"
+      ? {
+          weapon: inventoryItemIds.includes(parsed.equippedItemIds.weapon) ? parsed.equippedItemIds.weapon : null,
+          armor: inventoryItemIds.includes(parsed.equippedItemIds.armor) ? parsed.equippedItemIds.armor : null,
+          item: inventoryItemIds.includes(parsed.equippedItemIds.item) ? parsed.equippedItemIds.item : null
+        }
+      : {
+          weapon: null,
+          armor: null,
+          item: null
+        };
     return {
-      rescued: Array.isArray(parsed.rescued) ? parsed.rescued.filter(isBeautyKnown) : [],
+      rescued: Array.isArray(parsed.rescued) ? parsed.rescued.filter((id) => BEAUTIES.some((beauty) => beauty.id === id)) : [],
+      recruitedBeautyIds,
       clearedStages: Array.isArray(parsed.clearedStages)
         ? parsed.clearedStages.filter((id) => STAGES.some((stage) => stage.id === id))
         : [],
       selectedCompanionId: isBeautyKnown(parsed.selectedCompanionId) ? parsed.selectedCompanionId : null,
-      introWatched: Boolean(parsed.introWatched)
+      introWatched: Boolean(parsed.introWatched),
+      gold: Math.max(0, Number(parsed.gold) || 0),
+      tickets: parsed.tickets == null ? 24 : Math.max(0, Number(parsed.tickets) || 0),
+      inventoryItemIds,
+      equippedItemIds
     };
   } catch (_error) {
     return createDefaultProgress();
@@ -1133,18 +1716,157 @@ function loadProgress() {
 }
 
 function saveProgress() {
-  if (progress.selectedCompanionId && !progress.rescued.includes(progress.selectedCompanionId)) {
+  if (progress.selectedCompanionId && !isBeautyOwned(progress.selectedCompanionId)) {
     progress.selectedCompanionId = null;
   }
+  progress.rescued = Array.from(new Set(progress.rescued)).filter((id) => BEAUTIES.some((beauty) => beauty.id === id));
+  progress.clearedStages = Array.from(new Set(progress.clearedStages)).filter((id) => STAGES.some((stage) => stage.id === id));
+  progress.recruitedBeautyIds = Array.from(new Set(progress.recruitedBeautyIds)).filter((id) => SUMMON_BEAUTIES.some((beauty) => beauty.id === id));
+  progress.inventoryItemIds = Array.from(new Set(progress.inventoryItemIds)).filter((id) => SHOP_ITEMS.some((item) => item.id === id));
+  ["weapon", "armor", "item"].forEach((type) => {
+    const equippedId = progress.equippedItemIds[type];
+    if (!progress.inventoryItemIds.includes(equippedId)) {
+      progress.equippedItemIds[type] = null;
+    }
+  });
   localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
 }
 
 function isBeautyKnown(id) {
-  return BEAUTIES.some((beauty) => beauty.id === id);
+  return ALL_BEAUTIES.some((beauty) => beauty.id === id);
+}
+
+function isBeautyOwned(id) {
+  const beauty = getBeauty(id);
+  if (!beauty) {
+    return false;
+  }
+  return beauty.source === "summon"
+    ? progress.recruitedBeautyIds.includes(beauty.id)
+    : progress.rescued.includes(beauty.id);
+}
+
+function getShopItem(id) {
+  return SHOP_ITEMS.find((item) => item.id === id) || null;
+}
+
+function getQualityMeta(quality) {
+  return QUALITY_META[quality] || QUALITY_META.common;
+}
+
+function getCompanionRankMeta(rank) {
+  return COMPANION_RANK_META[rank] || COMPANION_RANK_META.c;
+}
+
+function getTypeLabel(type) {
+  return ({
+    weapon: "武器",
+    armor: "防具",
+    item: "道具"
+  })[type] || "物品";
+}
+
+function getOwnedItems(type) {
+  return progress.inventoryItemIds
+    .map(getShopItem)
+    .filter(Boolean)
+    .filter((item) => !type || item.type === type);
+}
+
+function getEquippedItem(type) {
+  return getShopItem(progress.equippedItemIds[type]);
+}
+
+function equipItem(itemId) {
+  const item = getShopItem(itemId);
+  if (!item || !progress.inventoryItemIds.includes(item.id)) {
+    return false;
+  }
+  progress.equippedItemIds[item.type] = item.id;
+  saveProgress();
+  return true;
+}
+
+function grantInventoryItem(itemId) {
+  if (!progress.inventoryItemIds.includes(itemId)) {
+    progress.inventoryItemIds.push(itemId);
+  }
+  const item = getShopItem(itemId);
+  if (item && !progress.equippedItemIds[item.type]) {
+    progress.equippedItemIds[item.type] = item.id;
+  }
+}
+
+function applyEquippedItems(state) {
+  ["weapon", "armor", "item"].forEach((type) => {
+    const item = getEquippedItem(type);
+    if (item) {
+      item.apply(state);
+    }
+  });
+  state.hero.hp = Math.min(state.hero.maxHp, state.hero.hp);
+}
+
+function getEquippedSummary() {
+  return ["weapon", "armor", "item"].map((type) => {
+    const item = getEquippedItem(type);
+    return item ? `${getTypeLabel(type)}：${item.name}` : `${getTypeLabel(type)}：未装备`;
+  });
+}
+
+function getOwnedBeauties() {
+  return ALL_BEAUTIES.filter((beauty) => isBeautyOwned(beauty.id));
+}
+
+function rollQualityByStage(stageId) {
+  const roll = Math.random();
+  const white = Math.max(0.46, 0.66 - stageId * 0.02);
+  const green = Math.min(0.34, 0.2 + stageId * 0.012);
+  const blue = Math.min(0.18, 0.08 + stageId * 0.009);
+  if (roll < white) {
+    return "common";
+  }
+  if (roll < white + green) {
+    return "uncommon";
+  }
+  if (roll < white + green + blue) {
+    return "rare";
+  }
+  return "epic";
+}
+
+function rollVictoryReward(stageId, firstClear) {
+  const gold = 88 + stageId * 26 + (firstClear ? 40 : 0);
+  const tickets = firstClear ? 2 + Math.floor(stageId / 3) : stageId % 4 === 0 ? 1 : 0;
+  let item = null;
+  let duplicateGold = 0;
+  if (Math.random() < 0.52) {
+    const type = ["weapon", "armor", "item"][Math.floor(Math.random() * 3)];
+    const quality = rollQualityByStage(stageId);
+    item = SHOP_ITEMS.find((shopItem) => shopItem.type === type && shopItem.quality === quality) || null;
+    if (item) {
+      if (progress.inventoryItemIds.includes(item.id)) {
+        duplicateGold = Math.round(item.price * 0.35);
+        item = null;
+      } else {
+        grantInventoryItem(item.id);
+      }
+    }
+  }
+  progress.gold += gold + duplicateGold;
+  progress.tickets += tickets;
+  return {
+    gold,
+    tickets,
+    item,
+    duplicateGold
+  };
 }
 
 function showScreen(name) {
   homeScreen.classList.toggle("screen-active", name === "home");
+  libraryScreen.classList.toggle("screen-active", name === "library");
+  shopScreen.classList.toggle("screen-active", name === "shop");
   battleScreen.classList.toggle("screen-active", name === "battle");
   sound.setScene(name === "battle" ? "battle" : "menu");
 }
@@ -1155,16 +1877,21 @@ function renderHome() {
   renderCompanions();
   renderStages();
   renderLibrary();
+  renderShop();
 }
 
 function renderSummary() {
   const rescuedCount = progress.rescued.length;
+  const ownedBeautyCount = getOwnedBeauties().length;
   const clearedCount = progress.clearedStages.length;
   const selected = getSelectedCompanion();
   summaryStrip.innerHTML = `
     <div class="summary-chip"><span>已净化 Boss</span><strong>${rescuedCount}/${BEAUTIES.length}</strong></div>
+    <div class="summary-chip"><span>已收录美女</span><strong>${ownedBeautyCount}/${ALL_BEAUTIES.length}</strong></div>
     <div class="summary-chip"><span>已通关关卡</span><strong>${clearedCount}/${STAGES.length}</strong></div>
     <div class="summary-chip"><span>当前辅佐</span><strong>${selected ? selected.name : "未携带"}</strong></div>
+    <div class="summary-chip"><span>金币储备</span><strong>${progress.gold}</strong></div>
+    <div class="summary-chip"><span>点券储备</span><strong>${progress.tickets}</strong></div>
   `;
 }
 
@@ -1183,9 +1910,9 @@ function renderCompanions() {
   } else {
     currentCompanion.innerHTML = `
       <div class="current-companion-layout">
-        <img src="${selected.art.purified}" alt="${selected.name}净化形态" class="current-companion-art">
+        <img src="${selected.art.purified}" alt="${selected.name}净化形态" class="current-companion-art purified-portrait">
         <div>
-          <p class="section-kicker">已编组</p>
+          <p class="section-kicker">${selected.source === "summon" ? "已招募编组" : "已净化编组"}</p>
           <h3 style="margin: 0; color: ${selected.accent};">${selected.name} · ${selected.title}</h3>
           <p>${selected.profile}</p>
           <p><strong>${selected.skillName}</strong>：${selected.skillDesc}</p>
@@ -1203,12 +1930,13 @@ function renderCompanions() {
     `
   ];
 
-  BEAUTIES.filter((beauty) => progress.rescued.includes(beauty.id)).forEach((beauty) => {
+  getOwnedBeauties().forEach((beauty) => {
+    const rankMeta = beauty.rank ? getCompanionRankMeta(beauty.rank) : null;
     buttons.push(`
       <button class="choice-button with-art ${progress.selectedCompanionId === beauty.id ? "is-selected" : ""}" data-beauty-id="${beauty.id}">
-        <img src="${beauty.art.purified}" alt="${beauty.name}" class="choice-avatar">
+        <img src="${beauty.art.purified}" alt="${beauty.name}" class="choice-avatar purified-portrait">
         <div>
-          <span>${beauty.name}</span>
+          <span>${beauty.name}${rankMeta ? ` · <em style="color:${rankMeta.color}; font-style:normal;">${rankMeta.label}</em>` : ""}</span>
           <small>${beauty.skillName}</small>
         </div>
       </button>
@@ -1270,40 +1998,385 @@ function renderStages() {
 }
 
 function renderLibrary() {
-  beautyLibrary.innerHTML = BEAUTIES.map((beauty, index) => {
-    const unlocked = progress.rescued.includes(beauty.id);
-    const stage = getStage(beauty.stageId);
-    const bossArt = getCorruptArtPath(beauty);
-    const filterClass = beautyNeedsCorruptFilter(beauty) ? "is-corrupt-filter" : "";
-    return `
-      <article class="beauty-card ${unlocked ? "" : "locked"}" style="box-shadow: inset 0 0 0 1px ${hexToRgba(beauty.accent, unlocked ? 0.22 : 0.08)};">
-        <div class="beauty-top">
-          <div>
-            <span class="beauty-badge">${unlocked ? "已净化" : `目标 ${index + 1}`}</span>
-            <h3>${unlocked ? beauty.name : "未净化目标"}</h3>
-          </div>
-          <span class="meta-pill">${unlocked ? beauty.title : "资料封锁中"}</span>
+  if (!ALL_BEAUTIES.length) {
+    beautyLibrary.innerHTML = "";
+    libraryCounter.textContent = "0 / 0";
+    return;
+  }
+  libraryBeautyIndex = ((libraryBeautyIndex % ALL_BEAUTIES.length) + ALL_BEAUTIES.length) % ALL_BEAUTIES.length;
+  const beauty = ALL_BEAUTIES[libraryBeautyIndex];
+  const unlocked = isBeautyOwned(beauty.id);
+  const stage = getStage(beauty.stageId);
+  const bossArt = getCorruptArtPath(beauty);
+  const filterClass = beauty.source === "summon" ? "" : beautyNeedsCorruptFilter(beauty) ? "is-corrupt-filter" : "";
+  const rankMeta = beauty.rank ? getCompanionRankMeta(beauty.rank) : null;
+  libraryCounter.textContent = `${libraryBeautyIndex + 1} / ${ALL_BEAUTIES.length}`;
+  beautyLibrary.innerHTML = `
+    <article class="beauty-viewer-card" style="box-shadow: inset 0 0 0 1px ${hexToRgba(beauty.accent, unlocked ? 0.22 : 0.08)};">
+      <div class="beauty-viewer-art">
+        <div class="beauty-viewer-portrait">
+          <img src="${unlocked ? beauty.art.purified : bossArt}" alt="${unlocked ? beauty.name : beauty.bossName || beauty.name}" class="${unlocked ? "purified-portrait" : !unlocked && filterClass ? filterClass : ""}">
         </div>
         <div class="portrait-strip">
           <div class="portrait-state">
-            <img src="${bossArt}" alt="${beauty.bossName}" class="${filterClass}">
-            <div class="portrait-label">黑化 Boss</div>
+            <img src="${beauty.source === "summon" ? beauty.art.purified : bossArt}" alt="${beauty.source === "summon" ? beauty.name : beauty.bossName}" class="${beauty.source === "summon" ? "" : filterClass}">
+            <div class="portrait-label">${beauty.source === "summon" ? "招募档案" : "黑化阶段"}</div>
           </div>
           <div class="portrait-state">
-            <img src="${beauty.art.purified}" alt="${beauty.name}">
-            <div class="portrait-label">净化辅佐</div>
+            <img src="${beauty.art.purified}" alt="${beauty.name}" class="purified-portrait">
+            <div class="portrait-label">${beauty.source === "summon" ? "出战形态" : "净化阶段"}</div>
           </div>
         </div>
-        <p>${unlocked ? beauty.profile : "她仍被困在哥布林之巢深处。通关对应主线后，才能完整收录这一位美少女的档案。"}</p>
+      </div>
+      <div class="beauty-viewer-copy">
+        <div class="beauty-top">
+          <div>
+            <span class="beauty-badge">${unlocked ? beauty.source === "summon" ? "已招募" : "已净化" : beauty.source === "summon" ? "待招募" : `目标 ${libraryBeautyIndex + 1}`}</span>
+            <h3 style="color:${beauty.accent};">${unlocked || beauty.source === "summon" ? beauty.name : beauty.bossName}</h3>
+          </div>
+          <span class="meta-pill">${unlocked ? beauty.title : beauty.source === "summon" ? "商城角色池" : "资料封锁中"}</span>
+        </div>
+        <p>${unlocked ? beauty.profile : beauty.source === "summon" ? "她是暂未加入队伍的招募角色。前往商城中的角色招募池，有机会把她直接收入美女库。" : "她仍被困在哥布林之巢深处。通关对应主线后，才能完整收录这一位美少女的档案。"}</p>
         <div class="beauty-meta">
-          <span class="meta-pill">${stage ? stage.name : "未知关卡"}</span>
-          <span class="meta-pill">${unlocked ? beauty.skillName : "技能未知"}</span>
-          <span class="meta-pill">${unlocked ? "已可出战" : "待净化"}</span>
+          <span class="meta-pill">${beauty.source === "summon" ? "来源 角色招募" : stage ? stage.name : "未知关卡"}</span>
+          <span class="meta-pill">${beauty.source === "summon" ? `品级 ${rankMeta ? rankMeta.label : "C"}` : stage ? stage.sceneName : "未知场景"}</span>
+          <span class="meta-pill">${unlocked ? "已可出战" : beauty.source === "summon" ? "待招募" : "待净化"}</span>
         </div>
         <p>${unlocked ? `${beauty.skillName}：${beauty.skillDesc}` : "净化后，她会以辅佐身份加入队伍，并在战斗中自动施放专属技能。"}</p>
+        <p>${unlocked ? `当前状态：可在首页“出战辅佐”中编入队伍。` : beauty.source === "summon" ? "当前状态：可通过商城中的角色招募直接获得，不需要等待主线净化。" : `当前状态：完成第 ${beauty.stageId} 章后即可把她从黑化中救回来。`}</p>
+      </div>
+    </article>
+  `;
+}
+
+function openLibraryScreen(targetBeautyId = null) {
+  if (targetBeautyId) {
+    const nextIndex = ALL_BEAUTIES.findIndex((beauty) => beauty.id === targetBeautyId);
+    if (nextIndex >= 0) {
+      libraryBeautyIndex = nextIndex;
+    }
+  }
+  renderLibrary();
+  showScreen("library");
+}
+
+function shiftLibraryBeauty(offset) {
+  libraryBeautyIndex = (libraryBeautyIndex + offset + ALL_BEAUTIES.length) % ALL_BEAUTIES.length;
+  renderLibrary();
+}
+
+function pickWeighted(table) {
+  const roll = Math.random();
+  let cursor = 0;
+  for (const [value, weight] of table) {
+    cursor += weight;
+    if (roll <= cursor) {
+      return value;
+    }
+  }
+  return table[table.length - 1][0];
+}
+
+function getCharacterDuplicateGold(rank) {
+  return ({
+    c: 120,
+    b: 200,
+    a: 360,
+    s: 680
+  })[rank] || 120;
+}
+
+function getDrawCurrencyLabel(currency) {
+  return currency === "gold" ? "金币" : "点券";
+}
+
+function getCharacterDrawPool(currency) {
+  const allowedRanks = currency === "gold" ? ["c", "b"] : ["b", "a", "s"];
+  return SUMMON_BEAUTIES.filter((beauty) => allowedRanks.includes(beauty.rank));
+}
+
+function getEquipmentDrawPool(currency) {
+  const allowedQualities = currency === "gold" ? ["common", "uncommon"] : ["uncommon", "rare", "epic"];
+  return SHOP_ITEMS.filter((item) => allowedQualities.includes(item.quality));
+}
+
+function createShopItemArt(item) {
+  const quality = getQualityMeta(item.quality);
+  const glyph = item.type === "weapon"
+    ? '<rect x="78" y="122" width="188" height="24" rx="12" fill="#edf8ff"/><rect x="194" y="104" width="48" height="16" rx="8" fill="#fce4a7"/><rect x="132" y="146" width="34" height="82" rx="16" fill="#13202e"/><path d="M124 154l-42 42 18 18 48-28v-32z" fill="#293b4e"/>'
+    : item.type === "armor"
+      ? '<path d="M104 112l76-30 76 30v122l-76 36-76-36V112z" fill="#ecf7ff"/><path d="M142 124h76v88l-38 20-38-20v-88z" fill="#182533"/><path d="M150 140h60v34l-30 16-30-16v-34z" fill="#7fd3ff"/>'
+      : '<circle cx="180" cy="152" r="58" fill="#edf9ff"/><path d="M180 106l17 28 32 7-22 23 4 33-31-14-31 14 4-33-22-23 32-7 17-28z" fill="#ffd97c"/>';
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 420">
+      <defs>
+        <radialGradient id="bg" cx=".5" cy=".2" r=".9">
+          <stop offset="0" stop-color="${quality.color}" stop-opacity=".42"/>
+          <stop offset=".5" stop-color="${quality.color}" stop-opacity=".12"/>
+          <stop offset="1" stop-color="#0a1017" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <rect width="360" height="420" rx="42" fill="#0d1520"/>
+      <circle cx="180" cy="120" r="136" fill="url(#bg)"/>
+      <rect x="54" y="74" width="252" height="272" rx="34" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.08)"/>
+      ${glyph}
+      <text x="180" y="312" text-anchor="middle" fill="${quality.color}" font-size="32" font-family="Georgia">${item.name}</text>
+      <text x="180" y="348" text-anchor="middle" fill="#f6cf91" font-size="20" letter-spacing="4">${getTypeLabel(item.type)}</text>
+    </svg>
+  `.trim();
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+
+function renderDrawCard(category) {
+  const isCharacter = category === "character";
+  const title = isCharacter ? "角色招募" : "装备补给";
+  const info = isCharacter
+    ? "金币招募只会出现 B / C 品级美女，点券招募最低 B，最高 S。抽到后可直接进入美女库并出战。"
+    : "金币补给只会出现白 / 绿装备，点券补给最低绿，最高紫。重复装备会自动折算金币。";
+  const entries = isCharacter
+    ? [
+        { label: "金币池", detail: "C 58% / B 42%" },
+        { label: "点券池", detail: "B 58% / A 31% / S 11%" }
+      ]
+    : [
+        { label: "金币池", detail: "白 72% / 绿 28%" },
+        { label: "点券池", detail: "绿 54% / 蓝 32% / 紫 14%" }
+      ];
+  const recruitCount = SUMMON_BEAUTIES.filter((beauty) => progress.recruitedBeautyIds.includes(beauty.id)).length;
+  return `
+    <article class="draw-card">
+      <div class="draw-card-header">
+        <div>
+          <p class="section-kicker">${isCharacter ? "角色池" : "装备池"}</p>
+          <h3>${title}</h3>
+        </div>
+        <div class="wallet-cluster">
+          ${isCharacter ? `<span class="rank-pill rank-s">已招募 ${recruitCount}/${SUMMON_BEAUTIES.length}</span>` : `<span class="rank-pill rank-a">已拥有 ${progress.inventoryItemIds.length}/${SHOP_ITEMS.length}</span>`}
+        </div>
+      </div>
+      <p class="draw-info">${info}</p>
+      <ul class="draw-rate-list">
+        ${entries.map((entry) => `<li class="draw-entry"><span>${entry.label}</span><strong>${entry.detail}</strong></li>`).join("")}
+      </ul>
+      <div class="draw-buttons">
+        <button class="ghost-button" type="button" data-draw-category="${category}" data-draw-currency="gold" ${progress.gold >= DRAW_COSTS[category].gold ? "" : "disabled"}>金币抽卡 ${DRAW_COSTS[category].gold}</button>
+        <button class="solid-button" type="button" data-draw-category="${category}" data-draw-currency="ticket" ${progress.tickets >= DRAW_COSTS[category].ticket ? "" : "disabled"}>点券抽卡 ${DRAW_COSTS[category].ticket}</button>
+      </div>
+    </article>
+  `;
+}
+
+function rollCharacterDraw(currency) {
+  const pool = getCharacterDrawPool(currency);
+  const rank = pickWeighted(DRAW_TABLES.character[currency]);
+  const candidates = pool.filter((beauty) => beauty.rank === rank);
+  const beauty = (candidates.length ? candidates : pool)[Math.floor(Math.random() * (candidates.length ? candidates.length : pool.length))];
+  const duplicate = progress.recruitedBeautyIds.includes(beauty.id);
+  let duplicateGold = 0;
+  if (duplicate) {
+    duplicateGold = getCharacterDuplicateGold(beauty.rank);
+    progress.gold += duplicateGold;
+  } else {
+    progress.recruitedBeautyIds.push(beauty.id);
+    if (!progress.selectedCompanionId) {
+      progress.selectedCompanionId = beauty.id;
+    }
+  }
+  return {
+    category: "character",
+    currency,
+    beauty,
+    duplicateGold
+  };
+}
+
+function rollEquipmentDraw(currency) {
+  const pool = getEquipmentDrawPool(currency);
+  const quality = pickWeighted(DRAW_TABLES.equipment[currency]);
+  const candidates = pool.filter((item) => item.quality === quality);
+  const item = (candidates.length ? candidates : pool)[Math.floor(Math.random() * (candidates.length ? candidates.length : pool.length))];
+  const duplicate = progress.inventoryItemIds.includes(item.id);
+  let duplicateGold = 0;
+  if (duplicate) {
+    duplicateGold = Math.round(item.price * 0.48);
+    progress.gold += duplicateGold;
+  } else {
+    grantInventoryItem(item.id);
+  }
+  return {
+    category: "equipment",
+    currency,
+    item,
+    duplicateGold
+  };
+}
+
+function openDrawResultModal(result) {
+  if (result.category === "character") {
+    const beauty = result.beauty;
+    const rankMeta = getCompanionRankMeta(beauty.rank);
+    drawResultBadge.textContent = "角色招募";
+    drawResultArt.src = beauty.art.purified;
+    drawResultArt.className = "draw-result-art purified-portrait";
+    drawResultKicker.textContent = result.duplicateGold ? "重复招募" : "招募成功";
+    drawResultTitle.textContent = result.duplicateGold ? `再次邂逅 ${beauty.name}` : `获得 ${beauty.name}`;
+    drawResultText.textContent = result.duplicateGold
+      ? `${beauty.name} 已在你的美女库中，本次自动折算为 ${result.duplicateGold} 金币。`
+      : `${beauty.profile} 她已经直接加入美女库，并可在“出战辅佐”中编队。`;
+    drawResultMeta.innerHTML = `
+      <span class="meta-pill" style="color:${rankMeta.color};">品级 ${rankMeta.label}</span>
+      <span class="meta-pill">${beauty.title}</span>
+      <span class="meta-pill">${beauty.skillName}</span>
+      <span class="meta-pill">${getDrawCurrencyLabel(result.currency)}招募</span>
+    `;
+  } else {
+    const item = result.item;
+    const quality = getQualityMeta(item.quality);
+    drawResultBadge.textContent = "装备补给";
+    drawResultArt.src = createShopItemArt(item);
+    drawResultArt.className = "draw-result-art";
+    drawResultKicker.textContent = result.duplicateGold ? "重复装备" : "补给到货";
+    drawResultTitle.textContent = result.duplicateGold ? `重复获得 ${item.name}` : `获得 ${item.name}`;
+    drawResultText.textContent = result.duplicateGold
+      ? `${item.name} 已在仓库中，本次自动折算为 ${result.duplicateGold} 金币。`
+      : `${item.description} 效果：${item.effectText}`;
+    drawResultMeta.innerHTML = `
+      <span class="meta-pill" style="color:${quality.color};">${quality.label}</span>
+      <span class="meta-pill">${getTypeLabel(item.type)}</span>
+      <span class="meta-pill">${getDrawCurrencyLabel(result.currency)}补给</span>
+    `;
+  }
+  drawResultModal.classList.remove("hidden");
+}
+
+function closeDrawResultModal() {
+  drawResultModal.classList.add("hidden");
+}
+
+function performDraw(category, currency) {
+  const cost = DRAW_COSTS[category][currency];
+  if (currency === "gold") {
+    if (progress.gold < cost) {
+      return;
+    }
+    progress.gold -= cost;
+  } else {
+    if (progress.tickets < cost) {
+      return;
+    }
+    progress.tickets -= cost;
+  }
+  const result = category === "character" ? rollCharacterDraw(currency) : rollEquipmentDraw(currency);
+  saveProgress();
+  renderHome();
+  openShopScreen();
+  openDrawResultModal(result);
+}
+
+function renderShop() {
+  shopWallet.innerHTML = `
+    <div class="wallet-cluster">
+      <span class="wallet-chip">金币 <strong>${progress.gold}</strong></span>
+      <span class="wallet-chip">点券 <strong>${progress.tickets}</strong></span>
+    </div>
+  `;
+  shopDrawDeck.innerHTML = `
+    ${renderDrawCard("character")}
+    ${renderDrawCard("equipment")}
+  `;
+  equipmentStrip.innerHTML = ["weapon", "armor", "item"].map((type) => {
+    const equipped = getEquippedItem(type);
+    const quality = equipped ? getQualityMeta(equipped.quality) : null;
+    return `
+      <article class="equipment-card ${quality ? quality.className : ""}">
+        <div class="equipment-card-top">
+          <span class="type-pill">${getTypeLabel(type)}</span>
+          ${quality ? `<span class="quality-pill" style="color:${quality.color};">${quality.label}</span>` : ""}
+        </div>
+        <strong>${equipped ? equipped.name : "未装备"}</strong>
+        <p>${equipped ? equipped.effectText : "前往下方商城购买或等待通关掉落。"}</p>
       </article>
     `;
   }).join("");
+
+  const grouped = ["weapon", "armor", "item"].map((type) => ({
+    type,
+    items: SHOP_ITEMS.filter((item) => item.type === type)
+  }));
+
+  shopGrid.innerHTML = grouped.map((group) => `
+    <section class="shop-section">
+      <h3>${getTypeLabel(group.type)}直购</h3>
+      <div class="shop-cards">
+        ${group.items.map((item) => renderShopCard(item)).join("")}
+      </div>
+    </section>
+  `).join("");
+
+  shopGrid.querySelectorAll("[data-shop-buy]").forEach((button) => {
+    button.addEventListener("click", () => {
+      purchaseItem(button.dataset.shopBuy);
+    });
+  });
+  shopDrawDeck.querySelectorAll("[data-draw-category]").forEach((button) => {
+    button.addEventListener("click", () => {
+      performDraw(button.dataset.drawCategory, button.dataset.drawCurrency);
+    });
+  });
+  shopGrid.querySelectorAll("[data-shop-equip]").forEach((button) => {
+    button.addEventListener("click", () => {
+      equipItem(button.dataset.shopEquip);
+      renderHome();
+      openShopScreen();
+    });
+  });
+}
+
+function renderShopCard(item) {
+  const quality = getQualityMeta(item.quality);
+  const owned = progress.inventoryItemIds.includes(item.id);
+  const equipped = progress.equippedItemIds[item.type] === item.id;
+  const afford = progress.gold >= item.price;
+  const actionLabel = equipped ? "已装备" : owned ? "装备" : `购买 ${item.price}`;
+  const actionAttr = equipped
+    ? "disabled"
+    : owned
+      ? `data-shop-equip="${item.id}"`
+      : `data-shop-buy="${item.id}" ${afford ? "" : "disabled"}`;
+  return `
+    <article class="shop-card ${quality.className}">
+      <div class="shop-card-top">
+        <div>
+          <span class="type-pill">${getTypeLabel(item.type)}</span>
+          <strong style="display:block; margin-top:8px; color:${quality.color};">${item.name}</strong>
+        </div>
+        <span class="quality-pill" style="color:${quality.color};">${quality.label}</span>
+      </div>
+      <p>${item.description}</p>
+      <p><strong style="font-size:14px; color:var(--ink);">${item.effectText}</strong></p>
+      <div class="shop-price">
+        <span class="wallet-chip"><strong>${item.price}</strong> 金币</span>
+        <button class="solid-button" type="button" ${actionAttr}>${actionLabel}</button>
+      </div>
+    </article>
+  `;
+}
+
+function purchaseItem(itemId) {
+  const item = getShopItem(itemId);
+  if (!item || progress.inventoryItemIds.includes(item.id) || progress.gold < item.price) {
+    return;
+  }
+  progress.gold -= item.price;
+  grantInventoryItem(item.id);
+  saveProgress();
+  renderHome();
+  openShopScreen();
+}
+
+function openShopScreen() {
+  renderShop();
+  showScreen("shop");
 }
 
 function requestStageStart(stageId) {
@@ -1439,6 +2512,8 @@ function openBossIntro(state) {
   bossIntroTitle.textContent = beauty.bossName;
   bossIntroText.textContent = state.stage.bossWarning;
   bossIntroTaunt.textContent = beauty.taunt;
+  bossIntroStartButton.disabled = true;
+  bossIntroStartButton.textContent = "自动开战中...";
   bossIntroMeta.innerHTML = `
     <span class="meta-pill">主线第 ${state.stage.id} 章</span>
     <span class="meta-pill">${beauty.skillName}</span>
@@ -1489,6 +2564,7 @@ function closeAllOverlays() {
   bossIntroModal.classList.add("hidden");
   upgradeModal.classList.add("hidden");
   resultModal.classList.add("hidden");
+  drawResultModal.classList.add("hidden");
   sound.cancelSpeech();
 }
 
@@ -1509,7 +2585,7 @@ function launchStage(stageId) {
 }
 
 function createGame(stage, companion) {
-  return {
+  const state = {
     stage,
     theme: THEMES[stage.themeId],
     time: 0,
@@ -1577,6 +2653,8 @@ function createGame(stage, companion) {
     stageAccent: stage.accent,
     bgPulse: Math.random() * Math.PI * 2
   };
+  applyEquippedItems(state);
+  return state;
 }
 
 function frame(timestamp) {
@@ -1973,6 +3051,10 @@ function updateZones(state, dt) {
         monster.slowUntil = Math.max(monster.slowUntil, state.time + 0.8);
         damageMonster(state, monster, zone.dps * dt, { silent: true });
       }
+      if (zone.type === "bubble") {
+        monster.slowUntil = Math.max(monster.slowUntil, state.time + 1.05);
+        damageMonster(state, monster, zone.dps * dt, { silent: true });
+      }
     });
     return zone.life > 0;
   });
@@ -2169,18 +3251,21 @@ function finishBattle(victory) {
   closeBossIntro();
 
   let unlockedBeauty = null;
+  let rewards = null;
   if (victory) {
     const beauty = getBeauty(game.stage.bossBeautyId);
+    const firstClear = !progress.clearedStages.includes(game.stage.id);
     if (!progress.rescued.includes(beauty.id)) {
       progress.rescued.push(beauty.id);
       unlockedBeauty = beauty;
     }
-    if (!progress.clearedStages.includes(game.stage.id)) {
+    if (firstClear) {
       progress.clearedStages.push(game.stage.id);
     }
     if (!progress.selectedCompanionId) {
       progress.selectedCompanionId = beauty.id;
     }
+    rewards = rollVictoryReward(game.stage.id, firstClear);
     saveProgress();
   }
 
@@ -2194,23 +3279,24 @@ function finishBattle(victory) {
   const nextStage = victory && game.stage.id < STAGES.length ? game.stage.id + 1 : null;
   resultContext = {
     nextStageId: nextStage,
-    retryStageId: game.stage.id
+    retryStageId: game.stage.id,
+    rewards
   };
 
   resultKicker.textContent = victory ? "净化成功" : "防线失守";
   resultTitle.textContent = victory ? `成功净化 ${getBeauty(game.stage.bossBeautyId).bossName}` : "本次行动失败";
   resultText.textContent = victory
     ? (unlockedBeauty
-      ? `${unlockedBeauty.name} 已加入美女库，并解锁专属技能【${unlockedBeauty.skillName}】。下一章已开放。`
-      : "该 Boss 已完成净化，本次挑战会记入重战记录。")
+      ? `${unlockedBeauty.name} 已加入美女库，并解锁专属技能【${unlockedBeauty.skillName}】。本次通关奖励已发放。`
+      : "该 Boss 已完成净化，本次挑战的金币和掉落奖励已结算。")
     : "哥布林怪潮击穿了防线。调整编组和技能路线后，再试一次。";
-  renderResultStats(game);
+  renderResultStats(game, rewards);
   resultPrimaryButton.textContent = "返回主界面";
   resultSecondaryButton.textContent = nextStage ? `挑战第 ${nextStage} 章` : victory ? "再次挑战" : "重整后再战";
   resultModal.classList.remove("hidden");
 }
 
-function renderResultStats(state) {
+function renderResultStats(state, rewards = null) {
   const skillNames = getOwnedModuleKeys(state)
     .map((key) => MODULE_SKILLS[key]?.name)
     .filter(Boolean);
@@ -2239,9 +3325,23 @@ function renderResultStats(state) {
       <span>自动施放</span>
       <strong>${state.stats.moduleCasts + state.stats.companionCasts}</strong>
     </article>
+    ${rewards ? `
+      <article class="result-stat">
+        <span>金币奖励</span>
+        <strong>+${rewards.gold + rewards.duplicateGold}</strong>
+      </article>
+      <article class="result-stat">
+        <span>点券奖励</span>
+        <strong>+${rewards.tickets}</strong>
+      </article>
+      <article class="result-stat">
+        <span>额外掉落</span>
+        <strong>${rewards.item ? `${getQualityMeta(rewards.item.quality).label}${getTypeLabel(rewards.item.type)}` : rewards.duplicateGold ? "重复折现" : "本次仅金币"}</strong>
+      </article>
+    ` : ""}
     <article class="result-stat result-skill-summary">
       <span>本局成型技能</span>
-      <p>${skillNames.length ? skillNames.join(" · ") : "本局主要依靠普通射击推进。"}${state.companion ? ` 辅佐：${state.companion.name}` : ""}</p>
+      <p>${skillNames.length ? skillNames.join(" · ") : "本局主要依靠普通射击推进。"}${state.companion ? ` 辅佐：${state.companion.name}` : ""}${rewards?.item ? ` 掉落：${rewards.item.name}（${rewards.item.effectText}）` : rewards?.duplicateGold ? ` 掉落重复物品已折算金币。` : ""}${rewards?.tickets ? ` 另得点券：${rewards.tickets}。` : ""}</p>
     </article>
   `;
 }
@@ -2271,7 +3371,7 @@ function updateBattleHud() {
   const cooldownLeft = Math.max(0, getCompanionCooldown(game) - (game.time - game.hero.companionCastAt));
   battleCompanionStatus.innerHTML = `
     <div class="companion-status-layout">
-      <img src="${game.companion.art.purified}" alt="${game.companion.name}" class="companion-art">
+      <img src="${game.companion.art.purified}" alt="${game.companion.name}" class="companion-art purified-portrait">
       <div>
         <p class="battle-companion-label">美女辅佐</p>
         <h3 style="margin: 6px 0; color: ${game.companion.accent};">${game.companion.name}</h3>
@@ -2548,6 +3648,135 @@ function castCompanionSkill(state, beauty) {
       flashBattleMessage("苍雅张开【圣辉屏障】", 1.3);
       return true;
     }
+    case "qinglu": {
+      [-0.36, -0.12, 0.12, 0.36].forEach((offset) => {
+        const angle = -Math.PI / 2 + offset;
+        state.bullets.push({
+          x: state.hero.x,
+          y: state.hero.y - 70,
+          vx: Math.cos(angle) * 520,
+          vy: Math.sin(angle) * 930,
+          radius: 10,
+          damage: state.hero.damage * 1.65,
+          pierce: 2,
+          color: "#c8ffd8",
+          splash: 18,
+          label: "花露",
+          fromHero: false,
+          life: 1.05
+        });
+      });
+      flashBattleMessage("晴露抛出【花露散射】", 1.15);
+      return true;
+    }
+    case "taoxi": {
+      const target = findClusterTarget(state);
+      if (!target) {
+        return false;
+      }
+      state.zones.push({
+        type: "bubble",
+        x: target.x,
+        y: target.y,
+        radius: 92,
+        life: 5.2,
+        dps: 26,
+        pulse: 0,
+        color: "rgba(255, 185, 216, 0.22)"
+      });
+      livingMonsters(state).forEach((monster) => {
+        if (Math.hypot(monster.x - target.x, monster.y - target.y) <= 112) {
+          monster.slowUntil = Math.max(monster.slowUntil, state.time + 3.2);
+        }
+      });
+      flashBattleMessage("桃汐展开【潮泡禁域】", 1.18);
+      return true;
+    }
+    case "yunmi": {
+      const selected = selectTargets(state, 4);
+      if (!selected.length) {
+        return false;
+      }
+      selected.forEach((monster, index) => {
+        const dx = monster.x - state.hero.x;
+        const dy = monster.y - (state.hero.y - 62);
+        const length = Math.max(1, Math.hypot(dx, dy));
+        state.bullets.push({
+          x: state.hero.x + (index - 1.5) * 12,
+          y: state.hero.y - 62,
+          vx: dx / length * 760,
+          vy: dy / length * 760,
+          radius: 10,
+          damage: state.hero.damage * 1.9,
+          pierce: 1,
+          color: "#cbf5ff",
+          label: "羽针",
+          fromHero: false,
+          life: 0.9
+        });
+      });
+      flashBattleMessage("云弥打出【追光羽针】", 1.18);
+      return true;
+    }
+    case "luoye": {
+      const selected = selectTargets(state, 4);
+      selected.forEach((monster) => {
+        monster.freezeUntil = Math.max(monster.freezeUntil, state.time + 2.8);
+        damageMonster(state, monster, 72 + state.hero.damage * 0.65, {
+          color: "#ddd2ff",
+          label: "影缚",
+          fromCompanion: true
+        });
+      });
+      flashBattleMessage("洛夜施放【暮影禁锢】", 1.2);
+      return true;
+    }
+    case "qinyao": {
+      state.hero.hp = Math.min(state.hero.maxHp, state.hero.hp + state.hero.maxHp * 0.1);
+      state.hero.barrier += 42;
+      const target = findClusterTarget(state);
+      if (!target) {
+        return true;
+      }
+      [-26, 26].forEach((offset) => {
+        spawnBomb(state, {
+          x: target.x + offset,
+          y: -90,
+          targetY: target.y,
+          vy: 880,
+          damage: 84 + state.hero.damage * 1.1,
+          radius: 74,
+          color: "#ffd796",
+          label: "投送"
+        });
+      });
+      flashBattleMessage("琴瑶完成【和声投送】", 1.2);
+      return true;
+    }
+    case "ruolan": {
+      if (!castHighEnergyRay(state, 2)) {
+        return false;
+      }
+      flashBattleMessage("若澜展开【棱镜射界】", 1.22);
+      return true;
+    }
+    case "aisha": {
+      if (!castGuidedLaser(state, 2)) {
+        return false;
+      }
+      flashBattleMessage("艾纱发动【星轨惩戒】", 1.22);
+      return true;
+    }
+    case "jinse": {
+      state.hero.hp = Math.min(state.hero.maxHp, state.hero.hp + state.hero.maxHp * 0.14);
+      state.hero.barrier += 96;
+      if (!castGuidedLaser(state, 3)) {
+        return false;
+      }
+      spawnShockwave(state, state.hero.x, state.hero.y - 48, 182, "rgba(255, 148, 207, 0.28)");
+      flashBattleMessage("瑾瑟降下【凰羽圣裁】", 1.3);
+      return true;
+    }
     default:
       return false;
   }
@@ -2672,6 +3901,7 @@ function castHighEnergyRay(state, level) {
   if (!target) {
     return false;
   }
+  const width = 38 + level * 10;
   state.effects.push({
     type: "beam",
     points: [{ x: state.hero.x, y: state.hero.y - 42 }, { x: target.x, y: target.y }],
@@ -2680,9 +3910,12 @@ function castHighEnergyRay(state, level) {
     life: 0.28,
     totalLife: 0.28
   });
-  damageLine(state, state.hero.x, state.hero.y - 42, target.x, target.y, 38 + level * 10, 118 + level * 42, {
+  damageLine(state, state.hero.x, state.hero.y - 42, target.x, target.y, width, 118 + level * 42, {
     color: "#ffd5a2",
     label: "射线"
+  });
+  forEachMonsterOnLine(state, state.hero.x, state.hero.y - 42, target.x, target.y, width, (monster) => {
+    applyBurn(monster, state.time + 1.8 + level * 0.35, 28 + level * 12);
   });
   return true;
 }
@@ -2991,6 +4224,16 @@ function damageLine(state, x1, y1, x2, y2, width, amount, options = {}) {
       return;
     }
     damageMonster(state, monster, amount, options);
+  });
+}
+
+function forEachMonsterOnLine(state, x1, y1, x2, y2, width, callback) {
+  livingMonsters(state).forEach((monster) => {
+    const distance = pointToSegmentDistance(monster.x, monster.y, x1, y1, x2, y2);
+    if (distance > width + monster.radius * 0.2) {
+      return;
+    }
+    callback(monster, distance);
   });
 }
 
@@ -3385,7 +4628,9 @@ function drawZones(state) {
     ctx.save();
     ctx.fillStyle = zone.type === "fire"
       ? "rgba(255, 136, 98, 0.18)"
-      : "rgba(255, 220, 152, 0.16)";
+      : zone.type === "bubble"
+        ? "rgba(255, 184, 220, 0.16)"
+        : "rgba(255, 220, 152, 0.16)";
     ctx.beginPath();
     ctx.arc(zone.x, zone.y, zone.radius + Math.sin(zone.pulse * 3) * 4, 0, Math.PI * 2);
     ctx.fill();
@@ -3705,6 +4950,7 @@ function createSoundSystem() {
   let lastDeathAt = 0;
   let selectedVoice = null;
   let mandarinVoices = [];
+  let activeBossVoice = null;
   const MASTER_GAIN = 0.34;
   const MUSIC_GAIN = 0.66;
   const FX_GAIN = 1.18;
@@ -3908,7 +5154,15 @@ function createSoundSystem() {
       yuege: 76,
       molan: 74,
       xingkui: 79,
-      cangya: 81
+      cangya: 81,
+      qinglu: 77,
+      taoxi: 74,
+      yunmi: 79,
+      luoye: 71,
+      qinyao: 76,
+      ruolan: 80,
+      aisha: 83,
+      jinse: 86
     };
     playVocalCue(midiToFreq(roots[id] || 76), 0.34);
   }
@@ -4093,6 +5347,30 @@ function createSoundSystem() {
   }
 
   function speakBossLine(text, beautyId) {
+    const voiceAsset = bossVoiceCache[beautyId];
+    if (voiceAsset) {
+      cancelSpeech();
+      const clip = voiceAsset.cloneNode();
+      clip.volume = 0.92;
+      activeBossVoice = clip;
+      clip.onended = () => {
+        if (activeBossVoice === clip) {
+          activeBossVoice = null;
+        }
+      };
+      duckMusic(0.58, Math.max(2.4, (clip.duration || 2.8) + 0.3));
+      clip.play().catch(() => {
+        if (activeBossVoice === clip) {
+          activeBossVoice = null;
+        }
+        playSynthBossLine(text, beautyId);
+      });
+      return;
+    }
+    playSynthBossLine(text, beautyId);
+  }
+
+  function playSynthBossLine(text, beautyId) {
     if (!("speechSynthesis" in window)) {
       return;
     }
@@ -4115,6 +5393,11 @@ function createSoundSystem() {
   }
 
   function cancelSpeech() {
+    if (activeBossVoice) {
+      activeBossVoice.pause();
+      activeBossVoice.currentTime = 0;
+      activeBossVoice = null;
+    }
     if ("speechSynthesis" in window) {
       window.speechSynthesis.cancel();
     }
@@ -4208,11 +5491,11 @@ function getStageSceneArt(stageId) {
 }
 
 function getSelectedCompanion() {
-  return BEAUTIES.find((beauty) => beauty.id === progress.selectedCompanionId && progress.rescued.includes(beauty.id)) || null;
+  return ALL_BEAUTIES.find((beauty) => beauty.id === progress.selectedCompanionId && isBeautyOwned(beauty.id)) || null;
 }
 
 function getBeauty(id) {
-  return BEAUTIES.find((beauty) => beauty.id === id);
+  return ALL_BEAUTIES.find((beauty) => beauty.id === id);
 }
 
 function getStage(id) {
@@ -4224,7 +5507,7 @@ function getCorruptArtPath(beauty) {
 }
 
 function beautyNeedsCorruptFilter(beauty) {
-  return !beauty.art.corrupt;
+  return beauty.source !== "summon" && !beauty.art.corrupt;
 }
 
 function getUpgradeLevel(state, id) {

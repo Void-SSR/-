@@ -64,6 +64,10 @@
             </div>
             <div id="currentCompanion" class="current-companion"></div>
             <div id="companionChoices" class="companion-choices"></div>
+            <div class="panel-tools">
+              <button class="ghost-button" id="openLibraryButton" type="button">查看全部美女</button>
+              <button class="ghost-button" id="openShopButton" type="button">购买商城</button>
+            </div>
           </section>
         </div>
 
@@ -74,13 +78,39 @@
           </div>
           <div class="stage-grid" id="stageGrid"></div>
         </section>
+      </section>
 
-        <section class="glass-card">
-          <div class="section-head">
-            <p class="section-kicker">美女库</p>
-            <h2>已收录净化对象</h2>
+      <section class="screen" id="libraryScreen">
+        <section class="glass-card subpage-card">
+          <div class="subpage-head">
+            <button class="icon-button" id="libraryBackButton" type="button" aria-label="返回首页">←</button>
+            <div>
+              <p class="section-kicker">美女库</p>
+              <h2>已收录净化对象</h2>
+            </div>
+            <div class="subpage-status" id="libraryCounter"></div>
           </div>
-          <div class="beauty-grid" id="beautyLibrary"></div>
+          <div class="beauty-viewer" id="beautyLibrary"></div>
+          <div class="viewer-actions">
+            <button class="ghost-button" id="libraryPrevButton" type="button">上一位</button>
+            <button class="ghost-button" id="libraryNextButton" type="button">下一位</button>
+          </div>
+        </section>
+      </section>
+
+      <section class="screen" id="shopScreen">
+        <section class="glass-card subpage-card">
+          <div class="subpage-head">
+            <button class="icon-button" id="shopBackButton" type="button" aria-label="返回首页">←</button>
+            <div>
+              <p class="section-kicker">补给商城</p>
+              <h2>角色招募 / 装备补给 / 直购商店</h2>
+            </div>
+            <div class="subpage-status" id="shopWallet"></div>
+          </div>
+          <div class="shop-draw-grid" id="shopDrawDeck"></div>
+          <div class="equipment-strip" id="equipmentStrip"></div>
+          <div class="shop-grid" id="shopGrid"></div>
         </section>
       </section>
 
@@ -215,7 +245,7 @@
           <p class="boss-taunt" id="bossIntroTaunt"></p>
           <div class="stage-intro-meta" id="bossIntroMeta"></div>
           <div class="result-actions">
-            <button class="solid-button" id="bossIntroStartButton" type="button">迎战 Boss</button>
+            <button class="solid-button" id="bossIntroStartButton" type="button" disabled>自动开战中...</button>
           </div>
         </div>
       </div>
@@ -231,6 +261,27 @@
       <div class="result-actions">
         <button class="solid-button" id="resultPrimaryButton" type="button">返回主界面</button>
         <button class="ghost-button" id="resultSecondaryButton" type="button">继续作战</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay hidden" id="drawResultModal">
+    <div class="overlay-card draw-result-card">
+      <div class="draw-result-layout">
+        <div class="draw-result-art-wrap">
+          <div class="scene-badge" id="drawResultBadge">角色招募</div>
+          <img id="drawResultArt" class="draw-result-art" alt="抽卡结果">
+          <div class="draw-result-sheen"></div>
+        </div>
+        <div class="draw-result-copy">
+          <p class="section-kicker" id="drawResultKicker">抽卡结果</p>
+          <h2 id="drawResultTitle">获得新角色</h2>
+          <p class="overlay-text" id="drawResultText"></p>
+          <div class="stage-intro-meta" id="drawResultMeta"></div>
+          <div class="result-actions">
+            <button class="solid-button" id="drawResultConfirmButton" type="button">继续逛商城</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
