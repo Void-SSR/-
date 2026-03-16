@@ -141,6 +141,41 @@ h2 {
   line-height: 1.7;
 }
 
+.hero-showcase {
+  display: grid;
+  grid-template-columns: 128px 1fr;
+  gap: 16px;
+  align-items: center;
+  margin-top: 24px;
+  padding: 16px;
+  border-radius: 24px;
+  background:
+    linear-gradient(135deg, rgba(255, 133, 101, 0.12), rgba(117, 227, 216, 0.08)),
+    rgba(255, 255, 255, 0.02);
+}
+
+.hero-showcase-image {
+  width: 128px;
+  height: 184px;
+  object-fit: contain;
+  filter: drop-shadow(0 16px 24px rgba(0, 0, 0, 0.24));
+}
+
+.hero-showcase-copy {
+  display: grid;
+  gap: 8px;
+}
+
+.hero-showcase-copy strong {
+  font-size: 22px;
+  color: var(--ink);
+}
+
+.hero-showcase-copy span {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
 .summary-strip {
   display: grid;
   gap: 12px;
@@ -169,6 +204,10 @@ h2 {
 
 .screen-active {
   display: block;
+}
+
+.battle-screen.screen-active {
+  display: grid;
 }
 
 .top-grid {
@@ -269,6 +308,21 @@ h2 {
   padding: 14px;
   text-align: left;
   color: var(--ink);
+}
+
+.choice-button.with-art {
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+.choice-avatar {
+  width: 70px;
+  height: 86px;
+  object-fit: contain;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.06));
 }
 
 .choice-button span {
@@ -406,6 +460,78 @@ h2 {
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 }
 
+.portrait-strip {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.portrait-state {
+  padding: 10px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.portrait-state img,
+.stage-boss-art,
+.companion-art,
+.current-companion-art {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+.portrait-label {
+  margin-top: 8px;
+  color: var(--gold);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+}
+
+.stage-art-wrap {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 16px;
+  align-items: center;
+}
+
+.stage-boss-art {
+  width: 110px;
+  height: 156px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.08));
+}
+
+.current-companion-layout {
+  display: grid;
+  grid-template-columns: 108px 1fr;
+  gap: 14px;
+  align-items: center;
+}
+
+.current-companion-art {
+  width: 108px;
+  height: 148px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.06));
+}
+
+.companion-status-layout {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  gap: 14px;
+  align-items: center;
+}
+
+.companion-art {
+  width: 92px;
+  height: 122px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
 .beauty-portrait {
   width: 92px;
   height: 92px;
@@ -444,6 +570,11 @@ h2 {
 
 .beauty-card.locked .beauty-portrait {
   opacity: 0.34;
+}
+
+.beauty-card.locked .portrait-state img,
+.stage-card.locked .stage-boss-art {
+  filter: grayscale(1) brightness(0.42);
 }
 
 .beauty-card.locked h3,
@@ -526,27 +657,48 @@ h2 {
 
 .battle-main {
   min-width: 0;
+  display: flex;
+  justify-content: center;
 }
 
 .battle-frame {
   position: relative;
+  width: min(520px, 100%);
+  padding: 14px;
   border-radius: 34px;
   overflow: hidden;
   border: 1px solid var(--line-soft);
+  background:
+    linear-gradient(180deg, rgba(15, 24, 35, 0.95), rgba(8, 13, 20, 0.96)),
+    rgba(255, 255, 255, 0.02);
   box-shadow: var(--shadow);
+}
+
+.battle-frame::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 8px;
+  width: 140px;
+  height: 6px;
+  border-radius: 999px;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.08);
+  z-index: 2;
 }
 
 #battleCanvas {
   display: block;
   width: 100%;
   height: auto;
+  border-radius: 26px;
   background: #0b1016;
 }
 
 .battle-message {
   position: absolute;
   left: 50%;
-  top: 24px;
+  top: 36px;
   transform: translateX(-50%);
   padding: 12px 20px;
   border-radius: 999px;
@@ -628,6 +780,20 @@ h2 {
   .overlay-card {
     padding: 18px;
     border-radius: 24px;
+  }
+
+  .hero-showcase,
+  .current-companion-layout,
+  .companion-status-layout,
+  .stage-art-wrap {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-showcase-image,
+  .current-companion-art,
+  .stage-boss-art,
+  .companion-art {
+    justify-self: center;
   }
 
   .stage-actions,

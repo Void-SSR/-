@@ -1,110 +1,136 @@
-const STORAGE_KEY = "rescue-beauties-save-v1";
+const STORAGE_KEY = "rescue-beauties-save-v2";
+const LEGACY_STORAGE_KEYS = ["rescue-beauties-save-v1"];
+const HERO_ART = "assets/hero-main.svg";
+const MONSTER_ART = {
+  goblin: "assets/goblin-grunt.svg",
+  elite: "assets/goblin-elite.svg"
+};
 
 const BEAUTIES = [
   {
     id: "hiyori",
     name: "绯音",
     title: "净火咏叹者",
-    profile: "舞台女王被黑雾侵蚀后化为烈焰指挥官，净化后会用焰羽为防线扫清一整排敌军。",
+    bossName: "黑化·绯音",
+    profile: "被黑雾腐蚀的舞台歌姬，净化后会以焰羽扫清正前方的大群目标。",
     skillName: "焰羽扫射",
-    skillDesc: "每 10 秒释放三道高伤焰羽弹，直线贯穿怪群。",
+    skillDesc: "每 10 秒向上打出三束高伤焰羽弹，贯穿怪群。",
     accent: "#ff8e61",
     cooldown: 10,
-    cast(game) {
-      const offsets = [-48, 0, 48];
+    art: {
+      purified: "assets/hiyori-purified.svg",
+      corrupt: "assets/hiyori-corrupt.svg"
+    },
+    cast(state) {
+      if (!livingMonsters(state).length) {
+        return false;
+      }
+
+      const offsets = [-54, 0, 54];
       offsets.forEach((offset, index) => {
-        game.bullets.push({
-          x: game.hero.x + 42,
-          y: game.hero.y + offset,
-          vx: 930,
-          vy: offset * 0.15 + index * 6 - 6,
-          radius: 12,
-          damage: game.hero.damage * 3.1,
+        state.bullets.push({
+          x: state.hero.x + offset,
+          y: state.hero.y - 64,
+          vx: offset * 0.35,
+          vy: -980 - index * 25,
+          radius: 13,
+          damage: state.hero.damage * 3.1,
           pierce: 99,
-          color: "#ffbc7c",
+          color: "#ffb777",
           fromCompanion: true,
-          splash: 18,
-          trail: "flame"
+          splash: 22,
+          trail: "flame",
+          life: 1.15
         });
       });
-      spawnShockwave(game, game.hero.x + 45, game.hero.y, 132, "rgba(255, 154, 104, 0.34)");
-      flashBattleMessage("绯音发动【焰羽扫射】", 1.4);
+      spawnShockwave(state, state.hero.x, state.hero.y - 50, 142, "rgba(255, 144, 105, 0.34)");
+      flashBattleMessage("绯音发动【焰羽扫射】", 1.35);
+      return true;
     }
   },
   {
     id: "serin",
     name: "澄澈",
     title: "霜镜审裁者",
-    profile: "冰穹圣殿的巡礼少女，擅长冻结整片战场，为你的防线争取安全输出时间。",
+    bossName: "黑化·澄澈",
+    profile: "曾经守护冰穹的巡礼少女，净化后擅长冻结整片战场，压住下落怪潮。",
     skillName: "冰镜领域",
-    skillDesc: "每 11 秒冻结全场敌人 4 秒，并造成一次范围冰爆。",
+    skillDesc: "每 11 秒冻结全场敌人 4 秒，并造成一次冰爆。",
     accent: "#7eddf8",
     cooldown: 11,
-    cast(game) {
-      let hitCount = 0;
-      game.monsters.forEach((monster) => {
-        if (monster.dead) {
-          return;
-        }
-        hitCount += 1;
-        monster.slowUntil = Math.max(monster.slowUntil, game.time + 4);
-        dealDamage(game, monster, 48 + game.stage.id * 8, {
-          fromCompanion: true,
-          color: "#b7f7ff",
-          label: "冰爆"
+    art: {
+      purified: "assets/serin-purified.svg",
+      corrupt: "assets/serin-corrupt.svg"
+    },
+    cast(state) {
+      const targets = livingMonsters(state);
+      if (!targets.length) {
+        return false;
+      }
+
+      targets.forEach((monster) => {
+        monster.slowUntil = Math.max(monster.slowUntil, state.time + 4);
+        dealDamage(state, monster, 48 + state.stage.id * 10, {
+          color: "#c0f6ff",
+          label: "冰爆",
+          fromCompanion: true
         });
       });
-      if (hitCount > 0) {
-        game.effects.push({
-          type: "nova",
-          x: game.hero.x + 10,
-          y: game.hero.y,
-          radius: 0,
-          maxRadius: 320,
-          color: "rgba(126, 221, 248, 0.25)",
-          life: 0.55,
-          totalLife: 0.55
-        });
-        flashBattleMessage("澄澈展开【冰镜领域】", 1.5);
-      }
+
+      state.effects.push({
+        type: "nova",
+        x: state.hero.x,
+        y: state.hero.y - 24,
+        radius: 0,
+        maxRadius: 360,
+        color: "rgba(126, 221, 248, 0.26)",
+        life: 0.6,
+        totalLife: 0.6
+      });
+      flashBattleMessage("澄澈展开【冰镜领域】", 1.45);
+      return true;
     }
   },
   {
     id: "yelan",
     name: "夜岚",
     title: "雷辉裁定者",
-    profile: "被雷殿核心驱动的执刃少女，恢复理智后能够以链雷追击多个高威胁目标。",
+    bossName: "黑化·夜岚",
+    profile: "被雷辉核心侵染的裁定者，净化后会以链状雷击点杀高威胁敌人。",
     skillName: "雷链裁决",
     skillDesc: "每 9 秒锁定最多 5 个敌人，降下连锁雷击。",
     accent: "#ffe48a",
     cooldown: 9,
-    cast(game) {
-      const targets = [...game.monsters]
-        .filter((monster) => !monster.dead)
-        .sort((a, b) => distanceToHero(a, game.hero) - distanceToHero(b, game.hero))
+    art: {
+      purified: "assets/yelan-purified.svg",
+      corrupt: "assets/yelan-corrupt.svg"
+    },
+    cast(state) {
+      const targets = livingMonsters(state)
+        .sort((a, b) => targetPriority(b, state.hero) - targetPriority(a, state.hero))
         .slice(0, 5);
 
       if (!targets.length) {
-        return;
+        return false;
       }
 
-      const points = [{ x: game.hero.x + 12, y: game.hero.y }];
+      const points = [{ x: state.hero.x, y: state.hero.y - 32 }];
       targets.forEach((monster, index) => {
         points.push({ x: monster.x, y: monster.y });
-        dealDamage(game, monster, 82 + index * 18, {
-          fromCompanion: true,
-          color: "#fff39d",
-          label: "雷击"
+        dealDamage(state, monster, 84 + index * 20, {
+          color: "#fff19a",
+          label: "雷击",
+          fromCompanion: true
         });
       });
-
-      game.effects.push({
+      state.effects.push({
         type: "chain",
         points,
         life: 0.28,
         totalLife: 0.28
       });
-      flashBattleMessage("夜岚引发【雷链裁决】", 1.3);
+      flashBattleMessage("夜岚引发【雷链裁决】", 1.28);
+      return true;
     }
   }
 ];
@@ -112,31 +138,28 @@ const BEAUTIES = [
 const STAGES = [
   {
     id: 1,
-    name: "霓虹残街",
+    name: "霓虹废区",
     danger: "低危",
     bossBeautyId: "hiyori",
-    bossName: "黑化·绯音",
-    description: "被黑雾侵蚀的歌姬盘踞在霓虹废墟。坚守防线，扛过第一波尸潮。",
+    description: "哥布林拾荒队从高空通道倾泻而下，偶尔会混入狂化精英。",
     accent: "#ff8e61",
-    bossAt: 42
+    bossAt: 40
   },
   {
     id: 2,
     name: "寒晶回廊",
     danger: "中危",
     bossBeautyId: "serin",
-    bossName: "黑化·澄澈",
-    description: "失控的霜镜少女会冻结弹道，你需要更强的清场能力。",
+    description: "低温雾幕让怪潮更加耐打，精英哥布林会掩护黑化少女逼近防线。",
     accent: "#7eddf8",
-    bossAt: 47
+    bossAt: 46
   },
   {
     id: 3,
     name: "雷落穹塔",
     danger: "高危",
     bossBeautyId: "yelan",
-    bossName: "黑化·夜岚",
-    description: "穹塔顶端不断落下雷辉残响，精英怪和 Boss 会同时压上来。",
+    description: "高塔雷暴覆盖整条下落轨道，Boss 会伴随多轮精英怪同时登场。",
     accent: "#ffe48a",
     bossAt: 52
   }
@@ -148,8 +171,8 @@ const UPGRADE_POOL = [
     name: "急速扳机",
     rarity: "战术卡",
     description: "攻击频率提升 28%。",
-    apply(game) {
-      game.hero.fireRate *= 1.28;
+    apply(state) {
+      state.hero.fireRate *= 1.28;
     }
   },
   {
@@ -157,8 +180,8 @@ const UPGRADE_POOL = [
     name: "穿甲实弹",
     rarity: "战术卡",
     description: "基础伤害 +14。",
-    apply(game) {
-      game.hero.damage += 14;
+    apply(state) {
+      state.hero.damage += 14;
     }
   },
   {
@@ -166,8 +189,8 @@ const UPGRADE_POOL = [
     name: "双翼弹幕",
     rarity: "战术卡",
     description: "额外增加 2 枚散射子弹。",
-    apply(game) {
-      game.hero.projectiles = Math.min(7, game.hero.projectiles + 2);
+    apply(state) {
+      state.hero.projectiles = Math.min(7, state.hero.projectiles + 2);
     }
   },
   {
@@ -175,8 +198,8 @@ const UPGRADE_POOL = [
     name: "轨道穿透",
     rarity: "战术卡",
     description: "子弹穿透 +1。",
-    apply(game) {
-      game.hero.pierce += 1;
+    apply(state) {
+      state.hero.pierce += 1;
     }
   },
   {
@@ -184,9 +207,9 @@ const UPGRADE_POOL = [
     name: "弱点瞄具",
     rarity: "战术卡",
     description: "暴击率 +10%，暴击伤害 +25%。",
-    apply(game) {
-      game.hero.critChance += 0.1;
-      game.hero.critMultiplier += 0.25;
+    apply(state) {
+      state.hero.critChance += 0.1;
+      state.hero.critMultiplier += 0.25;
     }
   },
   {
@@ -194,8 +217,8 @@ const UPGRADE_POOL = [
     name: "寒霜弹芯",
     rarity: "战术卡",
     description: "命中目标后附带 35% 减速。",
-    apply(game) {
-      game.hero.slowShots = true;
+    apply(state) {
+      state.hero.slowShots = true;
     }
   },
   {
@@ -203,8 +226,8 @@ const UPGRADE_POOL = [
     name: "爆裂改装",
     rarity: "战术卡",
     description: "命中附加小范围溅射伤害。",
-    apply(game) {
-      game.hero.splash = Math.min(44, game.hero.splash + 14);
+    apply(state) {
+      state.hero.splash = Math.min(48, state.hero.splash + 14);
     }
   },
   {
@@ -212,12 +235,20 @@ const UPGRADE_POOL = [
     name: "紧急修复",
     rarity: "应急卡",
     description: "立即恢复 30% 基地生命。",
-    apply(game) {
-      game.hero.hp = Math.min(game.hero.maxHp, game.hero.hp + game.hero.maxHp * 0.3);
+    apply(state) {
+      state.hero.hp = Math.min(state.hero.maxHp, state.hero.hp + state.hero.maxHp * 0.3);
     }
   }
 ];
 
+const SPRITE_PATHS = [
+  HERO_ART,
+  MONSTER_ART.goblin,
+  MONSTER_ART.elite,
+  ...BEAUTIES.flatMap((beauty) => [beauty.art.purified, beauty.art.corrupt])
+];
+
+const spriteCache = {};
 let progress = loadProgress();
 let game = null;
 let lastTimestamp = 0;
@@ -253,9 +284,18 @@ const resultSecondaryButton = document.getElementById("resultSecondaryButton");
 const canvas = document.getElementById("battleCanvas");
 const ctx = canvas.getContext("2d");
 
+preloadSprites();
 bindEvents();
 renderHome();
 requestAnimationFrame(frame);
+
+function preloadSprites() {
+  SPRITE_PATHS.forEach((path) => {
+    const image = new Image();
+    image.src = path;
+    spriteCache[path] = image;
+  });
+}
 
 function bindEvents() {
   resetProgressButton.addEventListener("click", () => {
@@ -313,7 +353,7 @@ function createDefaultProgress() {
 }
 
 function loadProgress() {
-  const raw = localStorage.getItem(STORAGE_KEY);
+  const raw = localStorage.getItem(STORAGE_KEY) || LEGACY_STORAGE_KEYS.map((key) => localStorage.getItem(key)).find(Boolean);
   if (!raw) {
     return createDefaultProgress();
   }
@@ -339,6 +379,11 @@ function saveProgress() {
 
 function isBeautyKnown(id) {
   return BEAUTIES.some((beauty) => beauty.id === id);
+}
+
+function showScreen(name) {
+  homeScreen.classList.toggle("screen-active", name === "home");
+  battleScreen.classList.toggle("screen-active", name === "battle");
 }
 
 function renderHome() {
@@ -375,10 +420,15 @@ function renderCompanions() {
     `;
   } else {
     currentCompanion.innerHTML = `
-      <p class="section-kicker">已编组</p>
-      <h3 style="margin: 0; color: ${selected.accent};">${selected.name} · ${selected.title}</h3>
-      <p>${selected.profile}</p>
-      <p><strong>${selected.skillName}</strong>：${selected.skillDesc}</p>
+      <div class="current-companion-layout">
+        <img src="${selected.art.purified}" alt="${selected.name}净化形态" class="current-companion-art">
+        <div>
+          <p class="section-kicker">已编组</p>
+          <h3 style="margin: 0; color: ${selected.accent};">${selected.name} · ${selected.title}</h3>
+          <p>${selected.profile}</p>
+          <p><strong>${selected.skillName}</strong>：${selected.skillDesc}</p>
+        </div>
+      </div>
     `;
   }
 
@@ -387,16 +437,19 @@ function renderCompanions() {
     `
       <button class="choice-button none-button ${selected ? "" : "is-selected"}" data-beauty-id="">
         <span>单人挑战</span>
-        <small>不携带美女辅佐，依赖纯火力通关</small>
+        <small>不携带美女辅佐，依赖纯火力硬守防线</small>
       </button>
     `
   ];
 
   unlockedBeauties.forEach((beauty) => {
     buttons.push(`
-      <button class="choice-button ${progress.selectedCompanionId === beauty.id ? "is-selected" : ""}" data-beauty-id="${beauty.id}">
-        <span>${beauty.name}</span>
-        <small>${beauty.skillName}</small>
+      <button class="choice-button with-art ${progress.selectedCompanionId === beauty.id ? "is-selected" : ""}" data-beauty-id="${beauty.id}">
+        <img src="${beauty.art.purified}" alt="${beauty.name}" class="choice-avatar">
+        <div>
+          <span>${beauty.name}</span>
+          <small>${beauty.skillName}</small>
+        </div>
       </button>
     `);
   });
@@ -415,30 +468,33 @@ function renderCompanions() {
 
 function renderStages() {
   stageGrid.innerHTML = STAGES.map((stage) => {
+    const beauty = getBeauty(stage.bossBeautyId);
     const unlocked = isStageUnlocked(stage.id);
     const cleared = progress.clearedStages.includes(stage.id);
-    const bossBeauty = BEAUTIES.find((beauty) => beauty.id === stage.bossBeautyId);
     const statusText = !unlocked ? "未解锁" : cleared ? "已净化，可重战" : "待净化";
-    const startLabel = cleared ? "再次挑战" : "开始行动";
     const lockedCopy = unlocked ? stage.description : `需先通过第 ${stage.id - 1} 章才可挑战。`;
 
     return `
       <article class="stage-card ${unlocked ? "" : "locked"}" style="box-shadow: inset 0 0 0 1px ${hexToRgba(stage.accent, 0.14)};">
         <div class="stage-top">
-          <div>
-            <span class="stage-number">第 ${stage.id} 章</span>
-            <h3>${stage.name}</h3>
-          </div>
+          <span class="stage-number">第 ${stage.id} 章</span>
           <span class="stage-status">${statusText}</span>
         </div>
-        <p>${lockedCopy}</p>
-        <div class="stage-meta">
-          <span class="meta-pill">威胁等级 ${stage.danger}</span>
-          <span class="meta-pill">Boss ${bossBeauty.name}</span>
+        <div class="stage-art-wrap">
+          <img src="${beauty.art.corrupt}" alt="${beauty.bossName}" class="stage-boss-art">
+          <div>
+            <h3>${stage.name}</h3>
+            <p>${lockedCopy}</p>
+            <div class="stage-meta">
+              <span class="meta-pill">威胁等级 ${stage.danger}</span>
+              <span class="meta-pill">Boss ${beauty.bossName}</span>
+              <span class="meta-pill">精英怪出没</span>
+            </div>
+          </div>
         </div>
         <div class="stage-actions">
-          <button class="solid-button" type="button" data-stage-start="${stage.id}" ${unlocked ? "" : "disabled"}>${startLabel}</button>
-          <button class="ghost-button" type="button" disabled>${bossBeauty.skillName}</button>
+          <button class="solid-button" type="button" data-stage-start="${stage.id}" ${unlocked ? "" : "disabled"}>${cleared ? "再次挑战" : "开始行动"}</button>
+          <button class="ghost-button" type="button" disabled>${beauty.skillName}</button>
         </div>
       </article>
     `;
@@ -454,28 +510,34 @@ function renderStages() {
 function renderLibrary() {
   beautyLibrary.innerHTML = BEAUTIES.map((beauty, index) => {
     const unlocked = progress.rescued.includes(beauty.id);
-    const label = unlocked ? "已净化" : `目标 ${index + 1}`;
     return `
-      <article class="beauty-card ${unlocked ? "" : "locked"}" style="box-shadow: inset 0 0 0 1px ${hexToRgba(beauty.accent, unlocked ? 0.22 : 0.06)};">
+      <article class="beauty-card ${unlocked ? "" : "locked"}" style="box-shadow: inset 0 0 0 1px ${hexToRgba(beauty.accent, unlocked ? 0.22 : 0.08)};">
         <div class="beauty-top">
-          <div class="beauty-portrait" style="background: linear-gradient(160deg, ${hexToRgba(beauty.accent, unlocked ? 0.42 : 0.16)}, rgba(255,255,255,0.04));"></div>
-          <span class="beauty-badge">${label}</span>
-        </div>
-        <h3>${unlocked ? beauty.name : "未净化目标"}</h3>
-        <p>${unlocked ? beauty.profile : "黑雾仍在覆盖她的记忆。通关对应章节后可查看完整资料。"}</p>
-        <div class="beauty-meta">
+          <div>
+            <span class="beauty-badge">${unlocked ? "已净化" : `目标 ${index + 1}`}</span>
+            <h3>${unlocked ? beauty.name : "未净化目标"}</h3>
+          </div>
           <span class="meta-pill">${unlocked ? beauty.title : "资料封锁中"}</span>
-          <span class="meta-pill">${unlocked ? beauty.skillName : "技能未知"}</span>
         </div>
-        <p>${unlocked ? `${beauty.skillName}：${beauty.skillDesc}` : "击败黑化 Boss 并完成净化后，这位美少女会成为你后续关卡的辅佐。 "}</p>
+        <div class="portrait-strip">
+          <div class="portrait-state">
+            <img src="${beauty.art.corrupt}" alt="${beauty.bossName}">
+            <div class="portrait-label">黑化 Boss</div>
+          </div>
+          <div class="portrait-state">
+            <img src="${beauty.art.purified}" alt="${beauty.name}">
+            <div class="portrait-label">净化辅佐</div>
+          </div>
+        </div>
+        <p>${unlocked ? beauty.profile : "黑雾仍在覆盖她的记忆。通关对应章节后才能正式收录完整档案。"}</p>
+        <div class="beauty-meta">
+          <span class="meta-pill">${unlocked ? beauty.skillName : "技能未知"}</span>
+          <span class="meta-pill">${unlocked ? "已可出战" : "待净化"}</span>
+        </div>
+        <p>${unlocked ? `${beauty.skillName}：${beauty.skillDesc}` : "击败黑化 Boss 后，她会以净化形态加入你的美女库，并在战斗中以专属技能支援你。 "}</p>
       </article>
     `;
   }).join("");
-}
-
-function showScreen(name) {
-  homeScreen.classList.toggle("screen-active", name === "home");
-  battleScreen.classList.toggle("screen-active", name === "battle");
 }
 
 function startStage(stageId) {
@@ -484,46 +546,47 @@ function startStage(stageId) {
     return;
   }
 
-  const selectedCompanion = getSelectedCompanion();
+  const companion = getSelectedCompanion();
   pendingUpgrades = 0;
+  resultContext = null;
   closeUpgradeModal();
   closeResultModal();
-  resultContext = null;
-  game = createGame(stage, selectedCompanion);
+  game = createGame(stage, companion);
   battleStageName.textContent = `第 ${stage.id} 章 · ${stage.name}`;
   updateBattleHud();
   showScreen("battle");
-  flashBattleMessage(`第 ${stage.id} 章开始：${stage.name}`, 2.2);
+  flashBattleMessage(`第 ${stage.id} 章开始：${stage.name}`, 2.1);
 }
 
 function createGame(stage, companion) {
-  const stageAccent = stage.accent;
-  const bossColor = BEAUTIES.find((beauty) => beauty.id === stage.bossBeautyId)?.accent || stage.accent;
   return {
     stage,
     time: 0,
     ended: false,
     paused: false,
     spawnClock: 0,
-    bossSpawned: false,
+    supportClock: 0,
     bossWarned: false,
+    bossSpawned: false,
     bossDefeated: false,
     hero: {
-      x: 118,
-      y: canvas.height / 2,
-      maxHp: 320,
-      hp: 320,
-      fireRate: 3.6,
+      x: canvas.width / 2,
+      y: canvas.height - 150,
+      maxHp: 360,
+      hp: 360,
+      fireRate: 3.8,
       damage: 24,
-      bulletSpeed: 850,
+      bulletSpeed: 920,
       pierce: 1,
       projectiles: 1,
       critChance: 0.08,
-      critMultiplier: 1.7,
+      critMultiplier: 1.72,
       splash: 0,
       slowShots: false,
       fireCooldown: 0,
-      companionCastAt: 0
+      recoil: 0,
+      muzzleTimer: 0,
+      companionCastAt: -999
     },
     level: 1,
     xp: 0,
@@ -535,8 +598,8 @@ function createGame(stage, companion) {
     texts: [],
     message: null,
     companion,
-    stageAccent,
-    bossColor
+    stageAccent: stage.accent,
+    bgPulse: Math.random() * Math.PI * 2
   };
 }
 
@@ -557,8 +620,11 @@ function frame(timestamp) {
 
 function updateGame(state, dt) {
   state.time += dt;
+  state.bgPulse += dt;
+  state.hero.recoil = Math.max(0, state.hero.recoil - dt * 7);
+  state.hero.muzzleTimer = Math.max(0, state.hero.muzzleTimer - dt);
   updateSpawns(state, dt);
-  updateCompanion(state, dt);
+  updateCompanion(state);
   updateHeroFire(state, dt);
   updateBullets(state, dt);
   updateMonsters(state, dt);
@@ -573,13 +639,13 @@ function updateGame(state, dt) {
 
 function updateSpawns(state, dt) {
   if (!state.bossSpawned) {
-    if (!state.bossWarned && state.time >= state.stage.bossAt - 6) {
+    if (!state.bossWarned && state.time >= state.stage.bossAt - 7) {
       state.bossWarned = true;
-      flashBattleMessage("黑化 Boss 即将现身", 1.5);
+      flashBattleMessage("黑化 Boss 即将自上层降临", 1.5);
     }
 
     state.spawnClock += dt;
-    const interval = Math.max(0.34, 1.1 - state.time * 0.012 - state.stage.id * 0.05);
+    const interval = Math.max(0.42, 1.18 - state.time * 0.012 - state.stage.id * 0.05);
     if (state.spawnClock >= interval) {
       state.spawnClock = 0;
       spawnMonsterWave(state);
@@ -588,19 +654,22 @@ function updateSpawns(state, dt) {
     if (state.time >= state.stage.bossAt) {
       spawnBoss(state);
     }
-  } else if (state.bossSpawned && !state.bossDefeated) {
-    state.spawnClock += dt;
-    const supportInterval = Math.max(1.1, 2.7 - state.stage.id * 0.2);
-    if (state.spawnClock >= supportInterval) {
-      state.spawnClock = 0;
+  } else if (!state.bossDefeated) {
+    state.supportClock += dt;
+    const supportInterval = Math.max(1.2, 2.8 - state.stage.id * 0.25);
+    if (state.supportClock >= supportInterval) {
+      state.supportClock = 0;
       spawnMonster(state, pickMonsterKind(state, true));
     }
   }
 }
 
 function spawnMonsterWave(state) {
-  const amount = state.stage.id === 1 ? 1 + Math.random() * 1.2 : 1 + Math.random() * 1.8;
-  const count = Math.floor(amount);
+  let count = 1 + (Math.random() < 0.6 ? 1 : 0);
+  if (state.stage.id >= 2 && Math.random() < 0.22) {
+    count += 1;
+  }
+
   for (let index = 0; index < count; index += 1) {
     spawnMonster(state, pickMonsterKind(state, false));
   }
@@ -609,57 +678,73 @@ function spawnMonsterWave(state) {
 function pickMonsterKind(state, duringBoss) {
   const roll = Math.random();
   if (state.stage.id === 1) {
-    return roll > 0.76 ? "runner" : "grunt";
+    if ((duringBoss && roll > 0.78) || (!duringBoss && state.time > 18 && roll > 0.88)) {
+      return "elite";
+    }
+    return roll > 0.62 ? "scout" : "goblin";
   }
   if (state.stage.id === 2) {
-    if (duringBoss && roll > 0.7) {
-      return "tank";
+    if ((duringBoss && roll > 0.68) || (!duringBoss && roll > 0.84)) {
+      return "elite";
     }
-    return roll > 0.58 ? "runner" : roll > 0.18 ? "grunt" : "tank";
+    return roll > 0.52 ? "scout" : "goblin";
   }
-  if (roll > 0.72) {
-    return "runner";
+  if ((duringBoss && roll > 0.55) || (!duringBoss && roll > 0.8)) {
+    return "elite";
   }
-  return roll > 0.28 ? "grunt" : "tank";
+  return roll > 0.46 ? "scout" : "goblin";
 }
 
 function spawnMonster(state, kind) {
-  const scale = 1 + state.stage.id * 0.22 + state.time * 0.016;
-  const spawnY = 100 + Math.random() * (canvas.height - 180);
-  const config = {
-    grunt: {
-      hp: 72 * scale,
-      speed: 46 + state.stage.id * 6,
-      radius: 20,
+  const scale = 1 + state.stage.id * 0.2 + state.time * 0.016;
+  const configs = {
+    goblin: {
+      hp: 76 * scale,
+      speed: 78 + state.stage.id * 5,
+      radius: 30,
       damage: 10 + state.stage.id * 1.8,
-      attackRate: 1.2,
+      attackRate: 1.15,
       exp: 24,
-      color: "#b6d8d1"
+      sprite: MONSTER_ART.goblin,
+      width: 108,
+      height: 132,
+      elite: false,
+      label: ""
     },
-    runner: {
+    scout: {
       hp: 58 * scale,
-      speed: 74 + state.stage.id * 8,
-      radius: 16,
-      damage: 9 + state.stage.id * 1.4,
-      attackRate: 1.0,
+      speed: 104 + state.stage.id * 8,
+      radius: 24,
+      damage: 8 + state.stage.id * 1.4,
+      attackRate: 0.92,
       exp: 20,
-      color: "#ffd78c"
+      sprite: MONSTER_ART.goblin,
+      width: 92,
+      height: 112,
+      elite: false,
+      label: ""
     },
-    tank: {
-      hp: 116 * scale,
-      speed: 34 + state.stage.id * 4,
-      radius: 26,
-      damage: 13 + state.stage.id * 2.4,
-      attackRate: 1.5,
-      exp: 36,
-      color: "#ff8b79"
+    elite: {
+      hp: 220 * scale,
+      speed: 64 + state.stage.id * 4,
+      radius: 40,
+      damage: 19 + state.stage.id * 3,
+      attackRate: 1.42,
+      exp: 62,
+      sprite: MONSTER_ART.elite,
+      width: 134,
+      height: 162,
+      elite: true,
+      label: "ELITE"
     }
-  }[kind];
+  };
 
+  const config = configs[kind];
+  const spawnX = 90 + Math.random() * (canvas.width - 180);
   state.monsters.push({
     kind,
-    x: canvas.width + 48 + Math.random() * 120,
-    y: spawnY,
+    x: spawnX,
+    y: -80 - Math.random() * 90,
     hp: config.hp,
     maxHp: config.hp,
     speed: config.speed,
@@ -667,12 +752,19 @@ function spawnMonster(state, kind) {
     damage: config.damage,
     attackRate: config.attackRate,
     exp: config.exp,
-    color: config.color,
+    sprite: config.sprite,
+    width: config.width,
+    height: config.height,
+    isElite: config.elite,
+    isBoss: false,
+    dead: false,
     attackCooldown: 0,
     slowUntil: 0,
-    dead: false,
-    isBoss: false,
-    halo: Math.random() * Math.PI * 2
+    phase: Math.random() * Math.PI * 2,
+    animSpeed: kind === "scout" ? 11 : config.elite ? 7.2 : 8.2,
+    weave: kind === "scout" ? 22 : config.elite ? 16 : 12,
+    hitFlash: 0,
+    label: config.label
   });
 }
 
@@ -680,28 +772,37 @@ function spawnBoss(state) {
   if (state.bossSpawned) {
     return;
   }
+  const beauty = getBeauty(state.stage.bossBeautyId);
+  const hp = 1350 + state.stage.id * 460;
   state.bossSpawned = true;
   state.spawnClock = 0;
-  const beauty = BEAUTIES.find((item) => item.id === state.stage.bossBeautyId);
-  const hp = 1150 + state.stage.id * 420;
+  state.supportClock = 0;
   state.monsters.push({
     kind: "boss",
-    x: canvas.width + 90,
-    y: canvas.height / 2,
+    x: canvas.width / 2,
+    y: -180,
     hp,
     maxHp: hp,
-    speed: 28 + state.stage.id * 3,
-    radius: 46,
-    damage: 22 + state.stage.id * 4,
-    attackRate: 1.1,
+    speed: 42 + state.stage.id * 4,
+    radius: 66,
+    damage: 24 + state.stage.id * 4,
+    attackRate: 1.08,
     exp: 0,
-    color: beauty.accent,
+    sprite: beauty.art.corrupt,
+    width: 228,
+    height: 314,
+    isElite: false,
+    isBoss: true,
+    dead: false,
     attackCooldown: 0,
     slowUntil: 0,
-    dead: false,
-    isBoss: true,
-    halo: 0
+    phase: Math.random() * Math.PI * 2,
+    animSpeed: 3.4,
+    weave: 48,
+    hitFlash: 0,
+    label: "BOSS"
   });
+  flashBattleMessage(`${beauty.bossName} 登场`, 1.55);
 }
 
 function updateCompanion(state) {
@@ -711,8 +812,10 @@ function updateCompanion(state) {
   if (state.time - state.hero.companionCastAt < state.companion.cooldown) {
     return;
   }
-  state.hero.companionCastAt = state.time;
-  state.companion.cast(state);
+  const didCast = state.companion.cast(state);
+  if (didCast) {
+    state.hero.companionCastAt = state.time;
+  }
 }
 
 function updateHeroFire(state, dt) {
@@ -723,49 +826,60 @@ function updateHeroFire(state, dt) {
 
   const target = findPrimaryTarget(state);
   if (!target) {
-    state.hero.fireCooldown = 0.12;
+    state.hero.fireCooldown = 0.1;
     return;
   }
 
-  const angle = Math.atan2(target.y - state.hero.y, target.x - state.hero.x);
+  const angle = Math.atan2(target.y - (state.hero.y - 48), target.x - state.hero.x);
   const shotCount = state.hero.projectiles;
-  const spreadStep = 0.13;
+  const spreadStep = 0.11;
   const center = (shotCount - 1) / 2;
 
   for (let index = 0; index < shotCount; index += 1) {
     const bulletAngle = angle + (index - center) * spreadStep;
     state.bullets.push({
-      x: state.hero.x + 35,
-      y: state.hero.y,
+      x: state.hero.x + Math.cos(bulletAngle) * 18,
+      y: state.hero.y - 62 + Math.sin(bulletAngle) * 18,
       vx: Math.cos(bulletAngle) * state.hero.bulletSpeed,
       vy: Math.sin(bulletAngle) * state.hero.bulletSpeed,
-      radius: 5.5,
+      radius: 6,
       damage: state.hero.damage,
       pierce: state.hero.pierce,
       color: "#ffe2b8",
       fromCompanion: false,
       splash: state.hero.splash,
-      slow: state.hero.slowShots
+      slow: state.hero.slowShots,
+      life: 1.4
     });
   }
 
   state.hero.fireCooldown = 1 / state.hero.fireRate;
+  state.hero.recoil = Math.min(1, state.hero.recoil + 0.9);
+  state.hero.muzzleTimer = 0.08;
 }
 
 function findPrimaryTarget(state) {
-  return [...state.monsters]
-    .filter((monster) => !monster.dead)
-    .sort((a, b) => distanceToHero(a, state.hero) - distanceToHero(b, state.hero))[0];
+  return livingMonsters(state)
+    .sort((a, b) => targetPriority(b, state.hero) - targetPriority(a, state.hero))[0];
+}
+
+function targetPriority(monster, hero) {
+  return monster.y * 2 + (monster.isBoss ? 140 : 0) + (monster.isElite ? 60 : 0) - distanceToHero(monster, hero) * 0.25;
 }
 
 function updateBullets(state, dt) {
-  state.bullets.forEach((bullet) => {
+  state.bullets = state.bullets.filter((bullet) => {
     bullet.x += bullet.vx * dt;
     bullet.y += bullet.vy * dt;
-  });
+    bullet.life -= dt;
 
-  state.bullets = state.bullets.filter((bullet) => {
-    if (bullet.x < -30 || bullet.x > canvas.width + 30 || bullet.y < -30 || bullet.y > canvas.height + 30) {
+    if (
+      bullet.life <= 0 ||
+      bullet.x < -60 ||
+      bullet.x > canvas.width + 60 ||
+      bullet.y < -120 ||
+      bullet.y > canvas.height + 120
+    ) {
       return false;
     }
 
@@ -773,8 +887,9 @@ function updateBullets(state, dt) {
       if (monster.dead) {
         continue;
       }
-      const collision = Math.hypot(bullet.x - monster.x, bullet.y - monster.y) <= bullet.radius + monster.radius;
-      if (!collision) {
+
+      const hit = Math.hypot(bullet.x - monster.x, bullet.y - monster.y) <= bullet.radius + monster.radius;
+      if (!hit) {
         continue;
       }
 
@@ -784,11 +899,11 @@ function updateBullets(state, dt) {
       if (!bullet.fromCompanion && Math.random() < state.hero.critChance) {
         damage *= state.hero.critMultiplier;
         label = "暴击";
-        color = "#fff29c";
+        color = "#fff09f";
       }
 
       if (bullet.slow) {
-        monster.slowUntil = Math.max(monster.slowUntil, state.time + 2.5);
+        monster.slowUntil = Math.max(monster.slowUntil, state.time + 2.4);
       }
 
       dealDamage(state, monster, damage, { color, label });
@@ -817,7 +932,7 @@ function splashDamage(state, bullet, radius, amount) {
       return;
     }
     dealDamage(state, monster, amount, {
-      color: "#ffc79a",
+      color: "#ffcf9a",
       label: "溅射"
     });
   });
@@ -828,7 +943,7 @@ function splashDamage(state, bullet, radius, amount) {
     y: bullet.y,
     radius: 0,
     maxRadius: radius * 1.6,
-    color: "rgba(255, 177, 110, 0.28)",
+    color: "rgba(255, 180, 108, 0.28)",
     life: 0.22,
     totalLife: 0.22
   });
@@ -840,12 +955,14 @@ function updateMonsters(state, dt) {
       return;
     }
 
-    monster.halo += dt * 1.2;
-    const slowFactor = state.time < monster.slowUntil ? 0.6 : 1;
-    const dx = state.hero.x + 18 - monster.x;
-    const dy = state.hero.y - monster.y;
+    monster.hitFlash = Math.max(0, monster.hitFlash - dt * 4);
+    const slowFactor = state.time < monster.slowUntil ? 0.56 : 1;
+    const targetX = state.hero.x + Math.sin(state.time * (monster.isBoss ? 1.8 : 2.8) + monster.phase) * monster.weave;
+    const targetY = state.hero.y - (monster.isBoss ? 150 : 78);
+    const dx = targetX - monster.x;
+    const dy = targetY - monster.y;
     const distance = Math.hypot(dx, dy);
-    const attackRange = monster.radius + 42;
+    const attackRange = monster.radius + (monster.isBoss ? 86 : 58);
 
     if (distance > attackRange) {
       monster.x += (dx / distance) * monster.speed * slowFactor * dt;
@@ -853,16 +970,16 @@ function updateMonsters(state, dt) {
     } else {
       monster.attackCooldown -= dt;
       if (monster.attackCooldown <= 0) {
-        const damage = monster.damage * (monster.isBoss ? 1.1 : 1);
+        const damage = monster.damage * (monster.isBoss ? 1.12 : 1);
         state.hero.hp = Math.max(0, state.hero.hp - damage);
         monster.attackCooldown = monster.attackRate;
-        spawnShockwave(state, state.hero.x + 5, state.hero.y, 40, "rgba(255, 110, 110, 0.18)");
+        spawnShockwave(state, state.hero.x, state.hero.y - 18, monster.isBoss ? 72 : 48, "rgba(255, 112, 112, 0.18)");
         state.texts.push({
-          x: state.hero.x + 10,
-          y: state.hero.y - 34,
+          x: state.hero.x,
+          y: state.hero.y - 98,
           text: `-${Math.round(damage)}`,
-          color: "#ff8f8f",
-          life: 0.5
+          color: "#ff9696",
+          life: 0.55
         });
       }
     }
@@ -883,7 +1000,7 @@ function updateEffects(state, dt) {
 
 function updateTexts(state, dt) {
   state.texts.forEach((text) => {
-    text.y -= 42 * dt;
+    text.y -= 44 * dt;
     text.life -= dt;
   });
   state.texts = state.texts.filter((text) => text.life > 0);
@@ -897,14 +1014,20 @@ function updateMessage(state) {
   battleMessage.classList.add("hidden");
 }
 
+function livingMonsters(state) {
+  return state.monsters.filter((monster) => !monster.dead);
+}
+
 function dealDamage(state, monster, amount, options = {}) {
   if (monster.dead) {
     return;
   }
+
   monster.hp -= amount;
+  monster.hitFlash = 1;
   state.texts.push({
     x: monster.x,
-    y: monster.y - monster.radius,
+    y: monster.y - monster.radius - 8,
     text: options.label ? `${options.label} ${Math.round(amount)}` : `${Math.round(amount)}`,
     color: options.color || "#fff2c9",
     life: 0.55
@@ -914,7 +1037,7 @@ function dealDamage(state, monster, amount, options = {}) {
     monster.dead = true;
     if (monster.isBoss) {
       state.bossDefeated = true;
-      spawnShockwave(state, monster.x, monster.y, 230, hexToRgba(state.bossColor, 0.3));
+      spawnShockwave(state, monster.x, monster.y, 260, hexToRgba(state.stageAccent, 0.32));
       finishBattle(true);
     } else {
       state.killCount += 1;
@@ -925,7 +1048,7 @@ function dealDamage(state, monster, amount, options = {}) {
         y: monster.y,
         radius: 0,
         maxRadius: monster.radius * 2.2,
-        color: "rgba(255, 227, 177, 0.18)",
+        color: monster.isElite ? "rgba(255, 212, 110, 0.24)" : "rgba(173, 234, 126, 0.2)",
         life: 0.24,
         totalLife: 0.24
       });
@@ -963,7 +1086,7 @@ function openUpgradeModal() {
 
   upgradeChoices.querySelectorAll("[data-upgrade-id]").forEach((button) => {
     button.addEventListener("click", () => {
-      const picked = UPGRADE_POOL.find((upgrade) => upgrade.id === button.dataset.upgradeId);
+      const picked = UPGRADE_POOL.find((item) => item.id === button.dataset.upgradeId);
       if (!picked || !game) {
         return;
       }
@@ -1005,7 +1128,7 @@ function finishBattle(victory) {
 
   let unlockedBeauty = null;
   if (victory) {
-    const beauty = BEAUTIES.find((item) => item.id === game.stage.bossBeautyId);
+    const beauty = getBeauty(game.stage.bossBeautyId);
     const wasRescued = progress.rescued.includes(beauty.id);
     if (!wasRescued) {
       progress.rescued.push(beauty.id);
@@ -1021,25 +1144,22 @@ function finishBattle(victory) {
   }
 
   const nextStageId = victory && isStageUnlocked(game.stage.id + 1) ? game.stage.id + 1 : null;
-  resultContext = { nextStageId };
+  resultContext = { nextStageId: nextStageId || game.stage.id };
   resultKicker.textContent = victory ? "净化成功" : "防线失守";
-  resultTitle.textContent = victory ? `成功净化 ${game.stage.bossName}` : "本次行动失败";
+  resultTitle.textContent = victory ? `成功净化 ${getBeauty(game.stage.bossBeautyId).bossName}` : "本次行动失败";
 
   if (victory) {
+    const beauty = getBeauty(game.stage.bossBeautyId);
     resultText.textContent = unlockedBeauty
-      ? `${unlockedBeauty.name} 已加入美女库，可在后续关卡中作为辅佐出战。她的专属技能是【${unlockedBeauty.skillName}】。`
+      ? `${beauty.name} 已加入美女库，可在后续关卡中作为辅佐出战。她的专属技能是【${beauty.skillName}】。`
       : "该 Boss 已完成净化，本次战斗记入重战记录。";
   } else {
-    resultText.textContent = "黑雾怪潮突破了防线。回到主界面后重新选择关卡和美女辅佐，再试一次。";
+    resultText.textContent = "哥布林怪潮击穿了下方防线。返回主界面后重新编组，再次尝试净化行动。";
   }
 
   resultPrimaryButton.textContent = "返回主界面";
   resultSecondaryButton.textContent = nextStageId ? `挑战第 ${nextStageId} 章` : victory ? "再次挑战" : "重整后再战";
   resultModal.classList.remove("hidden");
-
-  if (!nextStageId) {
-    resultContext.nextStageId = game.stage.id;
-  }
 }
 
 function closeResultModal() {
@@ -1050,6 +1170,7 @@ function updateBattleHud() {
   if (!game) {
     return;
   }
+
   hudHp.textContent = `${Math.ceil(game.hero.hp)} / ${game.hero.maxHp}`;
   hudTimer.textContent = `${Math.floor(game.time)}s`;
   hudLevel.textContent = `Lv.${game.level}`;
@@ -1061,114 +1182,160 @@ function updateBattleHud() {
     battleCompanionStatus.innerHTML = `
       <p class="battle-companion-label">美女辅佐</p>
       <strong>当前未携带</strong>
-      <p>首关也能单人通关，但携带已净化美少女会让清场更轻松。</p>
+      <p>首关也能单人通关，但有辅佐时清怪与控场会稳定得多。</p>
     `;
     return;
   }
 
   const cooldownLeft = Math.max(0, game.companion.cooldown - (game.time - game.hero.companionCastAt));
   battleCompanionStatus.innerHTML = `
-    <p class="battle-companion-label">美女辅佐</p>
-    <h3 style="margin: 6px 0; color: ${game.companion.accent};">${game.companion.name}</h3>
-    <p>${game.companion.skillName}</p>
-    <p class="cooldown-label">技能冷却 ${cooldownLeft.toFixed(1)}s</p>
+    <div class="companion-status-layout">
+      <img src="${game.companion.art.purified}" alt="${game.companion.name}" class="companion-art">
+      <div>
+        <p class="battle-companion-label">美女辅佐</p>
+        <h3 style="margin: 6px 0; color: ${game.companion.accent};">${game.companion.name}</h3>
+        <p>${game.companion.skillName}</p>
+        <p class="cooldown-label">${cooldownLeft > 0 ? `技能冷却 ${cooldownLeft.toFixed(1)}s` : "技能就绪"}</p>
+      </div>
+    </div>
   `;
 }
 
 function renderGame(state) {
   drawBackground(state);
-  drawHero(state.hero, state.companion, state.stageAccent);
-  state.bullets.forEach(drawBullet);
+  drawSpawnGate(state);
+  state.effects.filter((effect) => effect.type === "nova").forEach(drawEffect);
   state.monsters.forEach((monster) => drawMonster(monster, state));
-  state.effects.forEach((effect) => drawEffect(effect));
+  state.effects.filter((effect) => effect.type !== "nova").forEach(drawEffect);
+  state.bullets.forEach(drawBullet);
+  drawCompanion(state);
+  drawHero(state);
   state.texts.forEach(drawText);
   drawBossBar(state);
 }
 
 function drawBackground(state) {
-  const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-  gradient.addColorStop(0, "#0a1016");
-  gradient.addColorStop(0.55, hexToRgba(state.stageAccent, 0.14));
-  gradient.addColorStop(1, "#111822");
+  const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+  gradient.addColorStop(0, "#0a1118");
+  gradient.addColorStop(0.58, hexToRgba(state.stageAccent, 0.08));
+  gradient.addColorStop(1, "#111722");
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  ctx.fillStyle = "rgba(255,255,255,0.02)";
-  for (let index = 0; index < 6; index += 1) {
-    const y = 110 + index * 84;
-    ctx.fillRect(0, y, canvas.width, 1);
+  ctx.fillStyle = "rgba(255,255,255,0.025)";
+  ctx.fillRect(62, 0, canvas.width - 124, canvas.height);
+
+  ctx.fillStyle = "rgba(255,255,255,0.03)";
+  for (let index = 0; index < 9; index += 1) {
+    const y = ((index * 132) + (state.time * 110)) % (canvas.height + 120) - 60;
+    ctx.fillRect(96, y, canvas.width - 192, 3);
   }
 
-  ctx.fillStyle = "rgba(246, 207, 145, 0.14)";
-  ctx.fillRect(94, 60, 6, canvas.height - 120);
+  ctx.fillStyle = "rgba(255,255,255,0.04)";
+  ctx.fillRect(92, 0, 3, canvas.height);
+  ctx.fillRect(canvas.width - 95, 0, 3, canvas.height);
 
-  ctx.fillStyle = "rgba(255,255,255,0.06)";
+  const defenseGradient = ctx.createLinearGradient(0, canvas.height - 210, 0, canvas.height);
+  defenseGradient.addColorStop(0, "rgba(0,0,0,0)");
+  defenseGradient.addColorStop(1, "rgba(255, 160, 120, 0.14)");
+  ctx.fillStyle = defenseGradient;
+  ctx.fillRect(0, canvas.height - 210, canvas.width, 210);
+
+  ctx.strokeStyle = hexToRgba(state.stageAccent, 0.32);
+  ctx.lineWidth = 4;
   ctx.beginPath();
-  ctx.arc(92, canvas.height / 2, 56, 0, Math.PI * 2);
+  ctx.moveTo(78, canvas.height - 170);
+  ctx.lineTo(canvas.width - 78, canvas.height - 170);
+  ctx.stroke();
+
+  ctx.fillStyle = "rgba(255,255,255,0.05)";
+  ctx.beginPath();
+  ctx.ellipse(canvas.width / 2, canvas.height - 120, 132, 34, 0, 0, Math.PI * 2);
   ctx.fill();
 }
 
-function drawHero(hero, companion, accent) {
+function drawSpawnGate(state) {
+  const pulse = 1 + Math.sin(state.bgPulse * 2.2) * 0.05;
   ctx.save();
-  ctx.translate(hero.x, hero.y);
-
-  ctx.fillStyle = "rgba(255, 255, 255, 0.08)";
+  ctx.translate(canvas.width / 2, 74);
+  ctx.scale(pulse, pulse);
+  ctx.fillStyle = hexToRgba(state.stageAccent, 0.18);
   ctx.beginPath();
-  ctx.arc(-6, 0, 62, 0, Math.PI * 2);
+  ctx.ellipse(0, 0, 112, 36, 0, 0, Math.PI * 2);
   ctx.fill();
-
-  ctx.fillStyle = "#f3e7d7";
+  ctx.strokeStyle = hexToRgba(state.stageAccent, 0.5);
+  ctx.lineWidth = 3;
   ctx.beginPath();
-  ctx.arc(0, -34, 18, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.fillStyle = "#151d27";
-  ctx.beginPath();
-  ctx.moveTo(-18, 12);
-  ctx.lineTo(18, 12);
-  ctx.lineTo(28, 56);
-  ctx.lineTo(-28, 56);
-  ctx.closePath();
-  ctx.fill();
-
-  ctx.strokeStyle = "#ffdbc3";
-  ctx.lineWidth = 10;
-  ctx.lineCap = "round";
-  ctx.beginPath();
-  ctx.moveTo(6, -8);
-  ctx.lineTo(42, -18);
+  ctx.ellipse(0, 0, 98, 24, 0, 0, Math.PI * 2);
   ctx.stroke();
+  ctx.restore();
+}
 
-  if (companion) {
-    ctx.globalAlpha = 0.9;
-    ctx.fillStyle = hexToRgba(companion.accent, 0.22);
-    ctx.beginPath();
-    ctx.arc(-22, -6, 28, 0, Math.PI * 2);
-    ctx.fill();
+function drawHero(state) {
+  const image = spriteCache[HERO_ART];
+  const idleBob = Math.sin(state.time * 4.4) * 3;
+  const recoil = state.hero.recoil * 8;
+  const y = state.hero.y + idleBob + recoil;
 
-    ctx.fillStyle = companion.accent;
+  ctx.save();
+  ctx.fillStyle = "rgba(0,0,0,0.24)";
+  ctx.beginPath();
+  ctx.ellipse(state.hero.x, state.hero.y + 120, 78, 24, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+
+  drawSprite(image, state.hero.x, y, 178, 250, {
+    rotation: -state.hero.recoil * 0.04
+  });
+
+  if (state.hero.muzzleTimer > 0) {
+    const alpha = state.hero.muzzleTimer / 0.08;
+    ctx.save();
+    ctx.translate(state.hero.x + 62, state.hero.y - 70);
+    ctx.rotate(-0.2);
+    ctx.fillStyle = `rgba(255, 205, 120, ${0.75 * alpha})`;
     ctx.beginPath();
-    ctx.arc(-22, -18, 10, 0, Math.PI * 2);
+    ctx.moveTo(0, 0);
+    ctx.lineTo(22, -10);
+    ctx.lineTo(46, 0);
+    ctx.lineTo(22, 10);
+    ctx.closePath();
     ctx.fill();
-    ctx.fillRect(-29, -10, 14, 26);
+    ctx.restore();
+  }
+}
+
+function drawCompanion(state) {
+  if (!state.companion) {
+    return;
   }
 
-  ctx.strokeStyle = hexToRgba(accent, 0.9);
-  ctx.lineWidth = 2;
-  ctx.strokeRect(-45, -68, 92, 140);
+  const image = spriteCache[state.companion.art.purified];
+  const float = Math.sin(state.time * 3 + 1.2) * 7;
+  const x = state.hero.x + 112;
+  const y = state.hero.y - 42 + float;
+
+  ctx.save();
+  ctx.fillStyle = hexToRgba(state.companion.accent, 0.14);
+  ctx.beginPath();
+  ctx.ellipse(x, y + 54, 36, 14, 0, 0, Math.PI * 2);
+  ctx.fill();
   ctx.restore();
+
+  drawSprite(image, x, y, 116, 152, {
+    rotation: Math.sin(state.time * 2.8) * 0.03
+  });
 }
 
 function drawBullet(bullet) {
   ctx.save();
-  if (bullet.trail === "flame") {
-    ctx.strokeStyle = "rgba(255, 184, 108, 0.32)";
-    ctx.lineWidth = bullet.radius;
-    ctx.beginPath();
-    ctx.moveTo(bullet.x - 26, bullet.y);
-    ctx.lineTo(bullet.x + 10, bullet.y);
-    ctx.stroke();
-  }
+  ctx.strokeStyle = bullet.trail === "flame" ? "rgba(255, 173, 108, 0.35)" : "rgba(255, 231, 184, 0.22)";
+  ctx.lineWidth = bullet.radius * (bullet.trail === "flame" ? 1.1 : 0.8);
+  ctx.beginPath();
+  ctx.moveTo(bullet.x - bullet.vx * 0.025, bullet.y - bullet.vy * 0.025);
+  ctx.lineTo(bullet.x + bullet.vx * 0.006, bullet.y + bullet.vy * 0.006);
+  ctx.stroke();
+
   ctx.fillStyle = bullet.color;
   ctx.beginPath();
   ctx.arc(bullet.x, bullet.y, bullet.radius, 0, Math.PI * 2);
@@ -1177,73 +1344,84 @@ function drawBullet(bullet) {
 }
 
 function drawMonster(monster, state) {
+  const image = spriteCache[monster.sprite];
+  const walk = Math.sin(state.time * monster.animSpeed + monster.phase);
+  const bob = walk * (monster.isBoss ? 8 : monster.isElite ? 6 : 5);
+  const rotation = monster.isBoss ? Math.sin(state.time * 2 + monster.phase) * 0.03 : walk * 0.04;
+  const width = monster.width;
+  const height = monster.height;
+
   ctx.save();
-  ctx.translate(monster.x, monster.y);
+  ctx.fillStyle = monster.isBoss ? "rgba(0,0,0,0.3)" : "rgba(0,0,0,0.2)";
+  ctx.beginPath();
+  ctx.ellipse(monster.x, monster.y + height * 0.34, width * 0.24, monster.isBoss ? 18 : 14, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
 
   if (monster.isBoss) {
-    const pulse = 1 + Math.sin(monster.halo * 3) * 0.06;
-    ctx.scale(pulse, pulse);
-    ctx.fillStyle = hexToRgba(monster.color, 0.14);
+    ctx.save();
+    ctx.fillStyle = hexToRgba(state.stageAccent, 0.14);
     ctx.beginPath();
-    ctx.arc(0, 0, monster.radius * 1.7, 0, Math.PI * 2);
+    ctx.arc(monster.x, monster.y - 6, 88 + Math.sin(state.time * 2 + monster.phase) * 8, 0, Math.PI * 2);
     ctx.fill();
-
-    ctx.strokeStyle = hexToRgba(monster.color, 0.75);
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.arc(0, -28, 26, 0, Math.PI * 2);
-    ctx.stroke();
-
-    ctx.fillStyle = "#f5e8dc";
-    ctx.beginPath();
-    ctx.arc(0, -18, 18, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.fillStyle = "#201620";
-    ctx.beginPath();
-    ctx.moveTo(-26, 14);
-    ctx.quadraticCurveTo(0, -4, 26, 14);
-    ctx.lineTo(34, 56);
-    ctx.lineTo(-34, 56);
-    ctx.closePath();
-    ctx.fill();
-
-    ctx.fillStyle = hexToRgba(monster.color, 0.88);
-    ctx.fillRect(-34, 18, 68, 12);
-  } else {
-    ctx.fillStyle = hexToRgba(monster.color, 0.1);
-    ctx.beginPath();
-    ctx.arc(0, 0, monster.radius * 1.4, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.fillStyle = monster.color;
-    ctx.beginPath();
-    ctx.arc(0, -8, monster.radius * 0.58, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.fillStyle = "#1b232b";
-    ctx.beginPath();
-    ctx.moveTo(-monster.radius * 0.8, monster.radius * 0.2);
-    ctx.lineTo(monster.radius * 0.8, monster.radius * 0.2);
-    ctx.lineTo(monster.radius, monster.radius * 1.2);
-    ctx.lineTo(-monster.radius, monster.radius * 1.2);
-    ctx.closePath();
-    ctx.fill();
+    ctx.restore();
   }
 
-  const hpWidth = monster.isBoss ? 120 : 54;
-  ctx.fillStyle = "rgba(255,255,255,0.08)";
-  ctx.fillRect(-hpWidth / 2, -monster.radius - 30, hpWidth, 8);
-  ctx.fillStyle = monster.isBoss ? state.bossColor : "#7ce3d9";
-  ctx.fillRect(-hpWidth / 2, -monster.radius - 30, hpWidth * Math.max(0, monster.hp / monster.maxHp), 8);
+  drawSprite(image, monster.x, monster.y + bob, width, height, { rotation });
 
+  if (monster.hitFlash > 0) {
+    ctx.save();
+    ctx.globalAlpha = monster.hitFlash * 0.18;
+    ctx.fillStyle = "#ffffff";
+    ctx.beginPath();
+    ctx.arc(monster.x, monster.y, monster.radius * 1.28, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  if (state.time < monster.slowUntil) {
+    ctx.save();
+    ctx.strokeStyle = "rgba(176, 242, 255, 0.45)";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(monster.x, monster.y, monster.radius * 1.25, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  const hpWidth = monster.isBoss ? 138 : monster.isElite ? 72 : 58;
+  const hpY = monster.y - height * 0.55;
+  ctx.fillStyle = "rgba(255,255,255,0.08)";
+  ctx.fillRect(monster.x - hpWidth / 2, hpY, hpWidth, 8);
+  ctx.fillStyle = monster.isBoss ? state.stageAccent : monster.isElite ? "#ffd36d" : "#7de0bb";
+  ctx.fillRect(monster.x - hpWidth / 2, hpY, hpWidth * Math.max(0, monster.hp / monster.maxHp), 8);
+
+  if (monster.label) {
+    drawPill(monster.x, hpY - 16, monster.label, monster.isBoss ? state.stageAccent : "#ffd36d");
+  }
+}
+
+function drawPill(x, y, text, color) {
+  ctx.save();
+  ctx.font = "700 12px PingFang SC";
+  const width = ctx.measureText(text).width + 18;
+  ctx.fillStyle = "rgba(9, 13, 20, 0.8)";
+  roundRectPath(x - width / 2, y - 12, width, 22, 11);
+  ctx.fill();
+  ctx.strokeStyle = hexToRgba(color, 0.44);
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(text, x, y - 1);
   ctx.restore();
 }
 
 function drawEffect(effect) {
   ctx.save();
   if (effect.type === "chain") {
-    ctx.strokeStyle = "rgba(255, 239, 157, 0.85)";
+    ctx.strokeStyle = "rgba(255, 239, 157, 0.9)";
     ctx.lineWidth = 4;
     ctx.beginPath();
     effect.points.forEach((point, index) => {
@@ -1270,7 +1448,7 @@ function drawText(text) {
   ctx.save();
   ctx.globalAlpha = Math.max(0, text.life * 1.8);
   ctx.fillStyle = text.color;
-  ctx.font = "600 18px PingFang SC";
+  ctx.font = "700 18px PingFang SC";
   ctx.textAlign = "center";
   ctx.fillText(text.text, text.x, text.y);
   ctx.restore();
@@ -1281,14 +1459,36 @@ function drawBossBar(state) {
   if (!boss) {
     return;
   }
+
+  const beauty = getBeauty(state.stage.bossBeautyId);
   ctx.save();
-  ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
-  ctx.fillRect(240, 28, canvas.width - 320, 18);
-  ctx.fillStyle = state.bossColor;
-  ctx.fillRect(240, 28, (canvas.width - 320) * Math.max(0, boss.hp / boss.maxHp), 18);
-  ctx.fillStyle = "#f4ede4";
-  ctx.font = "600 16px PingFang SC";
-  ctx.fillText(state.stage.bossName, 240, 20);
+  ctx.fillStyle = "rgba(0,0,0,0.44)";
+  roundRectPath(90, 28, canvas.width - 180, 22, 11);
+  ctx.fill();
+  ctx.fillStyle = state.stageAccent;
+  roundRectPath(90, 28, (canvas.width - 180) * Math.max(0, boss.hp / boss.maxHp), 22, 11);
+  ctx.fill();
+  ctx.fillStyle = "#f7f0e8";
+  ctx.font = "700 16px PingFang SC";
+  ctx.textAlign = "left";
+  ctx.fillText(beauty.bossName, 94, 20);
+  ctx.restore();
+}
+
+function drawSprite(image, x, y, width, height, options = {}) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(options.rotation || 0);
+  ctx.scale(options.scaleX || 1, options.scaleY || 1);
+
+  if (image && image.complete && image.naturalWidth) {
+    ctx.drawImage(image, -width / 2, -height / 2, width, height);
+  } else {
+    ctx.fillStyle = "rgba(255,255,255,0.1)";
+    roundRectPath(-width / 2, -height / 2, width, height, 20);
+    ctx.fill();
+  }
+
   ctx.restore();
 }
 
@@ -1318,6 +1518,10 @@ function getSelectedCompanion() {
   return BEAUTIES.find((beauty) => beauty.id === progress.selectedCompanionId && progress.rescued.includes(beauty.id)) || null;
 }
 
+function getBeauty(id) {
+  return BEAUTIES.find((beauty) => beauty.id === id);
+}
+
 function isStageUnlocked(stageId) {
   if (!STAGES.some((stage) => stage.id === stageId)) {
     return false;
@@ -1337,4 +1541,14 @@ function hexToRgba(hex, alpha) {
   const green = (value >> 8) & 255;
   const blue = value & 255;
   return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+}
+
+function roundRectPath(x, y, width, height, radius) {
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.arcTo(x + width, y, x + width, y + height, radius);
+  ctx.arcTo(x + width, y + height, x, y + height, radius);
+  ctx.arcTo(x, y + height, x, y, radius);
+  ctx.arcTo(x, y, x + width, y, radius);
+  ctx.closePath();
 }
