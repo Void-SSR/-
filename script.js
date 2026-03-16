@@ -415,6 +415,121 @@ const STAGES = [
   }
 ];
 
+const STAGE_SCENE_PRESETS = {
+  neon: {
+    skyTop: "#2f1030",
+    skyMid: "#140917",
+    skyBottom: "#06070c",
+    glow: "#ff6eae",
+    mist: "#67d9ff",
+    moon: "#ff7dad",
+    far: '<path d="M0 196L46 156L68 168L96 138L124 180L156 144L194 176L232 122L260 166L300 132L334 176L368 146L410 188L458 138L492 170L526 120L560 166L600 132V320H0Z" fill="#160a1d"/><rect x="84" y="112" width="14" height="74" fill="#2b1734"/><rect x="210" y="98" width="18" height="104" fill="#2a1733"/><rect x="468" y="88" width="16" height="108" fill="#2b1836"/>',
+    mid: '<path d="M0 232H600V320H0Z" fill="#0b1018"/><path d="M-10 208L52 196L112 212L170 190L226 204L288 182L358 204L432 176L498 198L610 180V320H-10Z" fill="#111925"/><path d="M34 162H176L198 184H320L342 168H420L446 186H560V198H34Z" fill="none" stroke="#ff6fb7" stroke-width="5" stroke-linecap="round" opacity=".35"/><rect x="122" y="154" width="38" height="24" rx="4" fill="#3ef0ff" opacity=".38"/><rect x="334" y="146" width="46" height="28" rx="4" fill="#ff67a8" opacity=".3"/>',
+    near: '<path d="M0 254L74 206L112 230L168 186L214 236L270 176L318 228L364 188L408 234L460 190L510 240L556 198L600 228V320H0Z" fill="#05070b"/><path d="M0 264C68 238 128 286 192 258C250 232 324 286 394 258C466 228 540 278 600 246V320H0Z" fill="#09121b" opacity=".9"/>'
+  },
+  frost: {
+    skyTop: "#183252",
+    skyMid: "#0b1725",
+    skyBottom: "#04080d",
+    glow: "#c7f1ff",
+    mist: "#8ce7ff",
+    moon: "#d9f7ff",
+    far: '<path d="M0 204L42 174L68 186L96 150L118 204L152 136L184 188L216 124L248 196L286 138L316 208L360 122L396 198L428 156L458 204L506 132L540 190L600 152V320H0Z" fill="#13263b"/><path d="M44 134L60 88L76 134H44ZM166 114L184 58L202 114H166ZM338 124L356 52L374 124H338ZM510 130L528 74L546 130H510Z" fill="#b9f5ff" opacity=".34"/>',
+    mid: '<path d="M0 236L54 214L116 222L182 202L246 214L320 196L394 214L460 204L600 226V320H0Z" fill="#0d1622"/><path d="M86 154H148L164 188H70Z" fill="#88e9ff" opacity=".28"/><path d="M274 146H346L364 192H252Z" fill="#a3f4ff" opacity=".28"/><path d="M446 150H520L538 196H428Z" fill="#95eeff" opacity=".24"/>',
+    near: '<path d="M0 270L62 220L106 252L152 202L202 268L256 188L302 248L356 206L410 272L466 198L516 250L572 216L600 230V320H0Z" fill="#061019"/><path d="M0 286C70 256 130 304 204 272C274 242 338 304 410 272C482 240 544 294 600 264V320H0Z" fill="#0a1a26" opacity=".92"/>'
+  },
+  thunder: {
+    skyTop: "#241c31",
+    skyMid: "#0d1118",
+    skyBottom: "#05070a",
+    glow: "#ffe373",
+    mist: "#92b0ff",
+    moon: "#fff1ab",
+    far: '<path d="M0 196L54 168L92 180L124 140L168 172L204 132L248 188L286 118L330 182L374 146L418 192L458 112L504 188L546 136L600 176V320H0Z" fill="#171623"/><rect x="112" y="92" width="18" height="118" fill="#26202f"/><rect x="280" y="72" width="22" height="146" fill="#2b2436"/><rect x="452" y="84" width="20" height="132" fill="#241d30"/><path d="M450 36L428 96H452L430 150L486 78H458L486 36Z" fill="#ffe07f" opacity=".7"/><path d="M174 62L156 104H176L158 146L206 84H184L206 62Z" fill="#fff0a4" opacity=".46"/>',
+    mid: '<path d="M0 236L62 214L124 224L188 208L248 224L318 196L390 220L460 204L600 226V320H0Z" fill="#101723"/><path d="M96 158L122 114L148 158Z" fill="#ffd95d" opacity=".28"/><path d="M278 142L306 96L334 142Z" fill="#ffe586" opacity=".3"/><path d="M452 150L478 108L504 150Z" fill="#ffe05e" opacity=".28"/>',
+    near: '<path d="M0 262L66 218L114 238L168 192L226 246L280 170L332 236L388 190L440 250L494 178L544 234L600 206V320H0Z" fill="#05080d"/><path d="M0 286C72 252 138 308 214 272C286 238 352 306 420 270C492 236 552 292 600 258V320H0Z" fill="#0a0f17" opacity=".94"/>'
+  },
+  shrine: {
+    skyTop: "#33131c",
+    skyMid: "#14090f",
+    skyBottom: "#060507",
+    glow: "#ff97b1",
+    mist: "#ffcfdf",
+    moon: "#ffc6d6",
+    far: '<path d="M0 200L52 168L92 180L136 138L180 174L224 122L270 188L318 134L372 194L424 156L476 198L522 132L570 182L600 170V320H0Z" fill="#1c0f15"/><path d="M214 100H386V120H214ZM236 120H258V182H236ZM342 120H364V182H342Z" fill="#31141f" opacity=".88"/><path d="M214 104L194 140H406L386 104Z" fill="#4a1d2d" opacity=".78"/>',
+    mid: '<path d="M0 236L56 220L124 226L188 210L252 222L320 204L388 218L456 206L600 230V320H0Z" fill="#120d14"/><path d="M82 150H180L196 172H66Z" fill="#ff97b6" opacity=".2"/><path d="M418 146H514L530 168H402Z" fill="#ffb2c7" opacity=".18"/><circle cx="112" cy="176" r="7" fill="#ffd6e4" opacity=".4"/><circle cx="484" cy="172" r="7" fill="#ffd6e4" opacity=".4"/>',
+    near: '<path d="M0 266L64 226L116 246L168 202L230 258L282 184L334 244L390 202L446 264L502 198L552 236L600 214V320H0Z" fill="#06070a"/><path d="M0 286C68 252 138 306 210 272C280 240 344 306 418 270C490 236 552 292 600 258V320H0Z" fill="#0d0b10" opacity=".95"/>'
+  },
+  steamdock: {
+    skyTop: "#37291c",
+    skyMid: "#181210",
+    skyBottom: "#070606",
+    glow: "#ffc078",
+    mist: "#f0bd87",
+    moon: "#ffd09b",
+    far: '<path d="M0 202L56 174L106 188L150 146L202 182L248 132L296 192L338 146L392 202L446 164L494 194L544 142L600 178V320H0Z" fill="#1d1511"/><rect x="116" y="116" width="30" height="90" fill="#352820"/><rect x="150" y="104" width="10" height="102" fill="#4d3a2d"/><path d="M150 108L242 72L246 84L160 118Z" fill="#604939" opacity=".9"/><rect x="382" y="102" width="44" height="112" rx="6" fill="#2f251e"/><circle cx="404" cy="138" r="16" fill="#ffce88" opacity=".16"/><rect x="462" y="114" width="18" height="96" fill="#3a2e27"/><path d="M480 118L548 86L552 98L484 130Z" fill="#6c5641"/>',
+    mid: '<path d="M0 236L60 216L126 224L192 208L262 220L334 206L408 220L482 210L600 226V320H0Z" fill="#120f0f"/><path d="M88 162H176V182H88Z" fill="#ffbf79" opacity=".18"/><path d="M372 166H434V186H372Z" fill="#ffd4a2" opacity=".18"/><path d="M448 170H520V188H448Z" fill="#ffca8c" opacity=".16"/>',
+    near: '<path d="M0 268L66 230L116 248L174 208L232 262L286 192L344 248L402 206L456 268L510 214L560 242L600 220V320H0Z" fill="#050607"/><path d="M0 288C74 256 146 306 220 272C290 240 356 304 428 272C500 240 560 292 600 262V320H0Z" fill="#0d0d0d" opacity=".96"/>'
+  },
+  desert: {
+    skyTop: "#4b3417",
+    skyMid: "#21160c",
+    skyBottom: "#090705",
+    glow: "#ffd486",
+    mist: "#efc16d",
+    moon: "#ffe1a5",
+    far: '<path d="M0 228C40 204 84 194 124 206C172 220 212 186 254 194C308 206 348 182 392 190C452 202 498 176 600 196V320H0Z" fill="#25180d"/><path d="M72 168H100V214H72ZM84 152H88V168H84ZM274 156H308V216H274ZM288 132H292V156H288ZM472 162H504V212H472ZM484 142H488V162H484Z" fill="#3a2613"/><path d="M224 146L258 116L292 146H224Z" fill="#51361b" opacity=".7"/>',
+    mid: '<path d="M0 250C70 208 124 246 192 220C256 196 320 244 388 216C450 190 520 240 600 208V320H0Z" fill="#16110d"/><path d="M108 184L154 154L180 188L132 210Z" fill="#ffd98c" opacity=".14"/><path d="M388 178L430 150L458 190L414 210Z" fill="#ffd28a" opacity=".12"/>',
+    near: '<path d="M0 276C72 232 136 302 212 258C286 214 354 294 432 252C506 210 556 276 600 236V320H0Z" fill="#0a0806"/><path d="M0 292C84 260 156 312 234 278C310 244 384 310 458 274C526 240 566 288 600 266V320H0Z" fill="#11100b" opacity=".94"/>'
+  },
+  opera: {
+    skyTop: "#391823",
+    skyMid: "#190b11",
+    skyBottom: "#070607",
+    glow: "#ffb1a3",
+    mist: "#ffccb8",
+    moon: "#ffd8ca",
+    far: '<path d="M0 196L52 166L92 182L138 144L184 176L230 132L286 190L338 144L396 198L450 164L500 194L548 146L600 178V320H0Z" fill="#1e0e15"/><path d="M92 132C120 96 170 96 198 132V214H92Z" fill="#3a1823" opacity=".82"/><path d="M402 132C430 96 480 96 508 132V214H402Z" fill="#351721" opacity=".8"/><path d="M250 86H350V214H250Z" fill="#2c1219"/><path d="M250 86L238 126H362L350 86Z" fill="#4c1f2d" opacity=".74"/>',
+    mid: '<path d="M0 236L58 218L128 226L198 210L270 222L342 206L416 222L488 210L600 228V320H0Z" fill="#130d12"/><path d="M44 84L76 220H12Z" fill="#6e2336" opacity=".72"/><path d="M556 84L588 220H524Z" fill="#6e2336" opacity=".72"/><circle cx="300" cy="112" r="18" fill="#ffd6bf" opacity=".2"/><path d="M288 112L300 142L312 112L338 118L320 98L334 74L300 90L266 74L280 98L262 118Z" fill="#ffd7c2" opacity=".3"/>',
+    near: '<path d="M0 270L70 230L120 246L182 206L244 260L300 190L352 250L410 204L468 268L526 214L570 242L600 226V320H0Z" fill="#050608"/><path d="M0 290C80 254 152 310 228 274C300 240 372 306 446 272C522 238 566 292 600 264V320H0Z" fill="#0e0b0d" opacity=".95"/>'
+  },
+  abysslab: {
+    skyTop: "#13323b",
+    skyMid: "#08131c",
+    skyBottom: "#040609",
+    glow: "#7fe7ef",
+    mist: "#7fe7ef",
+    moon: "#a3fbff",
+    far: '<path d="M0 200L54 170L92 184L138 144L188 176L236 130L286 194L338 138L394 200L446 160L500 196L548 144L600 180V320H0Z" fill="#0f222b"/><rect x="86" y="108" width="60" height="108" rx="18" fill="#163642" opacity=".78"/><rect x="270" y="92" width="68" height="126" rx="18" fill="#153945" opacity=".78"/><rect x="448" y="104" width="58" height="114" rx="18" fill="#163844" opacity=".74"/><circle cx="116" cy="142" r="20" fill="#8af2ff" opacity=".18"/><circle cx="304" cy="130" r="20" fill="#8af2ff" opacity=".18"/><circle cx="478" cy="144" r="20" fill="#8af2ff" opacity=".18"/>',
+    mid: '<path d="M0 236L60 218L124 224L190 208L260 220L330 208L402 220L476 208L600 226V320H0Z" fill="#0f151a"/><path d="M154 104L210 166" stroke="#7fe7ef" stroke-width="4" opacity=".18"/><path d="M338 94L412 178" stroke="#7fe7ef" stroke-width="4" opacity=".18"/><path d="M498 116L554 170" stroke="#7fe7ef" stroke-width="4" opacity=".16"/>',
+    near: '<path d="M0 268L68 228L122 248L180 206L240 262L294 190L352 250L412 208L470 270L526 218L572 246L600 228V320H0Z" fill="#05070a"/><path d="M0 288C74 254 144 308 220 274C294 242 364 306 438 272C510 240 560 294 600 266V320H0Z" fill="#0a1014" opacity=".95"/>'
+  },
+  greenhouse: {
+    skyTop: "#1e2f18",
+    skyMid: "#0b130d",
+    skyBottom: "#050705",
+    glow: "#b2f875",
+    mist: "#caff9a",
+    moon: "#dfffb4",
+    far: '<path d="M0 198L54 168L96 182L142 140L188 176L238 130L290 196L338 146L392 198L446 160L498 194L546 144L600 176V320H0Z" fill="#132016"/><path d="M102 118H204V214H102Z" fill="none" stroke="#8cd86a" stroke-width="4" opacity=".36"/><path d="M118 134L154 102L190 134M154 102V214" stroke="#8cd86a" stroke-width="4" opacity=".36"/><path d="M378 110H504V214H378Z" fill="none" stroke="#7ec85e" stroke-width="4" opacity=".34"/><path d="M396 128L442 88L486 128M442 88V214" stroke="#8fe466" stroke-width="4" opacity=".34"/>',
+    mid: '<path d="M0 238L58 220L126 228L196 212L268 224L344 210L420 224L492 212L600 228V320H0Z" fill="#0f1410"/><path d="M48 146C84 138 88 184 120 174C146 166 150 196 176 188" stroke="#b7ff91" stroke-width="6" opacity=".24" fill="none"/><path d="M402 138C434 126 446 182 478 170C502 160 512 196 544 184" stroke="#c3ff9e" stroke-width="6" opacity=".22" fill="none"/>',
+    near: '<path d="M0 270L70 232L124 250L182 210L244 264L302 192L360 252L420 210L480 272L536 220L578 246L600 232V320H0Z" fill="#050706"/><path d="M0 290C80 256 150 312 228 276C300 242 372 308 448 274C522 242 566 296 600 270V320H0Z" fill="#0b0f0b" opacity=".95"/>'
+  },
+  skycity: {
+    skyTop: "#1a2846",
+    skyMid: "#0a1018",
+    skyBottom: "#05070b",
+    glow: "#dbe7ff",
+    mist: "#c3d4ff",
+    moon: "#edf4ff",
+    far: '<path d="M0 194L58 164L102 180L150 138L198 176L246 126L294 192L344 136L398 198L454 154L506 188L552 138L600 174V320H0Z" fill="#142033"/><path d="M120 118H152V214H120ZM222 96H252V214H222ZM332 84H364V214H332ZM446 104H476V214H446Z" fill="#253552"/><path d="M110 118L136 70L162 118Z" fill="#3f5478"/><path d="M212 96L238 46L264 96Z" fill="#425577"/><path d="M322 84L348 28L374 84Z" fill="#41506e"/><path d="M436 104L462 58L488 104Z" fill="#455878"/><path d="M144 82L238 56L240 66L148 92ZM352 48L472 74L470 84L350 58Z" fill="#b9c9f5" opacity=".24"/>',
+    mid: '<path d="M0 236L60 218L128 226L198 210L272 224L346 208L422 224L494 212L600 228V320H0Z" fill="#10161f"/><path d="M84 170H170V190H84Z" fill="#dbe7ff" opacity=".12"/><path d="M248 164H338V184H248Z" fill="#e5eeff" opacity=".12"/><path d="M430 170H518V190H430Z" fill="#dce8ff" opacity=".1"/>',
+    near: '<path d="M0 268L72 226L126 248L186 204L248 264L304 188L364 252L426 208L486 270L542 216L582 244L600 230V320H0Z" fill="#06080d"/><path d="M0 288C82 254 154 310 230 274C304 240 378 306 452 272C526 240 568 294 600 268V320H0Z" fill="#0b1017" opacity=".95"/>'
+  }
+};
+
+const STAGE_SCENE_ART = Object.fromEntries(STAGES.map((stage) => [stage.id, createStageSceneIllustration(stage)]));
+
 const UPGRADE_POOL = [
   {
     id: "rapid-trigger",
@@ -862,7 +977,7 @@ const storyIntroSkipButton = document.getElementById("storyIntroSkipButton");
 const storyIntroNextButton = document.getElementById("storyIntroNextButton");
 const stageIntroModal = document.getElementById("stageIntroModal");
 const stageIntroArt = document.getElementById("stageIntroArt");
-const stageIntroBossArt = document.getElementById("stageIntroBossArt");
+const stageIntroSceneArt = document.getElementById("stageIntroSceneArt");
 const stageIntroTitle = document.getElementById("stageIntroTitle");
 const stageIntroText = document.getElementById("stageIntroText");
 const stageIntroMeta = document.getElementById("stageIntroMeta");
@@ -880,6 +995,7 @@ const resultModal = document.getElementById("resultModal");
 const resultKicker = document.getElementById("resultKicker");
 const resultTitle = document.getElementById("resultTitle");
 const resultText = document.getElementById("resultText");
+const resultStats = document.getElementById("resultStats");
 const resultPrimaryButton = document.getElementById("resultPrimaryButton");
 const resultSecondaryButton = document.getElementById("resultSecondaryButton");
 const canvas = document.getElementById("battleCanvas");
@@ -902,7 +1018,7 @@ function preloadSprites() {
 function bindEvents() {
   document.addEventListener("pointerdown", () => {
     sound.ensureStarted();
-  }, { passive: true });
+  }, { passive: true, once: true });
 
   resetProgressButton.addEventListener("click", () => {
     sound.ensureStarted();
@@ -1112,11 +1228,9 @@ function renderCompanions() {
 
 function renderStages() {
   stageGrid.innerHTML = STAGES.map((stage) => {
-    const beauty = getBeauty(stage.bossBeautyId);
     const unlocked = isStageUnlocked(stage.id);
     const cleared = progress.clearedStages.includes(stage.id);
-    const bossArt = getCorruptArtPath(beauty);
-    const filterClass = beautyNeedsCorruptFilter(beauty) ? "is-corrupt-filter" : "";
+    const sceneArt = getStageSceneArt(stage.id);
     return `
       <article class="stage-card ${unlocked ? "" : "locked"}" style="box-shadow: inset 0 0 0 1px ${hexToRgba(stage.accent, unlocked ? 0.18 : 0.08)};">
         <div class="stage-top">
@@ -1125,10 +1239,10 @@ function renderStages() {
         </div>
         <div class="stage-art-wrap">
           <div class="stage-theme-panel ${stage.themeClass}">
+            <img src="${sceneArt}" alt="${stage.sceneName}" class="stage-scene-art">
             <div class="scene-layer scene-layer-a"></div>
             <div class="scene-layer scene-layer-b"></div>
             <div class="scene-layer scene-layer-c"></div>
-            <img src="${bossArt}" alt="${beauty.bossName}" class="stage-boss-art ${filterClass}">
           </div>
           <div>
             <h3>${stage.name}</h3>
@@ -1136,7 +1250,7 @@ function renderStages() {
             <div class="stage-meta">
               <span class="meta-pill">场景 ${stage.sceneName}</span>
               <span class="meta-pill">威胁 ${stage.danger}</span>
-              <span class="meta-pill">Boss ${beauty.bossName}</span>
+              <span class="meta-pill">恐怖巢穴</span>
             </div>
           </div>
         </div>
@@ -1297,18 +1411,16 @@ function openStageIntro(stageId) {
   if (!stage) {
     return;
   }
-  const beauty = getBeauty(stage.bossBeautyId);
-  const bossArt = getCorruptArtPath(beauty);
   pendingStageId = stageId;
   stageIntroArt.className = `stage-intro-art ${stage.themeClass}`;
-  stageIntroBossArt.src = bossArt;
-  stageIntroBossArt.className = `stage-intro-boss-art ${beautyNeedsCorruptFilter(beauty) ? "is-corrupt-filter" : ""}`;
+  stageIntroSceneArt.src = getStageSceneArt(stage.id);
+  stageIntroSceneArt.className = "stage-intro-scene";
   stageIntroTitle.textContent = `第 ${stage.id} 章 · ${stage.name}`;
   stageIntroText.textContent = stage.previewText;
   stageIntroMeta.innerHTML = `
     <span class="meta-pill">场景 ${stage.sceneName}</span>
     <span class="meta-pill">威胁 ${stage.danger}</span>
-    <span class="meta-pill">Boss ${beauty.bossName}</span>
+    <span class="meta-pill">恐怖巢穴</span>
     <span class="meta-pill">${stage.tip}</span>
   `;
   stageIntroModal.classList.remove("hidden");
@@ -1405,6 +1517,7 @@ function createGame(stage, companion) {
     bossIntroShown: false,
     bossSpawned: false,
     bossDefeated: false,
+    lastEliteAlertAt: -999,
     hero: {
       x: canvas.width / 2,
       y: canvas.height - 150,
@@ -1436,6 +1549,14 @@ function createGame(stage, companion) {
     xp: 0,
     nextXp: 100,
     killCount: 0,
+    stats: {
+      totalDamage: 0,
+      bossDamage: 0,
+      eliteKills: 0,
+      moduleCasts: 0,
+      companionCasts: 0,
+      shotsFired: 0
+    },
     bullets: [],
     bombs: [],
     monsters: [],
@@ -1629,6 +1750,10 @@ function spawnMonster(state, kind) {
     hitFlash: 0,
     label: config.label
   });
+  if (config.elite && state.time - state.lastEliteAlertAt > 8) {
+    state.lastEliteAlertAt = state.time;
+    flashBattleMessage("精英哥布林逼近", 1.1);
+  }
 }
 
 function spawnBoss(state) {
@@ -1683,6 +1808,7 @@ function updateCompanion(state) {
   }
   if (castCompanionSkill(state, state.companion)) {
     state.hero.companionCastAt = state.time;
+    state.stats.companionCasts += 1;
   }
 }
 
@@ -1709,6 +1835,7 @@ function runModule(state, key, dt, cooldownFn, castFn) {
     return;
   }
   if (castFn(level)) {
+    state.stats.moduleCasts += 1;
     state.moduleCooldowns[key] = Math.max(1.2, cooldownFn(level));
   }
 }
@@ -1746,6 +1873,7 @@ function updateHeroFire(state) {
   }
 
   sound.playHeroShot();
+  state.stats.shotsFired += state.hero.projectiles;
   state.hero.fireCooldown = 1 / state.hero.fireRate;
   state.hero.recoil = Math.min(1, state.hero.recoil + 0.9);
   state.hero.muzzleTimer = 0.08;
@@ -2072,9 +2200,46 @@ function finishBattle(victory) {
       ? `${unlockedBeauty.name} 已加入美女库，并解锁专属技能【${unlockedBeauty.skillName}】。下一章已开放。`
       : "该 Boss 已完成净化，本次挑战会记入重战记录。")
     : "哥布林怪潮击穿了防线。调整编组和技能路线后，再试一次。";
+  renderResultStats(game);
   resultPrimaryButton.textContent = "返回主界面";
   resultSecondaryButton.textContent = nextStage ? `挑战第 ${nextStage} 章` : victory ? "再次挑战" : "重整后再战";
   resultModal.classList.remove("hidden");
+}
+
+function renderResultStats(state) {
+  const skillNames = getOwnedModuleKeys(state)
+    .map((key) => MODULE_SKILLS[key]?.name)
+    .filter(Boolean);
+  resultStats.innerHTML = `
+    <article class="result-stat">
+      <span>战斗时长</span>
+      <strong>${Math.max(1, Math.floor(state.time))}s</strong>
+    </article>
+    <article class="result-stat">
+      <span>击杀总数</span>
+      <strong>${state.killCount}</strong>
+    </article>
+    <article class="result-stat">
+      <span>总伤害</span>
+      <strong>${Math.round(state.stats.totalDamage)}</strong>
+    </article>
+    <article class="result-stat">
+      <span>Boss 伤害</span>
+      <strong>${Math.round(state.stats.bossDamage)}</strong>
+    </article>
+    <article class="result-stat">
+      <span>精英击杀</span>
+      <strong>${state.stats.eliteKills}</strong>
+    </article>
+    <article class="result-stat">
+      <span>自动施放</span>
+      <strong>${state.stats.moduleCasts + state.stats.companionCasts}</strong>
+    </article>
+    <article class="result-stat result-skill-summary">
+      <span>本局成型技能</span>
+      <p>${skillNames.length ? skillNames.join(" · ") : "本局主要依靠普通射击推进。"}${state.companion ? ` 辅佐：${state.companion.name}` : ""}</p>
+    </article>
+  `;
 }
 
 function updateBattleHud() {
@@ -2756,8 +2921,13 @@ function damageMonster(state, monster, amount, options = {}) {
   if (monster.dead) {
     return;
   }
+  const actualDamage = Math.min(monster.hp, amount);
   monster.hp -= amount;
   monster.hitFlash = 1;
+  state.stats.totalDamage += actualDamage;
+  if (monster.isBoss) {
+    state.stats.bossDamage += actualDamage;
+  }
   if (!options.silent) {
     state.texts.push({
       x: monster.x,
@@ -2785,6 +2955,9 @@ function handleMonsterDeath(state, monster) {
   }
   sound.playMonsterDeath(monster.isElite);
   state.killCount += 1;
+  if (monster.isElite) {
+    state.stats.eliteKills += 1;
+  }
   if (state.hero.onKillRepair > 0) {
     state.hero.hp = Math.min(state.hero.maxHp, state.hero.hp + state.hero.onKillRepair);
   }
@@ -2880,6 +3053,7 @@ function drawBackground(state) {
   ctx.fill();
 
   drawThemeScene(state);
+  drawAtmosphere(state);
 
   ctx.fillStyle = "rgba(255,255,255,0.024)";
   roundRectPath(72, 20, canvas.width - 144, canvas.height - 80, 30);
@@ -2952,6 +3126,86 @@ function drawThemeScene(state) {
       break;
   }
   ctx.restore();
+}
+
+function drawAtmosphere(state) {
+  const config = {
+    neon: { count: 10, fall: 32, drift: 36, color: "rgba(255, 128, 180, 0.26)", shape: "spark" },
+    frost: { count: 18, fall: 86, drift: 12, color: "rgba(218, 246, 255, 0.32)", shape: "snow" },
+    thunder: { count: 14, fall: 120, drift: 8, color: "rgba(188, 204, 255, 0.18)", shape: "rain" },
+    shrine: { count: 12, fall: 46, drift: 24, color: "rgba(255, 183, 207, 0.28)", shape: "petal" },
+    steamdock: { count: 9, fall: 24, drift: 20, color: "rgba(255, 227, 190, 0.18)", shape: "steam" },
+    desert: { count: 18, fall: 18, drift: 64, color: "rgba(255, 220, 156, 0.18)", shape: "sand" },
+    opera: { count: 10, fall: 30, drift: 18, color: "rgba(255, 208, 188, 0.2)", shape: "dust" },
+    abysslab: { count: 14, fall: 42, drift: 10, color: "rgba(143, 246, 255, 0.24)", shape: "bubble" },
+    greenhouse: { count: 16, fall: 28, drift: 32, color: "rgba(213, 255, 166, 0.22)", shape: "spore" },
+    skycity: { count: 12, fall: 36, drift: 18, color: "rgba(224, 236, 255, 0.22)", shape: "feather" }
+  }[state.stage.themeId];
+
+  if (!config) {
+    return;
+  }
+
+  ctx.save();
+  ctx.fillStyle = config.color;
+  ctx.strokeStyle = config.color;
+  ctx.lineWidth = 1.5;
+  for (let index = 0; index < config.count; index += 1) {
+    const x = (index * 61 + state.time * config.drift * (0.5 + (index % 4) * 0.18)) % (canvas.width + 100) - 50;
+    const y = (index * 97 + state.time * config.fall * (0.9 + (index % 3) * 0.16)) % (canvas.height + 160) - 80;
+    const size = 4 + (index % 4) * 1.8;
+    drawAtmosphereParticle(config.shape, x + Math.sin(state.time * 0.8 + index) * 10, y, size, state.time + index);
+  }
+  ctx.restore();
+}
+
+function drawAtmosphereParticle(shape, x, y, size, phase) {
+  switch (shape) {
+    case "snow":
+    case "spore":
+    case "bubble":
+      ctx.beginPath();
+      ctx.arc(x, y, size * (shape === "bubble" ? 0.8 : 0.46), 0, Math.PI * 2);
+      shape === "bubble" ? ctx.stroke() : ctx.fill();
+      return;
+    case "rain":
+      ctx.beginPath();
+      ctx.moveTo(x, y - size);
+      ctx.lineTo(x - size * 0.45, y + size * 1.7);
+      ctx.stroke();
+      return;
+    case "petal":
+    case "feather":
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(Math.sin(phase * 2) * 0.4);
+      ctx.beginPath();
+      ctx.ellipse(0, 0, size * 0.48, size, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+      return;
+    case "steam":
+      ctx.beginPath();
+      ctx.arc(x, y, size * 0.54, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(x + size * 0.4, y - size * 0.45, size * 0.36, 0, Math.PI * 2);
+      ctx.fill();
+      return;
+    case "sand":
+    case "dust":
+      ctx.fillRect(x, y, size * 0.7, size * 0.36);
+      return;
+    case "spark":
+    default:
+      ctx.beginPath();
+      ctx.moveTo(x, y - size);
+      ctx.lineTo(x + size * 0.5, y);
+      ctx.lineTo(x, y + size);
+      ctx.lineTo(x - size * 0.5, y);
+      ctx.closePath();
+      ctx.fill();
+  }
 }
 
 function drawNeonScene(state) {
@@ -3440,15 +3694,20 @@ function drawPolygon(points) {
 function createSoundSystem() {
   let ctx = null;
   let master = null;
+  let compressor = null;
   let musicGain = null;
   let fxGain = null;
   let noiseBuffer = null;
   let desiredScene = "menu";
   let activeScene = null;
   let musicTimer = null;
+  let musicLoopToken = 0;
   let lastShotAt = 0;
   let lastDeathAt = 0;
   let selectedVoice = null;
+  const MASTER_GAIN = 0.34;
+  const MUSIC_GAIN = 0.66;
+  const FX_GAIN = 1.18;
 
   function ensureStarted() {
     if (!window.AudioContext && !window.webkitAudioContext) {
@@ -3458,20 +3717,30 @@ function createSoundSystem() {
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
       ctx = new AudioCtx();
       master = ctx.createGain();
-      master.gain.value = 0.22;
+      master.gain.value = MASTER_GAIN;
+      compressor = ctx.createDynamicsCompressor();
+      compressor.threshold.value = -18;
+      compressor.knee.value = 16;
+      compressor.ratio.value = 10;
+      compressor.attack.value = 0.003;
+      compressor.release.value = 0.18;
       musicGain = ctx.createGain();
-      musicGain.gain.value = 0.46;
+      musicGain.gain.value = MUSIC_GAIN;
       fxGain = ctx.createGain();
-      fxGain.gain.value = 0.92;
+      fxGain.gain.value = FX_GAIN;
       musicGain.connect(master);
       fxGain.connect(master);
-      master.connect(ctx.destination);
+      master.connect(compressor);
+      compressor.connect(ctx.destination);
       noiseBuffer = createNoiseBuffer(ctx);
     }
     if (ctx.state === "suspended") {
       ctx.resume();
     }
     ensureVoiceLoaded();
+    if (activeScene === desiredScene && musicTimer) {
+      return true;
+    }
     startMusic(desiredScene);
     return true;
   }
@@ -3484,12 +3753,22 @@ function createSoundSystem() {
   }
 
   function startMusic(scene) {
-    if (!ctx || activeScene === scene) {
+    if (!ctx) {
+      return;
+    }
+    if (activeScene === scene && musicTimer) {
       return;
     }
     stopMusic();
     activeScene = scene;
-    queueMusic(scene);
+    if (musicGain) {
+      const now = ctx.currentTime;
+      musicGain.gain.cancelScheduledValues(now);
+      musicGain.gain.setValueAtTime(Math.min(musicGain.gain.value, MUSIC_GAIN * 0.45), now);
+      musicGain.gain.linearRampToValueAtTime(MUSIC_GAIN, now + 0.24);
+    }
+    musicLoopToken += 1;
+    queueMusic(scene, musicLoopToken);
   }
 
   function stopMusic() {
@@ -3497,72 +3776,87 @@ function createSoundSystem() {
       window.clearTimeout(musicTimer);
       musicTimer = null;
     }
+    musicLoopToken += 1;
+    if (ctx && musicGain) {
+      const now = ctx.currentTime;
+      musicGain.gain.cancelScheduledValues(now);
+      musicGain.gain.setValueAtTime(MUSIC_GAIN, now);
+    }
     activeScene = null;
   }
 
-  function queueMusic(scene) {
-    if (!ctx || activeScene !== scene) {
+  function queueMusic(scene, token) {
+    if (!ctx || activeScene !== scene || token !== musicLoopToken) {
       return;
     }
     const start = ctx.currentTime + 0.02;
-    const loopSeconds = scene === "battle" ? 2.7 : 3.6;
+    const loopSeconds = scene === "battle" ? 2.42 : 3.84;
     if (scene === "battle") {
       scheduleBattleLoop(start);
     } else {
       scheduleMenuLoop(start);
     }
     musicTimer = window.setTimeout(() => {
-      if (activeScene === scene) {
-        queueMusic(scene);
+      if (activeScene === scene && token === musicLoopToken) {
+        queueMusic(scene, token);
       }
     }, loopSeconds * 1000 - 120);
   }
 
   function scheduleMenuLoop(start) {
     const chords = [
-      [62, 66, 69],
-      [59, 62, 66],
-      [64, 67, 71],
-      [57, 61, 64]
+      [60, 63, 67],
+      [56, 60, 63],
+      [62, 65, 68],
+      [55, 58, 62]
     ];
     chords.forEach((chord, chordIndex) => {
       chord.forEach((note, noteIndex) => {
-        playTone(midiToFreq(note), start + chordIndex * 0.92 + noteIndex * 0.14, 0.74, "sine", 0.028, musicGain, {
-          attack: 0.08,
-          release: 0.24
+        playTone(midiToFreq(note), start + chordIndex * 0.96 + noteIndex * 0.12, 0.8, "sine", 0.038, musicGain, {
+          attack: 0.06,
+          release: 0.28
         });
       });
-      playTone(midiToFreq(chord[0] - 12), start + chordIndex * 0.92, 0.88, "triangle", 0.03, musicGain, {
+      playTone(midiToFreq(chord[0] - 12), start + chordIndex * 0.96, 0.92, "triangle", 0.046, musicGain, {
         attack: 0.03,
-        release: 0.2
+        release: 0.22
       });
     });
-    playNoise(start + 0.06, 0.2, 0.006, musicGain, 1800);
+    playNoise(start + 0.06, 0.28, 0.012, musicGain, 1400);
   }
 
   function scheduleBattleLoop(start) {
-    const sequence = [45, 45, 48, 50, 52, 50, 48, 45];
-    sequence.forEach((note, index) => {
-      const time = start + index * 0.3;
-      playTone(midiToFreq(note), time, 0.2, "triangle", 0.04, musicGain, {
-        attack: 0.01,
+    const bassline = [40, 40, 43, 40, 47, 40, 43, 40, 38, 38, 43, 38, 48, 43, 42, 35];
+    bassline.forEach((note, index) => {
+      const time = start + index * 0.15;
+      const accented = index % 4 === 0 || index === 12;
+      playTone(midiToFreq(note), time, accented ? 0.2 : 0.16, accented ? "sawtooth" : "triangle", accented ? 0.07 : 0.052, musicGain, {
+        attack: 0.006,
+        release: 0.06
+      });
+      playTone(midiToFreq(note - 12), time, 0.18, "sine", accented ? 0.04 : 0.028, musicGain, {
+        attack: 0.008,
         release: 0.08
       });
-      if (index % 2 === 0) {
-        playTone(midiToFreq(note + 12), time + 0.08, 0.18, "sine", 0.018, musicGain, {
-          attack: 0.02,
-          release: 0.08
-        });
+      playNoise(time, accented ? 0.06 : 0.04, accented ? 0.034 : 0.018, musicGain, accented ? 170 : 900);
+      if (index % 2 === 1) {
+        playNoise(time + 0.055, 0.02, 0.008, musicGain, 3200);
       }
-      playNoise(time, 0.05, 0.02, musicGain, 170);
     });
-    [57, 60, 64, 67].forEach((note, index) => {
-      playTone(midiToFreq(note), start + 0.15 + index * 0.6, 0.34, "sine", 0.022, musicGain, {
-        attack: 0.04,
-        release: 0.14
+    [64, 62, 60, 57].forEach((note, index) => {
+      const time = start + index * 0.6 + 0.08;
+      playTone(midiToFreq(note), time, 0.28, "sine", 0.032, musicGain, {
+        attack: 0.03,
+        release: 0.1
       });
     });
-    playNoise(start + 0.02, 0.11, 0.012, musicGain, 900);
+    [71, 72, 74].forEach((note, index) => {
+      playTone(midiToFreq(note), start + 0.42 + index * 0.6, 0.18, "triangle", 0.024, musicGain, {
+        attack: 0.01,
+        release: 0.06
+      });
+    });
+    playNoise(start + 0.02, 0.18, 0.018, musicGain, 140);
   }
 
   function playHeroShot() {
@@ -3573,15 +3867,16 @@ function createSoundSystem() {
       return;
     }
     lastShotAt = ctx.currentTime;
-    playNoise(ctx.currentTime, 0.045, 0.12, fxGain, 2100);
-    playTone(180, ctx.currentTime, 0.06, "triangle", 0.08, fxGain, {
+    playNoise(ctx.currentTime, 0.05, 0.2, fxGain, 1650);
+    playTone(148, ctx.currentTime, 0.075, "triangle", 0.13, fxGain, {
       attack: 0.002,
-      release: 0.05
+      release: 0.06
     });
-    playTone(760, ctx.currentTime + 0.004, 0.03, "sine", 0.03, fxGain, {
+    playTone(520, ctx.currentTime + 0.005, 0.04, "sine", 0.045, fxGain, {
       attack: 0.003,
-      release: 0.02
+      release: 0.03
     });
+    playNoise(ctx.currentTime + 0.008, 0.02, 0.028, fxGain, 4200);
   }
 
   function playMonsterDeath(isElite) {
@@ -3592,10 +3887,10 @@ function createSoundSystem() {
       return;
     }
     lastDeathAt = ctx.currentTime;
-    playNoise(ctx.currentTime, isElite ? 0.12 : 0.08, isElite ? 0.055 : 0.035, fxGain, isElite ? 540 : 760);
-    playTone(isElite ? 120 : 150, ctx.currentTime, isElite ? 0.18 : 0.12, "sine", isElite ? 0.055 : 0.035, fxGain, {
+    playNoise(ctx.currentTime, isElite ? 0.14 : 0.1, isElite ? 0.082 : 0.05, fxGain, isElite ? 420 : 640);
+    playTone(isElite ? 104 : 132, ctx.currentTime, isElite ? 0.22 : 0.14, "sine", isElite ? 0.08 : 0.05, fxGain, {
       attack: 0.004,
-      release: 0.08
+      release: 0.09
     });
   }
 
@@ -3623,25 +3918,25 @@ function createSoundSystem() {
       return;
     }
     [69, 73, 78].forEach((note, index) => {
-      playTone(midiToFreq(note), ctx.currentTime + index * 0.08, 0.22, "sine", 0.05, fxGain, {
+      playTone(midiToFreq(note), ctx.currentTime + index * 0.08, 0.24, "sine", 0.08, fxGain, {
         attack: 0.02,
         release: 0.08
       });
     });
-    playNoise(ctx.currentTime, 0.08, 0.03, fxGain, 700);
+    playNoise(ctx.currentTime, 0.1, 0.05, fxGain, 700);
   }
 
   function playBossAlert() {
     if (!ensureStarted()) {
       return;
     }
-    duckMusic(0.4, 2.1);
-    playNoise(ctx.currentTime, 0.2, 0.07, fxGain, 560);
-    playTone(164, ctx.currentTime, 0.36, "triangle", 0.09, fxGain, {
+    duckMusic(0.66, 2.1);
+    playNoise(ctx.currentTime, 0.24, 0.11, fxGain, 520);
+    playTone(164, ctx.currentTime, 0.4, "triangle", 0.13, fxGain, {
       attack: 0.01,
       release: 0.12
     });
-    playTone(246, ctx.currentTime + 0.18, 0.28, "sine", 0.06, fxGain, {
+    playTone(246, ctx.currentTime + 0.18, 0.3, "sine", 0.085, fxGain, {
       attack: 0.01,
       release: 0.08
     });
@@ -3652,7 +3947,7 @@ function createSoundSystem() {
       return;
     }
     [72, 76, 79, 84].forEach((note, index) => {
-      playTone(midiToFreq(note), ctx.currentTime + index * 0.11, 0.32, "sine", 0.06, fxGain, {
+      playTone(midiToFreq(note), ctx.currentTime + index * 0.11, 0.32, "sine", 0.085, fxGain, {
         attack: 0.03,
         release: 0.1
       });
@@ -3664,12 +3959,12 @@ function createSoundSystem() {
       return;
     }
     [58, 54, 49].forEach((note, index) => {
-      playTone(midiToFreq(note), ctx.currentTime + index * 0.13, 0.34, "triangle", 0.06, fxGain, {
+      playTone(midiToFreq(note), ctx.currentTime + index * 0.13, 0.34, "triangle", 0.085, fxGain, {
         attack: 0.02,
         release: 0.12
       });
     });
-    playNoise(ctx.currentTime + 0.1, 0.22, 0.05, fxGain, 500);
+    playNoise(ctx.currentTime + 0.1, 0.22, 0.07, fxGain, 500);
   }
 
   function playVocalCue(frequency, duration) {
@@ -3677,7 +3972,7 @@ function createSoundSystem() {
     const voiceGain = ctx.createGain();
     voiceGain.gain.value = 0;
     voiceGain.connect(fxGain);
-    voiceGain.gain.linearRampToValueAtTime(0.08, start + 0.03);
+    voiceGain.gain.linearRampToValueAtTime(0.13, start + 0.03);
     voiceGain.gain.exponentialRampToValueAtTime(0.001, start + duration);
 
     [1, 2.02, 3.04].forEach((ratio, index) => {
@@ -3763,9 +4058,15 @@ function createSoundSystem() {
   }
 
   function pickVoice(voices) {
-    return voices.find((voice) => /zh/i.test(voice.lang) && /female|xiaoyi|tingting|mei|yan/i.test(voice.name))
-      || voices.find((voice) => /zh/i.test(voice.lang))
-      || voices[0];
+    const mandarinVoices = voices.filter((voice) => {
+      const label = `${voice.name} ${voice.lang}`;
+      return /(zh-CN|cmn-CN|cmn-Hans-CN|Mandarin|Putonghua|Xiaoyi|Tingting|Xiaoxiao|Xiaohan|Xiaomeng|Yunxi|Yunxia|Yunjian)/i.test(label)
+        && !/(zh-HK|Cantonese|Yue|Sin-ji|HiuMaan|Mei-Jia)/i.test(label);
+    });
+    return mandarinVoices.find((voice) => /female|xiaoyi|tingting|xiaoxiao|xiaohan|xiaomeng|mei|yan/i.test(voice.name))
+      || mandarinVoices[0]
+      || voices.find((voice) => /^zh(?!-HK)/i.test(voice.lang))
+      || null;
   }
 
   function speakBossLine(text, beautyId) {
@@ -3775,27 +4076,26 @@ function createSoundSystem() {
     ensureVoiceLoaded();
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
+    const speechStyle = ({
+      hiyori: { pitch: 1.04, rate: 0.94 },
+      serin: { pitch: 0.9, rate: 0.9 },
+      yelan: { pitch: 0.92, rate: 0.92 },
+      mingsha: { pitch: 1.02, rate: 0.95 },
+      lanwei: { pitch: 0.88, rate: 0.89 },
+      shali: { pitch: 0.95, rate: 0.9 },
+      yuege: { pitch: 1.05, rate: 0.95 },
+      molan: { pitch: 0.9, rate: 0.88 },
+      xingkui: { pitch: 1.08, rate: 0.96 },
+      cangya: { pitch: 0.86, rate: 0.87 }
+    })[beautyId] || { pitch: 1, rate: 0.93 };
     if (selectedVoice) {
       utterance.voice = selectedVoice;
-      utterance.lang = selectedVoice.lang || "zh-CN";
-    } else {
-      utterance.lang = "zh-CN";
     }
-    utterance.rate = 0.96;
-    utterance.volume = 0.94;
-    utterance.pitch = ({
-      hiyori: 1.08,
-      serin: 0.9,
-      yelan: 0.92,
-      mingsha: 1.02,
-      lanwei: 0.88,
-      shali: 0.95,
-      yuege: 1.06,
-      molan: 0.9,
-      xingkui: 1.1,
-      cangya: 0.86
-    })[beautyId] || 1;
-    duckMusic(0.26, 1.8);
+    utterance.lang = "zh-CN";
+    utterance.rate = speechStyle.rate;
+    utterance.volume = 0.78;
+    utterance.pitch = speechStyle.pitch;
+    duckMusic(0.64, 2.1);
     window.speechSynthesis.speak(utterance);
   }
 
@@ -3812,8 +4112,8 @@ function createSoundSystem() {
     const now = ctx.currentTime;
     musicGain.gain.cancelScheduledValues(now);
     musicGain.gain.setValueAtTime(musicGain.gain.value, now);
-    musicGain.gain.linearRampToValueAtTime(0.46 * ratio, now + 0.05);
-    musicGain.gain.linearRampToValueAtTime(0.46, now + duration);
+    musicGain.gain.linearRampToValueAtTime(MUSIC_GAIN * ratio, now + 0.05);
+    musicGain.gain.linearRampToValueAtTime(MUSIC_GAIN, now + duration);
   }
 
   return {
@@ -3850,6 +4150,46 @@ function createSkillIcon(label, startColor, endColor) {
     </svg>
   `.trim();
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+
+function createStageSceneIllustration(stage) {
+  const preset = STAGE_SCENE_PRESETS[stage.themeId] || STAGE_SCENE_PRESETS.neon;
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 320">
+      <defs>
+        <linearGradient id="sky-${stage.id}" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="${preset.skyTop}"/>
+          <stop offset="48%" stop-color="${preset.skyMid}"/>
+          <stop offset="100%" stop-color="${preset.skyBottom}"/>
+        </linearGradient>
+        <radialGradient id="glow-${stage.id}" cx="50%" cy="20%" r="46%">
+          <stop offset="0%" stop-color="${preset.glow}" stop-opacity=".42"/>
+          <stop offset="55%" stop-color="${preset.glow}" stop-opacity=".08"/>
+          <stop offset="100%" stop-color="${preset.glow}" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="mist-${stage.id}" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="${preset.mist}" stop-opacity=".02"/>
+          <stop offset="50%" stop-color="${preset.mist}" stop-opacity=".18"/>
+          <stop offset="100%" stop-color="${preset.mist}" stop-opacity=".02"/>
+        </linearGradient>
+      </defs>
+      <rect width="600" height="320" fill="url(#sky-${stage.id})"/>
+      <rect width="600" height="320" fill="url(#glow-${stage.id})"/>
+      <circle cx="458" cy="72" r="42" fill="${preset.moon}" opacity=".26"/>
+      <circle cx="458" cy="72" r="64" fill="${preset.moon}" opacity=".08"/>
+      <g opacity=".98">${preset.far}</g>
+      <g opacity=".98">${preset.mid}</g>
+      <path d="M0 224C72 206 146 246 228 220C312 194 382 246 460 220C526 198 566 214 600 206V320H0Z" fill="url(#mist-${stage.id})"/>
+      <g opacity=".98">${preset.near}</g>
+      <path d="M0 276C82 248 158 306 240 274C316 244 394 304 472 272C542 244 578 266 600 258V320H0Z" fill="rgba(255,255,255,.03)"/>
+      <path d="M0 292C64 268 128 322 208 286C290 248 372 318 454 284C526 256 570 300 600 286V320H0Z" fill="rgba(0,0,0,.34)"/>
+    </svg>
+  `.trim();
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+
+function getStageSceneArt(stageId) {
+  return STAGE_SCENE_ART[stageId] || STAGE_SCENE_ART[1];
 }
 
 function getSelectedCompanion() {
