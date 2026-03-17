@@ -13,23 +13,59 @@
 
     <header class="hero-banner">
       <div class="hero-copy">
-        <p class="eyebrow">Roguelike Gun Defense Prototype</p>
-        <h1>拯救美少女</h1>
-        <p class="hero-text">拯救被魔王污染的美少女</p>
+        <div class="hero-copy-top">
+          <div>
+            <p class="eyebrow">Roguelike Gun Defense Prototype</p>
+            <h1>拯救美少女</h1>
+            <p class="hero-text">拯救被魔王污染的美少女</p>
+          </div>
+          <button class="ghost-button compact-ghost-button" id="resetProgressButton" type="button">重置净化记录</button>
+        </div>
         <div class="hero-showcase">
           <img src="assets/hero-main.svg" alt="虾仁立绘" class="hero-showcase-image">
           <div class="hero-showcase-copy">
             <p class="section-kicker">防线主角</p>
             <strong>虾仁</strong>
             <span>美女们，我来拯救你们了！</span>
+            <div class="hero-meta-row">
+              <span class="meta-pill">竖屏防线</span>
+              <span class="meta-pill">抽卡成长</span>
+              <span class="meta-pill">净化 Boss</span>
+            </div>
           </div>
+        </div>
+        <div class="hero-highlights">
+          <article class="hero-highlight-card">
+            <span>01</span>
+            <div>
+              <strong>守住底线</strong>
+              <p>虾仁固定站在画面下侧自动开火，优先守住基地。</p>
+            </div>
+          </article>
+          <article class="hero-highlight-card">
+            <span>02</span>
+            <div>
+              <strong>抽卡成型</strong>
+              <p>击杀怪物后升级抽卡，围绕核心技能逐步成型整局流派。</p>
+            </div>
+          </article>
+          <article class="hero-highlight-card">
+            <span>03</span>
+            <div>
+              <strong>净化收录</strong>
+              <p>击败黑化 Boss 后收录美女图鉴，并解锁新的辅佐助战。</p>
+            </div>
+          </article>
         </div>
       </div>
 
       <div class="hero-panel">
-        <div class="panel-label">任务简报</div>
+        <div class="panel-label">作战总览</div>
         <div class="summary-strip" id="summaryStrip"></div>
-        <button class="ghost-button" id="resetProgressButton" type="button">重置净化记录</button>
+        <div class="hero-panel-note">
+          <strong>手机端提示</strong>
+          <p>先选辅佐，再直接点章节开战。结算后可继续下一章，不需要回首页重复进入。</p>
+        </div>
       </div>
     </header>
 
@@ -38,8 +74,8 @@
         <div class="top-grid">
           <section class="glass-card mission-card">
             <div class="section-head">
-              <p class="section-kicker">作战循环</p>
-              <h2>核心玩法</h2>
+              <p class="section-kicker">玩法速览</p>
+              <h2>一眼看懂战斗节奏</h2>
             </div>
             <div class="mission-steps">
               <article>
@@ -307,13 +343,19 @@
 
   <div class="overlay hidden" id="resultModal">
     <div class="overlay-card result-card">
-      <p class="section-kicker" id="resultKicker">战斗结算</p>
-      <h2 id="resultTitle">净化成功</h2>
-      <p class="overlay-text" id="resultText"></p>
-      <div class="result-stats" id="resultStats"></div>
-      <div class="result-actions">
-        <button class="solid-button" id="resultPrimaryButton" type="button">返回主界面</button>
-        <button class="ghost-button" id="resultSecondaryButton" type="button">继续作战</button>
+      <div class="result-head">
+        <p class="section-kicker" id="resultKicker">战斗结算</p>
+        <h2 id="resultTitle">净化成功</h2>
+        <p class="overlay-text" id="resultText"></p>
+      </div>
+      <div class="result-body">
+        <div class="result-stats" id="resultStats"></div>
+      </div>
+      <div class="result-footer">
+        <div class="result-actions">
+          <button class="solid-button" id="resultPrimaryButton" type="button">返回主界面</button>
+          <button class="ghost-button" id="resultSecondaryButton" type="button">继续作战</button>
+        </div>
       </div>
     </div>
   </div>

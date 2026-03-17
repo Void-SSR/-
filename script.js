@@ -337,6 +337,7 @@ const STAGES = [
     danger: "中高危",
     bossBeautyId: "mingsha",
     accent: "#ff9caf",
+    bossHp: 3900,
     bossAt: 52,
     description: "倒悬鸟居与樱雾祭坛之间，哥布林会沿参道成群压下。",
     previewText: "明纱的祓御符咒被腐化成樱刃。你要穿过倒悬神社，把她从黑雾祭坛上带回来。",
@@ -352,6 +353,7 @@ const STAGES = [
     danger: "高危",
     bossBeautyId: "lanwei",
     accent: "#eab471",
+    bossHp: 4650,
     bossAt: 56,
     description: "重吊机和锅炉群不断喷汽，精英怪会借蒸汽掩体推线。",
     previewText: "岚薇被囚在过热锅炉阵列中央。船坞的压力阀已经全部失控，必须尽快结束战斗。",
@@ -367,6 +369,7 @@ const STAGES = [
     danger: "高危",
     bossBeautyId: "shali",
     accent: "#ffd68d",
+    bossHp: 5350,
     bossAt: 60,
     description: "遗都风暴让怪潮扩散得更快，前场容易积压大批哥布林。",
     previewText: "砂璃的星痕长弓已被埋进流砂井。你需要在风沙彻底吞没防线前完成净化。",
@@ -382,6 +385,7 @@ const STAGES = [
     danger: "高危",
     bossBeautyId: "yuege",
     accent: "#ffb6a1",
+    bossHp: 6150,
     bossAt: 64,
     description: "猩红幕布后的旧舞台不断洒下碎光，怪潮会分批从高处落幕。",
     previewText: "月歌被困在坍塌的主舞台中央，黑幕把她的歌声撕裂成锋利月刃。",
@@ -397,6 +401,7 @@ const STAGES = [
     danger: "特危",
     bossBeautyId: "molan",
     accent: "#86e7ee",
+    bossHp: 7050,
     bossAt: 68,
     description: "实验管阵列会持续冒出泡影和警报，精英怪出现频率明显提高。",
     previewText: "沫澜被封在深海样本舱旁，研究所的每一道警报都在强化她体内的潮汐暴走。",
@@ -412,6 +417,7 @@ const STAGES = [
     danger: "特危",
     bossBeautyId: "xingkui",
     accent: "#c4f88a",
+    bossHp: 8000,
     bossAt: 72,
     description: "疯长藤蔓掩护了怪潮路线，星孢会让前场同时出现多层威胁。",
     previewText: "星葵的温室已经变成寄生花房。要救下她，就得在花孢彻底覆盖战线前突破哥布林群。",
@@ -427,6 +433,7 @@ const STAGES = [
     danger: "终局",
     bossBeautyId: "cangya",
     accent: "#dbe7ff",
+    bossHp: 9200,
     bossAt: 77,
     description: "通向最终哥布林之巢的圣城回路已经开启，精英怪会持续伴随终局 Boss。",
     previewText: "苍雅被渣男拖进了最深处的哥布林之巢入口。这里是主线终局，也是拯救计划真正的试炼。",
@@ -3117,7 +3124,7 @@ function spawnBoss(state) {
     return;
   }
   const beauty = getBeauty(state.stage.bossBeautyId);
-  const hp = 1600 + state.stage.id * 520;
+  const hp = state.stage.bossHp || (1600 + state.stage.id * 520);
   state.bossSpawned = true;
   state.spawnClock = 0;
   state.supportClock = 0;
@@ -3469,18 +3476,32 @@ function pickUpgradeChoices(state) {
 
   const result = [];
   const pool = [...available];
-  const hasNoCore = Object.values(state.modules).every((value) => !value);
+  const ownedModuleKeys = getOwnedModuleKeys(state);
+  const hasNoCore = ownedModuleKeys.length === 0;
   if (hasNoCore) {
-    const corePool = pool.filter((item) => item.rarity === "核心卡");
-    if (corePool.length) {
-      const picked = corePool[Math.floor(Math.random() * corePool.length)];
+    const picked = takeWeightedUpgrade(pool, state, (item) => isNewCoreUpgrade(state, item));
+    if (picked) {
       result.push(picked);
-      pool.splice(pool.indexOf(picked), 1);
+    }
+  } else {
+    const picked = takeWeightedUpgrade(pool, state, (item) => isOwnedCoreUpgrade(state, item));
+    if (picked) {
+      result.push(picked);
+    }
+  }
+
+  if (result.length < 2) {
+    const picked = takeWeightedUpgrade(pool, state, (item) => item.rarity === "枪械卡" || item.rarity === "元素卡");
+    if (picked) {
+      result.push(picked);
     }
   }
 
   while (result.length < 3 && pool.length) {
-    const picked = pool.splice(Math.floor(Math.random() * pool.length), 1)[0];
+    const picked = takeWeightedUpgrade(pool, state);
+    if (!picked) {
+      break;
+    }
     result.push(picked);
   }
   return result;
@@ -3499,6 +3520,76 @@ function isBlockedByModuleSkillCap(state, upgrade) {
   }
   const ownedModuleKeys = getOwnedModuleKeys(state);
   return ownedModuleKeys.length >= MAX_MODULE_SKILL_TYPES && !ownedModuleKeys.includes(moduleKey);
+}
+
+function isCoreUpgrade(upgrade) {
+  return upgrade.rarity === "核心卡";
+}
+
+function isOwnedCoreUpgrade(state, upgrade) {
+  const moduleKey = CORE_UPGRADE_TO_MODULE_KEY[upgrade.id];
+  return Boolean(moduleKey && state.modules[moduleKey]);
+}
+
+function isNewCoreUpgrade(state, upgrade) {
+  const moduleKey = CORE_UPGRADE_TO_MODULE_KEY[upgrade.id];
+  return Boolean(moduleKey && !state.modules[moduleKey]);
+}
+
+function getUpgradePickWeight(state, upgrade) {
+  if (isOwnedCoreUpgrade(state, upgrade)) {
+    return 2.8 + getUpgradeLevel(state, upgrade.id) * 0.55;
+  }
+  if (isNewCoreUpgrade(state, upgrade)) {
+    const moduleCount = getOwnedModuleKeys(state).length;
+    return moduleCount < MAX_MODULE_SKILL_TYPES ? (state.level >= 5 ? 1.35 : 0.88) : 0;
+  }
+  if (upgrade.rarity === "枪械卡") {
+    return 2.45;
+  }
+  if (upgrade.rarity === "元素卡") {
+    return 2.05;
+  }
+  if (upgrade.rarity === "共鸣卡") {
+    return state.companion ? 1.7 : 0.45;
+  }
+  if (upgrade.rarity === "防线卡") {
+    return state.hero.hp < state.hero.maxHp * 0.82 ? 1.85 : 1.05;
+  }
+  return 1;
+}
+
+function takeWeightedUpgrade(pool, state, predicate = null) {
+  const candidates = predicate ? pool.filter(predicate) : [...pool];
+  if (!candidates.length) {
+    return null;
+  }
+
+  const weighted = candidates
+    .map((upgrade) => ({ upgrade, weight: getUpgradePickWeight(state, upgrade) }))
+    .filter((entry) => entry.weight > 0);
+
+  if (!weighted.length) {
+    return null;
+  }
+
+  const total = weighted.reduce((sum, entry) => sum + entry.weight, 0);
+  let roll = Math.random() * total;
+  let picked = weighted[weighted.length - 1].upgrade;
+
+  for (const entry of weighted) {
+    roll -= entry.weight;
+    if (roll <= 0) {
+      picked = entry.upgrade;
+      break;
+    }
+  }
+
+  const index = pool.indexOf(picked);
+  if (index >= 0) {
+    pool.splice(index, 1);
+  }
+  return picked;
 }
 
 function gainXp(state, amount) {
