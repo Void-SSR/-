@@ -98,8 +98,8 @@ ${summary}`;
 - 目标平台：${data.project.platform}
 - 当前阶段：${data.current.title}
 - 当前状态：${data.current.status}
-- 当前版本标签号：${data.current.gitTag}
-- 当前Git提交号：${data.current.gitCommit}
+- 当前-版本标签：${data.current.gitTag}
+- 当前-Git提交号：${data.current.gitCommit}
 - 最近更新：${data.current.updatedAt}
 - 下一个标签：${data.tagRule.nextTag}
 
@@ -112,7 +112,7 @@ ${data.current.summary}
 - 前缀：${data.tagRule.prefix}
 - 格式：${data.tagRule.format}
 - 当前序号：${data.tagRule.currentSequence}
-- 当前版本标签号：${data.tagRule.currentTag}
+- 当前-版本标签：${data.tagRule.currentTag}
 - 下一个标签：${data.tagRule.nextTag}
 - 说明：${data.tagRule.notes}
 
@@ -357,11 +357,11 @@ function renderHtml(data) {
           <strong>${escapeHtml(data.current.status)}</strong>
         </article>
         <article class="meta-card">
-          <span>当前版本标签号</span>
+          <span>当前-版本标签</span>
           <strong>${escapeHtml(data.current.gitTag)}</strong>
         </article>
         <article class="meta-card">
-          <span>当前Git提交号</span>
+          <span>当前-Git提交号</span>
           <strong>${escapeHtml(data.current.gitCommit)}</strong>
         </article>
       </div>
@@ -406,7 +406,7 @@ function renderHtml(data) {
           <li>前缀：${escapeHtml(data.tagRule.prefix)}</li>
           <li>格式：${escapeHtml(data.tagRule.format)}</li>
           <li>当前序号：${escapeHtml(data.tagRule.currentSequence)}</li>
-          <li>当前版本标签号：${escapeHtml(data.tagRule.currentTag)}</li>
+          <li>当前-版本标签：${escapeHtml(data.tagRule.currentTag)}</li>
           <li>下一个标签：${escapeHtml(data.tagRule.nextTag)}</li>
           <li>${escapeHtml(data.tagRule.notes)}</li>
           ${activationRule}
