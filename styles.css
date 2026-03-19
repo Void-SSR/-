@@ -2691,3 +2691,480 @@ h2 {
     right: -1%;
   }
 }
+
+/* Web 正式基线：移动端产品化覆写 */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(6, 10, 18, 0.18), rgba(6, 10, 18, 0.88)),
+    url("assets/web-art/home-ambient-boss.png") no-repeat right -84px top 0 / 320px auto;
+  opacity: 0.24;
+  pointer-events: none;
+}
+
+.app-shell {
+  width: min(430px, calc(100vw - 18px));
+  padding: 12px 0 32px;
+}
+
+.hero-banner {
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.hero-copy,
+.hero-panel,
+.glass-card {
+  border-radius: 26px;
+}
+
+.hero-copy {
+  padding: 14px 14px 16px;
+  background:
+    linear-gradient(180deg, rgba(8, 14, 24, 0.9), rgba(9, 16, 28, 0.96)),
+    url("assets/web-art/ui-noise.png") center/160px repeat;
+}
+
+.hero-panel,
+.glass-card {
+  padding: 14px;
+}
+
+.hero-copy-top {
+  gap: 10px;
+}
+
+h1 {
+  font-size: clamp(34px, 11vw, 54px);
+}
+
+.eyebrow,
+.section-kicker,
+.panel-label {
+  margin: 0 0 8px;
+  letter-spacing: 0.18em;
+  font-size: 11px;
+}
+
+.hero-text {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.hero-showcase {
+  grid-template-columns: 64px 1fr;
+  gap: 12px;
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at right center, rgba(255, 92, 168, 0.2), transparent 30%),
+    linear-gradient(135deg, rgba(116, 200, 255, 0.1), rgba(255, 255, 255, 0.02)),
+    rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.hero-showcase-medal {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 22px;
+  font-family: var(--hero-font);
+  font-size: 28px;
+  color: #f7fbff;
+  background:
+    linear-gradient(145deg, rgba(255, 114, 167, 0.95), rgba(76, 107, 255, 0.92));
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.18),
+    0 14px 30px rgba(46, 66, 138, 0.28);
+}
+
+.hero-showcase-copy {
+  gap: 4px;
+}
+
+.hero-showcase-copy strong {
+  font-size: 18px;
+}
+
+.hero-showcase-copy span {
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.hero-highlights {
+  display: none;
+}
+
+.summary-strip {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin: 8px 0 0;
+}
+
+.summary-chip {
+  min-height: 58px;
+  padding: 10px 8px;
+  border-radius: 18px;
+}
+
+.summary-chip span {
+  font-size: 10px;
+}
+
+.summary-chip strong {
+  font-size: 16px;
+}
+
+.hero-panel-note {
+  display: none;
+}
+
+.campaign-launch-card {
+  margin-bottom: 12px;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(10, 17, 29, 0.94), rgba(9, 14, 26, 0.98)),
+    url("assets/web-art/ui-noise.png") center/160px repeat;
+}
+
+.campaign-launch-card .section-head,
+.home-portals .section-head {
+  margin-bottom: 12px;
+  align-items: center;
+}
+
+.campaign-launch-card .section-head h2,
+.home-portals .section-head h2 {
+  font-size: 26px;
+}
+
+.featured-stage-media {
+  position: relative;
+  min-height: 286px;
+  overflow: hidden;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, rgba(15, 24, 38, 0.96), rgba(8, 14, 23, 0.96));
+}
+
+.featured-stage-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.featured-stage-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(7, 12, 21, 0.12), rgba(7, 12, 21, 0.88)),
+    linear-gradient(90deg, rgba(7, 12, 21, 0.96), rgba(7, 12, 21, 0.28) 60%),
+    radial-gradient(circle at 82% 28%, rgba(255, 92, 168, 0.24), transparent 26%);
+}
+
+.featured-stage-copy {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  align-content: end;
+  min-height: 286px;
+  padding: 16px;
+}
+
+.featured-stage-copy h3 {
+  margin: 8px 0;
+  font-family: var(--hero-font);
+  font-size: 30px;
+  line-height: 1.02;
+  text-shadow: 0 8px 28px rgba(0, 0, 0, 0.44);
+}
+
+.featured-stage-copy p {
+  margin: 0;
+  max-width: 72%;
+  color: rgba(244, 247, 255, 0.88);
+  font-size: 14px;
+  line-height: 1.48;
+  text-shadow: 0 8px 24px rgba(0, 0, 0, 0.38);
+}
+
+.featured-stage-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.campaign-launch-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: stretch;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.campaign-launch-actions .solid-button {
+  flex: 1 1 180px;
+}
+
+.home-portals {
+  margin-top: 12px;
+  background:
+    linear-gradient(180deg, rgba(9, 17, 30, 0.94), rgba(8, 13, 25, 0.98)),
+    url("assets/web-art/ui-noise.png") center/160px repeat;
+}
+
+.top-grid,
+.portal-grid,
+.companion-overview,
+.stage-grid,
+.battle-screen {
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+.portal-grid {
+  gap: 12px;
+}
+
+.portal-card {
+  min-height: 138px;
+  padding: 18px;
+  border-radius: 22px;
+  background:
+    linear-gradient(180deg, rgba(13, 21, 35, 0.96), rgba(12, 18, 30, 0.98)),
+    url("assets/web-art/ui-noise.png") center/150px repeat;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.current-companion,
+.atlas-entry-card {
+  min-height: 186px;
+}
+
+.home-portal-grid .atlas-entry-card {
+  min-height: 148px;
+}
+
+.atlas-entry-home-card {
+  gap: 10px;
+  padding: 16px;
+}
+
+.atlas-entry-home-card .atlas-entry-head strong {
+  font-size: 20px;
+}
+
+.atlas-entry-home-card .atlas-entry-collage {
+  min-height: 104px;
+}
+
+.atlas-entry-home-card .atlas-entry-shot {
+  width: 42%;
+}
+
+.atlas-entry-home-card .atlas-entry-shot.shot-a {
+  left: -4%;
+}
+
+.atlas-entry-home-card .atlas-entry-shot.shot-b {
+  right: 0;
+  left: auto;
+  width: 46%;
+}
+
+.atlas-entry-home-card .atlas-entry-copy {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.portal-card-formation {
+  background:
+    radial-gradient(circle at right center, rgba(255, 145, 189, 0.16), transparent 32%),
+    linear-gradient(180deg, rgba(25, 22, 42, 0.98), rgba(13, 18, 31, 0.98));
+}
+
+.portal-card-equipment {
+  background:
+    radial-gradient(circle at right center, rgba(111, 221, 255, 0.14), transparent 32%),
+    linear-gradient(180deg, rgba(14, 29, 42, 0.98), rgba(12, 18, 31, 0.98));
+}
+
+.portal-card-shop {
+  background:
+    radial-gradient(circle at right center, rgba(255, 211, 115, 0.16), transparent 32%),
+    linear-gradient(180deg, rgba(33, 23, 14, 0.98), rgba(15, 18, 31, 0.98));
+}
+
+.portal-icon.portal-formation::before {
+  content: "编";
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--hero-font);
+  font-size: 28px;
+  color: #ffe7f2;
+}
+
+.portal-icon.portal-formation::after {
+  inset: 8px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 203, 226, 0.42);
+}
+
+.campaign-hero {
+  display: grid;
+  gap: 12px;
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.04), rgba(255,255,255,.015)),
+    rgba(255,255,255,.02);
+}
+
+.campaign-hero h3 {
+  margin: 0 0 8px;
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.campaign-hero p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.stage-card {
+  padding: 16px;
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, rgba(10, 17, 28, 0.94), rgba(8, 13, 23, 0.98)),
+    url("assets/web-art/ui-noise.png") center/150px repeat;
+}
+
+.stage-art-wrap {
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+.stage-art-wrap > div:last-child {
+  display: grid;
+  gap: 10px;
+}
+
+.stage-art-wrap > div:last-child p {
+  margin: 0;
+  color: rgba(239, 245, 255, 0.82);
+  line-height: 1.58;
+}
+
+.featured-stage-card,
+.home-portals,
+.campaign-hero,
+.subpage-card,
+.stage-card {
+  position: relative;
+}
+
+.featured-stage-card::after,
+.home-portals::after,
+.campaign-hero::after,
+.stage-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 92, 168, 0.04), transparent 32%, rgba(117, 212, 255, 0.04));
+  pointer-events: none;
+}
+
+.subpage-card {
+  padding: 18px 18px 22px;
+  border-radius: 26px;
+}
+
+.subpage-head {
+  grid-template-columns: auto 1fr;
+  margin-bottom: 18px;
+}
+
+.subpage-status {
+  grid-column: 1 / -1;
+}
+
+.formation-hero {
+  margin-bottom: 16px;
+  padding: 16px 18px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    radial-gradient(circle at right top, rgba(255, 145, 189, 0.14), transparent 36%),
+    linear-gradient(135deg, rgba(255,255,255,.04), rgba(255,255,255,.015)),
+    rgba(255,255,255,.02);
+}
+
+.formation-hero h3 {
+  margin: 8px 0;
+  font-size: 22px;
+}
+
+.formation-hero p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.formation-layout {
+  display: grid;
+  gap: 14px;
+}
+
+.formation-current {
+  min-height: 218px;
+}
+
+.formation-choices {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 900px) {
+  .app-shell {
+    width: min(1180px, calc(100vw - 28px));
+    padding: 22px 0 42px;
+  }
+
+  .hero-banner {
+    grid-template-columns: 1.08fr 0.92fr;
+    gap: 18px;
+    margin-bottom: 18px;
+  }
+
+  .top-grid,
+  .portal-grid,
+  .companion-overview,
+  .stage-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .battle-screen {
+    grid-template-columns: 320px minmax(0, 1fr);
+  }
+
+  .subpage-head {
+    grid-template-columns: auto 1fr auto;
+  }
+
+  .subpage-status {
+    grid-column: auto;
+  }
+}

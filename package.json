@@ -1,0 +1,9 @@
+{
+  "name": "save-the-good-girl-web",
+  "private": true,
+  "scripts": {
+    "render:web-status": "node scripts/render-web-status.mjs",
+    "export:web-status": "node scripts/export-web-status-site.mjs",
+    "test:web-status": "node scripts/test-web-status-workflow.mjs"
+  }
+}

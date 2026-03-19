@@ -555,7 +555,21 @@ const STAGE_SCENE_PRESETS = {
   }
 };
 
-const STAGE_SCENE_ART = Object.fromEntries(STAGES.map((stage) => [stage.id, createStageSceneIllustration(stage)]));
+const STAGE_SCENE_ART_FILES = {
+  1: "assets/web-art/stage-01-neon.png",
+  2: "assets/web-art/stage-02-frost.png",
+  3: "assets/web-art/stage-03-thunder.png",
+  4: "assets/web-art/stage-04-shrine.png",
+  5: "assets/web-art/stage-05-steamdock.png",
+  6: "assets/web-art/stage-06-desert.png",
+  7: "assets/web-art/stage-07-opera.png",
+  8: "assets/web-art/stage-08-abysslab.png",
+  9: "assets/web-art/stage-09-greenhouse.png",
+  10: "assets/web-art/stage-10-skycity.png"
+};
+const STAGE_SCENE_ART = Object.fromEntries(
+  STAGES.map((stage) => [stage.id, STAGE_SCENE_ART_FILES[stage.id] || createStageSceneIllustration(stage)])
+);
 
 const QUALITY_META = {
   common: {
@@ -1613,6 +1627,8 @@ let bossIntroTimer = null;
 let libraryBeautyIndex = 0;
 
 const homeScreen = document.getElementById("homeScreen");
+const formationScreen = document.getElementById("formationScreen");
+const campaignScreen = document.getElementById("campaignScreen");
 const equipmentScreen = document.getElementById("equipmentScreen");
 const libraryScreen = document.getElementById("libraryScreen");
 const libraryGalleryScreen = document.getElementById("libraryGalleryScreen");
@@ -1621,9 +1637,19 @@ const battleScreen = document.getElementById("battleScreen");
 const summaryStrip = document.getElementById("summaryStrip");
 const currentCompanion = document.getElementById("currentCompanion");
 const companionChoices = document.getElementById("companionChoices");
+const formationSummary = document.getElementById("formationSummary");
+const openFormationButton = document.getElementById("openFormationButton");
+const formationPortalStatus = document.getElementById("formationPortalStatus");
+const formationBackButton = document.getElementById("formationBackButton");
 const openEquipmentButton = document.getElementById("openEquipmentButton");
 const openLibraryButton = document.getElementById("openLibraryButton");
 const openShopButton = document.getElementById("openShopButton");
+const openCampaignButton = document.getElementById("openCampaignButton");
+const startFeaturedStageButton = document.getElementById("startFeaturedStageButton");
+const featuredStage = document.getElementById("featuredStage");
+const campaignBackButton = document.getElementById("campaignBackButton");
+const campaignSummary = document.getElementById("campaignSummary");
+const campaignRefreshButton = document.getElementById("campaignRefreshButton");
 const stageGrid = document.getElementById("stageGrid");
 const equipmentBackButton = document.getElementById("equipmentBackButton");
 const equipmentSummary = document.getElementById("equipmentSummary");
@@ -1773,6 +1799,16 @@ function bindEvents() {
     closeStageIntro();
   });
 
+  formationBackButton.addEventListener("click", () => {
+    sound.ensureStarted();
+    renderHome();
+  });
+
+  openFormationButton.addEventListener("click", () => {
+    sound.ensureStarted();
+    openFormationScreen();
+  });
+
   openLibraryButton.addEventListener("click", () => {
     sound.ensureStarted();
     openLibraryScreen();
@@ -1786,6 +1822,26 @@ function bindEvents() {
   openShopButton.addEventListener("click", () => {
     sound.ensureStarted();
     openShopScreen();
+  });
+
+  startFeaturedStageButton.addEventListener("click", () => {
+    sound.ensureStarted();
+    requestStageStart(Number(startFeaturedStageButton.dataset.stageId || getCurrentStageTarget().id));
+  });
+
+  openCampaignButton.addEventListener("click", () => {
+    sound.ensureStarted();
+    openCampaignScreen();
+  });
+
+  campaignBackButton.addEventListener("click", () => {
+    sound.ensureStarted();
+    renderHome();
+  });
+
+  campaignRefreshButton.addEventListener("click", () => {
+    sound.ensureStarted();
+    renderStages();
   });
 
   equipmentBackButton.addEventListener("click", () => {
@@ -2059,6 +2115,8 @@ function rollVictoryReward(stageId, firstClear) {
 
 function showScreen(name) {
   homeScreen.classList.toggle("screen-active", name === "home");
+  formationScreen.classList.toggle("screen-active", name === "formation");
+  campaignScreen.classList.toggle("screen-active", name === "campaign");
   equipmentScreen.classList.toggle("screen-active", name === "equipment");
   libraryScreen.classList.toggle("screen-active", name === "library");
   libraryGalleryScreen.classList.toggle("screen-active", name === "libraryGallery");
@@ -2070,7 +2128,9 @@ function showScreen(name) {
 function renderHome() {
   showScreen("home");
   renderSummary();
-  renderCompanions();
+  renderFeaturedStage();
+  renderFormationPortal();
+  renderFormationScreen();
   renderStages();
   renderLibraryHub();
   renderLibraryGallery();
@@ -2084,25 +2144,67 @@ function renderSummary() {
   const clearedCount = progress.clearedStages.length;
   const selected = getSelectedCompanion();
   summaryStrip.innerHTML = `
-    <div class="summary-chip"><span>已净化 Boss</span><strong>${rescuedCount}/${BEAUTIES.length}</strong></div>
-    <div class="summary-chip"><span>已收录美女</span><strong>${ownedBeautyCount}/${ALL_BEAUTIES.length}</strong></div>
-    <div class="summary-chip"><span>已通关关卡</span><strong>${clearedCount}/${STAGES.length}</strong></div>
-    <div class="summary-chip"><span>当前辅佐</span><strong>${selected ? selected.name : "未携带"}</strong></div>
-    <div class="summary-chip"><span>金币储备</span><strong>${progress.gold}</strong></div>
-    <div class="summary-chip"><span>点券储备</span><strong>${progress.tickets}</strong></div>
+    <div class="summary-chip"><span>已净化</span><strong>${rescuedCount}/${BEAUTIES.length}</strong></div>
+    <div class="summary-chip"><span>已收录</span><strong>${ownedBeautyCount}/${ALL_BEAUTIES.length}</strong></div>
+    <div class="summary-chip"><span>章节</span><strong>${clearedCount}/${STAGES.length}</strong></div>
+    <div class="summary-chip"><span>辅佐</span><strong>${selected ? selected.name : "单人"}</strong></div>
   `;
 }
 
-function renderCompanions() {
+function getCurrentStageTarget() {
+  const unlockedStages = STAGES.filter((stage) => isStageUnlocked(stage.id));
+  const uncleared = unlockedStages.find((stage) => !progress.clearedStages.includes(stage.id));
+  return uncleared || unlockedStages[unlockedStages.length - 1] || STAGES[0];
+}
+
+function renderFeaturedStage() {
+  const stage = getCurrentStageTarget();
+  const cleared = progress.clearedStages.includes(stage.id);
+  const sceneArt = getStageSceneArt(stage.id);
+  const beauty = getBeauty(stage.bossBeautyId);
+  const collectionLabel = cleared ? `已收录 ${beauty.name}` : `净化后收录 ${beauty.name}`;
+  const desireCopy = cleared
+    ? `${beauty.name} 已回到图鉴与编组池。再次净化她的旧巢穴，可以继续刷金币、点券和装备掉落。`
+    : `${beauty.bossName} 正在 ${stage.sceneName} 等你净化。打穿这一章后，你就能把 ${beauty.name} 收进图鉴并带上阵。`;
+  startFeaturedStageButton.dataset.stageId = String(stage.id);
+  startFeaturedStageButton.textContent = cleared ? "再次净化她" : "立刻净化她";
+  featuredStage.innerHTML = `
+    <div class="featured-stage-media ${stage.themeClass}">
+      <img src="${sceneArt}" alt="${stage.sceneName}" class="featured-stage-image">
+      <div class="featured-stage-overlay"></div>
+      <div class="featured-stage-copy">
+        <span class="stage-number">第 ${stage.id} 章 · 当前黑化目标</span>
+        <h3>${beauty.bossName}</h3>
+        <p>${desireCopy}</p>
+        <div class="featured-stage-meta">
+          <span class="meta-pill">章节 ${stage.name}</span>
+          <span class="meta-pill">场景 ${stage.sceneName}</span>
+          <span class="meta-pill">威胁 ${stage.danger}</span>
+          <span class="meta-pill">${collectionLabel}</span>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderFormationPortal() {
   const selected = getSelectedCompanion();
-  currentCompanion.className = "current-companion";
+  formationPortalStatus.textContent = selected
+    ? `${selected.name} · ${selected.skillName}`
+    : "还没带上心仪的辅佐，点击进入战前编组页。";
+}
+
+function renderFormationScreen() {
+  const selected = getSelectedCompanion();
+  formationSummary.textContent = `${getOwnedBeauties().length} / ${ALL_BEAUTIES.length} 可编组`;
+  currentCompanion.className = "current-companion formation-current";
 
   if (!selected) {
     currentCompanion.classList.add("empty");
     currentCompanion.innerHTML = `
       <div>
         <strong>当前未携带美女辅佐</strong>
-        <p>首次挑战可以单人出战。净化任意主线 Boss 后，即可从美女库中编入一名辅佐。</p>
+        <p>首次挑战可以单人出战。净化任意主线 Boss 后，即可在这里编入一名辅佐，提升开局压制力。</p>
       </div>
     `;
   } else {
@@ -2148,17 +2250,31 @@ function renderCompanions() {
     button.addEventListener("click", () => {
       progress.selectedCompanionId = button.dataset.beautyId || null;
       saveProgress();
-      renderCompanions();
+      renderFormationPortal();
+      renderFormationScreen();
       renderSummary();
     });
   });
 }
 
+function openFormationScreen() {
+  renderFormationScreen();
+  showScreen("formation");
+}
+
 function renderStages() {
+  const clearedCount = progress.clearedStages.length;
+  campaignSummary.textContent = `已推进 ${clearedCount}/${STAGES.length}`;
   stageGrid.innerHTML = STAGES.map((stage) => {
     const unlocked = isStageUnlocked(stage.id);
     const cleared = progress.clearedStages.includes(stage.id);
     const sceneArt = getStageSceneArt(stage.id);
+    const beauty = getBeauty(stage.bossBeautyId);
+    const hookText = unlocked
+      ? (cleared
+        ? `你已经净化了 ${beauty.name}。现在可以回刷这一章，继续拿金币、点券和装备掉落。`
+        : `本章黑化 Boss 是 ${beauty.bossName}。打穿这座巢穴后，你就能把 ${beauty.name} 收进图鉴与战前编组。`)
+      : `需先完成第 ${stage.id - 1} 章，才能继续追击新的黑化美少女 Boss。`;
     return `
       <article class="stage-card ${unlocked ? "" : "locked"}" style="box-shadow: inset 0 0 0 1px ${hexToRgba(stage.accent, unlocked ? 0.18 : 0.08)};">
         <div class="stage-top">
@@ -2174,17 +2290,18 @@ function renderStages() {
           </div>
           <div>
             <h3>${stage.name}</h3>
-            <p>${unlocked ? stage.description : `需先完成第 ${stage.id - 1} 章，才能进入这一座哥布林之巢。`}</p>
+            <p>${hookText}</p>
             <div class="stage-meta">
+              <span class="meta-pill">${beauty.bossName}</span>
               <span class="meta-pill">场景 ${stage.sceneName}</span>
               <span class="meta-pill">威胁 ${stage.danger}</span>
-              <span class="meta-pill">恐怖巢穴</span>
+              <span class="meta-pill">${cleared ? `已收录 ${beauty.name}` : `净化后收录 ${beauty.name}`}</span>
             </div>
           </div>
         </div>
         <div class="stage-actions">
-          <button class="solid-button" type="button" data-stage-start="${stage.id}" ${unlocked ? "" : "disabled"}>${cleared ? "再次挑战" : "查看作战"}</button>
-          <button class="ghost-button" type="button" disabled>${stage.tip}</button>
+          <button class="solid-button" type="button" data-stage-start="${stage.id}" ${unlocked ? "" : "disabled"}>${cleared ? "再次净化" : "进入净化"}</button>
+          <button class="ghost-button" type="button" disabled>${unlocked ? stage.tip : "继续推进前置章节后解锁"}</button>
         </div>
       </article>
     `;
@@ -2195,6 +2312,11 @@ function renderStages() {
       requestStageStart(Number(button.dataset.stageStart));
     });
   });
+}
+
+function openCampaignScreen() {
+  renderStages();
+  showScreen("campaign");
 }
 
 function renderEquipmentScreen() {
@@ -2229,7 +2351,8 @@ function renderEquipmentScreen() {
       equipItem(button.dataset.equipItem);
       saveProgress();
       renderSummary();
-      renderCompanions();
+      renderFormationPortal();
+      renderFormationScreen();
       renderEquipmentScreen();
     });
   });
@@ -2267,12 +2390,12 @@ function openEquipmentScreen() {
 
 function renderLibraryHub() {
   const preview = [...getOwnedBeauties(), ...ALL_BEAUTIES.filter((beauty) => !isBeautyOwned(beauty.id))]
-    .slice(0, 3);
+    .slice(0, 2);
   libraryCounter.textContent = `已收录 ${getOwnedBeauties().length}/${ALL_BEAUTIES.length}`;
   openLibraryButton.innerHTML = `
     <div class="atlas-entry-head">
       <strong>美女图鉴</strong>
-      <span class="atlas-entry-hint">点击合照进入</span>
+      <span class="atlas-entry-hint">已点亮 ${getOwnedBeauties().length}/${ALL_BEAUTIES.length}</span>
     </div>
     <div class="atlas-entry-collage">
       ${preview.map((beauty, index) => {
@@ -2282,7 +2405,7 @@ function renderLibraryHub() {
         return `<img src="${art}" alt="${unlocked ? beauty.name : "未解锁美女档案"}" class="atlas-entry-shot ${cssClass} ${unlocked ? "purified-portrait" : "is-codex-locked"}">`;
       }).join("")}
     </div>
-    <p class="atlas-entry-copy">这里会统一收录主线净化出的美女，以及商城招募到的角色。未点亮档案会保持灰色封存状态。</p>
+    <p class="atlas-entry-copy">点击进入图鉴总览，查看已净化与待招募档案。</p>
   `;
   libraryLanding.innerHTML = `
     <article class="library-landing-card">

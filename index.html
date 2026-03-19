@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>拯救美少女</title>
+  <link rel="icon" href="assets/hero-main.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -15,22 +16,22 @@
       <div class="hero-copy">
         <div class="hero-copy-top">
           <div>
-            <p class="eyebrow">Roguelike Gun Defense Prototype</p>
+            <p class="eyebrow">黑雾净化防线</p>
             <h1>拯救美少女</h1>
-            <p class="hero-text">拯救被魔王污染的美少女</p>
+            <p class="hero-text">净化黑化 Boss，把最危险也最迷人的美少女收进图鉴与出战编组。</p>
           </div>
           <button class="ghost-button compact-ghost-button" id="resetProgressButton" type="button">重置净化记录</button>
         </div>
         <div class="hero-showcase">
-          <img src="assets/hero-main.svg" alt="虾仁立绘" class="hero-showcase-image">
+          <div class="hero-showcase-medal" aria-hidden="true">虾</div>
           <div class="hero-showcase-copy">
-            <p class="section-kicker">防线主角</p>
+            <p class="section-kicker">净化指挥官</p>
             <strong>虾仁</strong>
-            <span>美女们，我来拯救你们了！</span>
+            <span>越危险的黑化美少女，越值得我亲自把她们带回来。</span>
             <div class="hero-meta-row">
-              <span class="meta-pill">竖屏防线</span>
-              <span class="meta-pill">抽卡成长</span>
-              <span class="meta-pill">净化 Boss</span>
+              <span class="meta-pill">主线净化</span>
+              <span class="meta-pill">战前编组</span>
+              <span class="meta-pill">美女图鉴</span>
             </div>
           </div>
         </div>
@@ -63,72 +64,94 @@
         <div class="panel-label">作战总览</div>
         <div class="summary-strip" id="summaryStrip"></div>
         <div class="hero-panel-note">
-          <strong>手机端提示</strong>
-          <p>先选辅佐，再直接点章节开战。结算后可继续下一章，不需要回首页重复进入。</p>
+          <strong>今日净化命令</strong>
+          <p>首页只保留当前净化行动与系统入口，详细编组、图鉴、装备和商城统一放到二级页面处理。</p>
         </div>
       </div>
     </header>
 
     <main>
       <section class="screen screen-active" id="homeScreen">
-        <div class="top-grid">
-          <section class="glass-card mission-card">
-            <div class="section-head">
-              <p class="section-kicker">玩法速览</p>
-              <h2>一眼看懂战斗节奏</h2>
-            </div>
-            <div class="mission-steps">
-              <article>
-                <span>01</span>
-                <p>虾仁固定驻守在画面下方自动开火，怪物会自上而下不断压向防线。</p>
-              </article>
-              <article>
-                <span>02</span>
-                <p>击杀怪物可获取经验，升级后从三张战术卡中抽选一项强化。</p>
-              </article>
-              <article>
-                <span>03</span>
-                <p>每关尾声会出现黑化 Boss，美少女净化后会收入美女库并解锁辅佐技能。</p>
-              </article>
-            </div>
-          </section>
-
-          <section class="glass-card companion-card">
-            <div class="section-head">
-              <p class="section-kicker">战前编组</p>
-              <h2>出战辅佐</h2>
-            </div>
-            <div class="companion-overview">
-              <div id="currentCompanion" class="current-companion"></div>
-              <button class="atlas-entry-card" id="openLibraryButton" type="button"></button>
-            </div>
-            <div id="companionChoices" class="companion-choices"></div>
-          </section>
-        </div>
+        <section class="glass-card campaign-launch-card">
+          <div class="section-head">
+            <p class="section-kicker">主线入口</p>
+            <h2>当前净化行动</h2>
+          </div>
+          <div id="featuredStage" class="featured-stage-card"></div>
+          <div class="campaign-launch-actions">
+            <button class="solid-button" id="startFeaturedStageButton" type="button">立即净化</button>
+            <button class="ghost-button" id="openCampaignButton" type="button">查看全部章节</button>
+          </div>
+        </section>
 
         <section class="glass-card home-portals">
           <div class="section-head">
-            <p class="section-kicker">功能入口</p>
-            <h2>装备 / 商城</h2>
+            <p class="section-kicker">核心入口</p>
+            <h2>点击进入二级系统</h2>
           </div>
-          <div class="portal-grid">
-            <button class="portal-card" id="openEquipmentButton" type="button">
+          <div class="portal-grid home-portal-grid">
+            <button class="portal-card portal-card-formation" id="openFormationButton" type="button">
+              <span class="portal-icon portal-formation"></span>
+              <strong>出战编组</strong>
+              <small id="formationPortalStatus">挑一位你最想带上阵的美少女辅佐，开战前先把她编进队伍。</small>
+            </button>
+            <button class="atlas-entry-card atlas-entry-home-card" id="openLibraryButton" type="button"></button>
+            <button class="portal-card portal-card-equipment" id="openEquipmentButton" type="button">
               <span class="portal-icon portal-equipment"></span>
               <strong>装备系统</strong>
-              <small>查看虾仁当前装备，并在背包里切换武器、防具、道具。</small>
+              <small>先把虾仁的火力和生存拉满，再去净化更危险的黑化美少女 Boss。</small>
             </button>
-            <button class="portal-card" id="openShopButton" type="button">
+            <button class="portal-card portal-card-shop" id="openShopButton" type="button">
               <span class="portal-icon portal-shop"></span>
               <strong>购买商城</strong>
-              <small>进入角色招募、装备补给和直购商店，继续强化整套阵容。</small>
+              <small>继续招募、补给和囤资源，把你想收的美少女和装备都拿下。</small>
             </button>
           </div>
         </section>
 
-        <section class="glass-card">
-          <div class="section-head">
-            <p class="section-kicker">主线关卡</p>
-            <h2>净化行动</h2>
+      </section>
+
+      <section class="screen" id="formationScreen">
+        <section class="glass-card subpage-card">
+          <div class="subpage-head">
+            <button class="icon-button" id="formationBackButton" type="button" aria-label="返回首页">←</button>
+            <div>
+              <p class="section-kicker">战前编组</p>
+              <h2>出战辅佐</h2>
+            </div>
+            <div class="subpage-status" id="formationSummary"></div>
+          </div>
+          <div class="formation-hero">
+            <div>
+              <p class="section-kicker">编组原则</p>
+              <h3>每次只能带一位美女辅佐</h3>
+              <p>先在这里完成辅佐编组，再回到首页直接点主线章节开战。未净化的主线 Boss 与未招募角色不会出现在可编组列表里。</p>
+            </div>
+          </div>
+          <div class="formation-layout">
+            <div id="currentCompanion" class="current-companion formation-current"></div>
+            <div id="companionChoices" class="companion-choices formation-choices"></div>
+          </div>
+        </section>
+      </section>
+
+      <section class="screen" id="campaignScreen">
+        <section class="glass-card subpage-card">
+          <div class="subpage-head">
+            <button class="icon-button" id="campaignBackButton" type="button" aria-label="返回首页">←</button>
+            <div>
+              <p class="section-kicker">主线章节</p>
+              <h2>净化行动总览</h2>
+            </div>
+            <div class="subpage-status" id="campaignSummary"></div>
+          </div>
+          <div class="campaign-hero">
+            <div>
+              <p class="section-kicker">推进建议</p>
+              <h3>优先推进当前章节，再回头重复挑战</h3>
+              <p>首页只保留当前重点行动和核心入口，完整章节列表放到这里集中查看与开战。</p>
+            </div>
+            <button class="ghost-button" id="campaignRefreshButton" type="button">刷新章节状态</button>
           </div>
           <div class="stage-grid" id="stageGrid"></div>
         </section>
