@@ -78,6 +78,13 @@ ${summary}`;
   const activationRule = data.tagRule.activationRule.map((line) => `- ${line}`).join("\n");
   const nextSteps = data.nextSteps.map((line, index) => `${index + 1}. ${line}`).join("\n");
   const usageNotes = data.usageNotes.map((line) => `- ${line}`).join("\n");
+  const errorLibraryBlock = data.errorLibrary
+    ? `## 错误库
+
+- 路径：${data.errorLibrary.path}
+- 作用：${data.errorLibrary.purpose}
+`
+    : "";
 
   return `# Web 版开发日志
 
@@ -91,8 +98,8 @@ ${summary}`;
 - 目标平台：${data.project.platform}
 - 当前阶段：${data.current.title}
 - 当前状态：${data.current.status}
-- 当前 Git 标签：${data.current.gitTag}
-- 当前提交：${data.current.gitCommit}
+- 当前版本标签号：${data.current.gitTag}
+- 当前Git提交号：${data.current.gitCommit}
 - 最近更新：${data.current.updatedAt}
 - 下一个标签：${data.tagRule.nextTag}
 
@@ -105,7 +112,7 @@ ${data.current.summary}
 - 前缀：${data.tagRule.prefix}
 - 格式：${data.tagRule.format}
 - 当前序号：${data.tagRule.currentSequence}
-- 当前标签：${data.tagRule.currentTag}
+- 当前版本标签号：${data.tagRule.currentTag}
 - 下一个标签：${data.tagRule.nextTag}
 - 说明：${data.tagRule.notes}
 
@@ -130,6 +137,8 @@ ${nextSteps}
 ## 使用说明
 
 ${usageNotes}
+
+${errorLibraryBlock}
 `;
 }
 
@@ -161,6 +170,17 @@ function renderHtml(data) {
   const nextSteps = data.nextSteps.map((line) => `<li>${escapeHtml(line)}</li>`).join("");
   const usageNotes = data.usageNotes.map((line) => `<li>${escapeHtml(line)}</li>`).join("");
   const activationRule = data.tagRule.activationRule.map((line) => `<li>${escapeHtml(line)}</li>`).join("");
+  const errorLibrarySection = data.errorLibrary
+    ? `
+      <section class="muted-section notes">
+        <h2>错误库</h2>
+        <ul>
+          <li>路径：${escapeHtml(data.errorLibrary.path)}</li>
+          <li>作用：${escapeHtml(data.errorLibrary.purpose)}</li>
+        </ul>
+      </section>
+    `
+    : "";
 
   return `<!DOCTYPE html>
 <html lang="zh-CN">
@@ -337,11 +357,11 @@ function renderHtml(data) {
           <strong>${escapeHtml(data.current.status)}</strong>
         </article>
         <article class="meta-card">
-          <span>当前标签</span>
+          <span>当前版本标签号</span>
           <strong>${escapeHtml(data.current.gitTag)}</strong>
         </article>
         <article class="meta-card">
-          <span>当前提交</span>
+          <span>当前Git提交号</span>
           <strong>${escapeHtml(data.current.gitCommit)}</strong>
         </article>
       </div>
@@ -386,7 +406,7 @@ function renderHtml(data) {
           <li>前缀：${escapeHtml(data.tagRule.prefix)}</li>
           <li>格式：${escapeHtml(data.tagRule.format)}</li>
           <li>当前序号：${escapeHtml(data.tagRule.currentSequence)}</li>
-          <li>当前标签：${escapeHtml(data.tagRule.currentTag)}</li>
+          <li>当前版本标签号：${escapeHtml(data.tagRule.currentTag)}</li>
           <li>下一个标签：${escapeHtml(data.tagRule.nextTag)}</li>
           <li>${escapeHtml(data.tagRule.notes)}</li>
           ${activationRule}
@@ -396,6 +416,7 @@ function renderHtml(data) {
         <h2>使用说明</h2>
         <ul>${usageNotes}</ul>
       </section>
+      ${errorLibrarySection}
     </div>
   </main>
 </body>

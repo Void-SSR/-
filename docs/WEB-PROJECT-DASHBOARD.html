@@ -173,12 +173,12 @@
           <strong>进行中</strong>
         </article>
         <article class="meta-card">
-          <span>当前标签</span>
+          <span>当前版本标签号</span>
           <strong>待定</strong>
         </article>
         <article class="meta-card">
-          <span>当前提交</span>
-          <strong>1a32f39</strong>
+          <span>当前Git提交号</span>
+          <strong>7202d6d</strong>
         </article>
       </div>
     </section>
@@ -270,7 +270,7 @@
           <li>前缀：ssgw</li>
           <li>格式：ssgw-01, ssgw-02, ssgw-03 ...</li>
           <li>当前序号：0</li>
-          <li>当前标签：尚未建立</li>
+          <li>当前版本标签号：尚未建立</li>
           <li>下一个标签：ssgw-01</li>
           <li>Web 版独立使用短标签，尾部数字按顺序递增，服务于正式里程碑与回滚定位。</li>
           <li>版本标签不是按修改次数递增。</li><li>只有形成新的正式里程碑时，才启用下一个版本标签。</li><li>新里程碑至少应满足：范围明确、已完成必要验证、适合作为稳定回滚点、日志/看板已同步、能被一句清楚的话命名。</li><li>中间迭代可以长期停留在当前标签下，不必因为小改动频繁升级。</li>
@@ -278,7 +278,11 @@
       </section>
       <section class="muted-section notes">
         <h2>使用说明</h2>
-        <ul><li>开发者以 docs/web-project-status.json 为唯一真实记录来源。</li><li>WEB-DEVLOG.md 用于开发记录和版本回看。</li><li>WEB-PROJECT-DASHBOARD.html 用于非技术伙伴快速查看。</li><li>真正回滚时，由使用者告诉 Codex 标签名，再由 Codex 执行回滚。</li><li>Web 版版本标签与 Cocos 版完全独立。</li></ul>
+        <ul><li>开发者以 docs/web-project-status.json 为唯一真实记录来源。</li><li>WEB-DEVLOG.md 用于开发记录和版本回看。</li><li>WEB-PROJECT-DASHBOARD.html 用于非技术伙伴快速查看。</li><li>WEB-ERROR-LIBRARY.md 用于记录未达成目标、卡点、根因、解决方式和沉淀规范。</li><li>真正回滚时，由使用者告诉 Codex 标签名，再由 Codex 执行回滚。</li><li>Web 版版本标签与 Cocos 版完全独立。</li><li>只有当对应改动已经确认成功时，才提供对应的 Web 版网址；未成功前不提前提供。</li></ul>
+      </section>
+      <section class="muted-section notes">
+        <h2>错误库</h2>
+        <ul><li>路径：docs/WEB-ERROR-LIBRARY.md</li><li>作用：记录未达成目标、卡点、根因、解决方式和沉淀规范，作为 Web 版持续改进的正式资产。</li></ul>
       </section>
     </div>
   </main>

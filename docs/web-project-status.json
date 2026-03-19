@@ -26,8 +26,12 @@
     "status": "进行中",
     "gitTag": "待定",
     "gitCommit": "自动读取",
-    "updatedAt": "2026-03-17",
+    "updatedAt": "2026-03-19",
     "summary": "Web 版已重新成为主开发线。当前目标是把首页与章节入口切换到半写实原画商业基线，拉起当前净化行动主链路，并让 Web 版日志看板同步进入正式里程碑流程。"
+  },
+  "errorLibrary": {
+    "path": "docs/WEB-ERROR-LIBRARY.md",
+    "purpose": "记录未达成目标、卡点、根因、解决方式和沉淀规范，作为 Web 版持续改进的正式资产。"
   },
   "modules": [
     {
@@ -78,7 +82,9 @@
     "开发者以 docs/web-project-status.json 为唯一真实记录来源。",
     "WEB-DEVLOG.md 用于开发记录和版本回看。",
     "WEB-PROJECT-DASHBOARD.html 用于非技术伙伴快速查看。",
+    "WEB-ERROR-LIBRARY.md 用于记录未达成目标、卡点、根因、解决方式和沉淀规范。",
     "真正回滚时，由使用者告诉 Codex 标签名，再由 Codex 执行回滚。",
-    "Web 版版本标签与 Cocos 版完全独立。"
+    "Web 版版本标签与 Cocos 版完全独立。",
+    "只有当对应改动已经确认成功时，才提供对应的 Web 版网址；未成功前不提前提供。"
   ]
 }
